@@ -33,6 +33,21 @@ class BannerController extends GetxController {
     carousalCurrentIndex.value = index;
   }
 
+RxBool isloadUserBanner =false.obs;
+
+ void fetchUserBanners(String vendorId) async {
+    isloadUserBanner.value = true;
+    var snapshot = await bannersRepo.fetchBanners(vendorId);
+     isloadUserBanner.value = false;
+     banners.value=snapshot;
+   
+    activeBanners.assignAll(banners.where(
+      (p0) => p0.active == true,
+    ));
+   
+    
+  }
+
 
   addBannersModel(BuildContext context, String vendorId) {
     showModalBottomSheet(

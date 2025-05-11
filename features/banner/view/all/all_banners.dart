@@ -43,7 +43,7 @@ class BannersMobileScreen extends StatelessWidget {
                         () {
                           if (controller.loading.value) {
                             return const TLargListTilehummer();
-                          }
+                          }else
                           if (controller.banners.isEmpty) {
                             return Center(
                               child: SizedBox(
@@ -59,7 +59,7 @@ class BannersMobileScreen extends StatelessWidget {
                             );
                           }
                          
-                       
+                       else{
                           return Obx(
                             () => ListView.separated(
                                 separatorBuilder: (_, __) =>
@@ -71,7 +71,7 @@ class BannersMobileScreen extends StatelessWidget {
                                     banner: controller.banners[index],
                                     vendorId: vendorId)),
                           );
-                        },
+                          }  },
                       ),
                       SizedBox(
                         height: 40,

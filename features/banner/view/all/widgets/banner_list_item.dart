@@ -40,8 +40,8 @@ class TBannerItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        width: 350,
-        height: 200,
+       width: 364,
+          height: 214,
         child: Slidable(
           key: const ValueKey(0),
           endActionPane: ActionPane(
@@ -100,8 +100,8 @@ class TBannerItem extends StatelessWidget {
                     children: [
                       CustomCaChedNetworkImage(
                         url: banner.image,
-                        width: 350,
-                        height: 200,
+                      width: 364,
+          height: 214,
                         raduis: BorderRadius.circular(15),
                         // height: 180,
                         //  height: 180,

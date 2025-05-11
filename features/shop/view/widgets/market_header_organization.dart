@@ -12,6 +12,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:winto/app/app_localization.dart';
 import 'package:winto/app/data.dart';
 import 'package:winto/core/constants/colors.dart';
+import 'package:winto/core/functions/lang_f.dart';
+import 'package:winto/features/admin/data/utils/user_images.dart';
 import 'package:winto/features/admin/presentation/widgets/profile/profile_image.dart';
 import 'package:winto/features/nav/static_bottom_navigator.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/edit_field.dart';
@@ -88,35 +90,63 @@ Widget marketHeaderSection(String userId, bool editMode, bool isVendor) {
                               height: 65.h,
                               child: Align(
                                 alignment: Alignment.topCenter,
-                                child: Container(
-                                  width: 100.w,
-                                  height: 63.h,
-                                  color: Colors.white,
-                                  child: ClipRRect(
-                                    borderRadius: const BorderRadius.only(
-                                        bottomLeft: Radius.circular(0),
-                                        bottomRight: Radius.circular(0)),
-                                    child: CachedNetworkImage(
-                                      imageUrl: userMap['bannerImage'],
-                                      imageBuilder: (context, imageProvider) =>
-                                          Container(
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: imageProvider,
-                                            fit: BoxFit.cover,
+                                child: GestureDetector(
+onTap: ()  { if( editMode) {
+
+      uploadBannerImageAndSaveToFirestore(
+                              context, ref); 
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MarketPlaceManagment(
+                                        vendorId: userId, editMode: true)));
+
+
+
+                    }
+                    else
+                    {
+ Navigator.push(  context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  NetworkImageContainerFullSize(
+                                      userMap!['bannerImage'] ?? '')));
+                    }
+                     
+                    },
+
+
+
+                                  child: Container(
+                                    width: 100.w,
+                                    height: 63.h,
+                                   
+                                    child: ClipRRect(
+                                      borderRadius: const BorderRadius.only(
+                                          bottomLeft: Radius.circular(0),
+                                          bottomRight: Radius.circular(0)),
+                                      child: CachedNetworkImage(
+                                        imageUrl: userMap['bannerImage'],
+                                        imageBuilder: (context, imageProvider) =>
+                                            Container(
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      placeholder: (context, url) =>
-                                          TShimmerEffect(
-                                        width: 100.w,
-                                        height: 55.h,
-                                      ),
-                                      errorWidget: (context, url, error) =>
-                                          Container(
-                                        width: 100.w,
-                                        height: 55.h,
-                                        color: Colors.grey,
+                                        placeholder: (context, url) =>
+                                            TShimmerEffect(
+                                          width: 100.w,
+                                          height: 55.h,
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Container(
+                                          width: 100.w,
+                                          height: 55.h,
+                                          color: Colors.grey,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -166,16 +196,31 @@ Widget marketHeaderSection(String userId, bool editMode, bool isVendor) {
                     raduis: BorderRadius.circular(50),
                     color: Colors.grey,
                   ),
+
+
+
+                
                 Positioned(
                   bottom: -10,
                   child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
+                    onTap: ()  { if( editMode) {
+      uploadProfileImageAndSaveToFirestore(
+                              context, ref);   
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MarketPlaceManagment(
+                                        vendorId: userId, editMode: true)));
+                    }
+                    else
+                    {
+ Navigator.push(  context,
                           MaterialPageRoute(
                               builder: (context) =>
                                   NetworkImageContainerFullSize(
                                       userMap!['profileImage'] ?? '')));
+                    }
+                     
                     },
                     child: Stack(
                       children: [
@@ -204,8 +249,8 @@ Widget marketHeaderSection(String userId, bool editMode, bool isVendor) {
                               child: UserProfileImageWidget(
                                 imgUrl: userMap['profileImage'] ?? '',
                                 size: 175,
-                                withShadow: false,
-                                allowChange: false,
+                                withShadow: true,
+                                allowChange: true,
                               ),
                             ),
                           ),
@@ -226,67 +271,8 @@ Widget marketHeaderSection(String userId, bool editMode, bool isVendor) {
                     ),
                   ),
                 ),
-                // Align(
-                //   alignment:
-                //       isArabicLocale() ? Alignment.topRight : Alignment.topLeft,
-                //   // left: 12,
-                //   // right: isArabicLocale() ? 12 : null,
-                //   // top: isArabicLocale() ? null : 12,
-                //   child: const Padding(
-                //     padding: EdgeInsets.all(8.0),
-                //     child: ControlPanelMenu(),
-                //   ),
-                // ),
-                // Align(
-                //   alignment:
-                //       isArabicLocale() ? Alignment.topLeft : Alignment.topRight,
-                //   // left: 12,
-                //   // right: isArabicLocale() ? 12 : null,
-                //   // top: isArabicLocale() ? null : 12,
-                //   child: Padding(
-                //     padding: EdgeInsets.all(12.0),
-                //     child: TRoundedContainer(
-                //       width: 30,
-                //       height: 30,
-                //       backgroundColor: Colors.white,
-                //       radius: BorderRadius.circular(40),
-                //       child: Center(
-                //         child: Icon(
-                //           Icons.share,
-                //           color: Colors.black,
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                Visibility(
-                  visible: false,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        HapticFeedback.lightImpact;
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const StaticBottomNavigator()));
-                      },
-                      child: TRoundedContainer(
-                        width: 30,
-                        height: 30,
-                        backgroundColor: Colors.white,
-                        radius: BorderRadius.circular(40),
-                        child: const Center(
-                          child: Icon(
-                            Icons.refresh,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+          
+                
               ]),
 
               Stack(
@@ -313,9 +299,7 @@ Widget marketHeaderSection(String userId, bool editMode, bool isVendor) {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: SvgPicture.asset(
-                                'assets/images/ecommerce/icons/store.svg',
-                              ),
+                              child:Icon(Icons.settings_rounded)
                             ),
                           ),
                         ),
@@ -388,17 +372,7 @@ Widget marketHeaderSection(String userId, bool editMode, bool isVendor) {
                             vendorId: userId,
                             editMode: isVendor,
                           )
-                          // TRoundedContainer(
-                          //   backgroundColor: Colors.white,
-                          //   enableShadow: true,
-                          //   width: 40,
-                          //   height: 38,
-                          //   radius: BorderRadius.circular(300),
-                          //   child: Padding(
-                          //     padding: const EdgeInsets.all(6.0),
-                          //     child: Icon(Icons.settings, size: 28),
-                          //   ),
-                          // ),
+                         
                           ),
                     ),
                   ),
@@ -414,57 +388,63 @@ Widget marketHeaderSection(String userId, bool editMode, bool isVendor) {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           //crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Visibility(
-                              visible: editMode,
-                              child: GestureDetector(
-                                onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => EditFieldPage(
-                                            userMap!,
-                                            localizations
-                                                .translate('edit_profile.name'),
-                                            'name',
-                                            1,
-                                            60,
-                                            localizations.translate(
-                                                'edit_profile.enter_your_name')))),
-                                child: TRoundedContainer(
-                                  width: 22,
-                                  height: 22,
-                                  enableShadow: true,
-                                  radius: BorderRadius.circular(300),
-                                  child: const Icon(
-                                    Icons.edit,
-                                    size: 18,
+                           
+                          
+                           Stack(
+                             children: [
+                               Container(
+                                color: Colors.transparent,
+                                           width: 60.w,
+                                           height: 45,
+                               
+                                  child:  Align(
+                                             alignment: Alignment.center,
+                                    child: Text(
+                                      userMap['organizationName'] ??
+                                          userMap['name'] ??
+                                          '',
+                                          maxLines: 2,
+                                                    textAlign: TextAlign.center,
+                                    
+                                      style: titilliumSemiBold.copyWith(fontSize: 18,fontWeight: FontWeight.w800),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            Visibility(
-                              visible: editMode,
-                              child: const SizedBox(
-                                width: 4,
-                              ),
-                            ),
-                           Container(
-                            color: Colors.transparent,
-            width: 60.w,
-            height: 20,
-
-                              child:  Align(
-              alignment: Alignment.center,
-                                child: Text(
-                                  userMap['organizationName'] ??
-                                      userMap['name'] ??
-                                      '',
-                                      maxLines: 1,
-                                                textAlign: TextAlign.center,
-                                
-                                  style: titilliumSemiBold.copyWith(fontSize: 18,fontWeight: FontWeight.w800),
+                            
+                             Positioned(
+                             bottom: 15,
+                             right: 15,
+                               child: Visibility(
+                                visible: editMode,
+                                child: GestureDetector(
+                                  onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => EditFieldPage(
+                                              userMap!,
+                                              isArabicLocale()? "اسم مشروعك" :"Organization Name",
+                                              'organizationName',
+                                              1,
+                                              60,
+                                              isArabicLocale()? "ادخل اسم مشروعك" :"Enter Your Organization Name"))),
+                                  child: TRoundedContainer(
+                                   
+                                    enableShadow: true,
+                                    radius: BorderRadius.circular(300),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: const Icon(
+                                        Icons.edit,
+                                        size: 18,
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
+                                                           ),
+                             ),
+                            
+                             ],
+                           ),
                           ],
                         ),
                       ),
@@ -792,7 +772,7 @@ Widget marketHeaderSection(String userId, bool editMode, bool isVendor) {
                         ],
                       ), */
 
-              const Padding(
+     if (editMode) const Padding(
                 padding: EdgeInsets.only(left: 8.0, right: 8),
                 child: Divider(
                   thickness: 1.5,

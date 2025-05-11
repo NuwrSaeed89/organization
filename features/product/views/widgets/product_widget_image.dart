@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_image_slider_mini.dart';
+import 'package:winto/features/organization/e_commerce/features/product/views/widgets/saved_widget.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/sizes.dart';
 
 class ProductWidgetImage extends StatelessWidget {
@@ -28,15 +29,20 @@ class ProductWidgetImage extends StatelessWidget {
         decoration: BoxDecoration(),
         child: Stack(children: [
           Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            Container(
-                height: 127,
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                child: TProductImageSliderMini(
-                  product: product,
-                  prefferHeight: 127,
-                  prefferWidth: 95,
-                )),
+            Stack(
+              children: [
+                Container(
+                    height: 127,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                    child: TProductImageSliderMini(
+                      product: product,
+                      prefferHeight: 127,
+                      prefferWidth: 95,
+                    )),
+                    
+              ],
+            ),
 
             // Product Details
           ]),

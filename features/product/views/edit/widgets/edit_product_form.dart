@@ -9,6 +9,7 @@ import 'package:simple_loading_dialog/simple_loading_dialog.dart';
 import 'package:winto/app/app_localization.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/controllers/category_controller.dart';
+import 'package:winto/features/organization/e_commerce/controllers/category_tab_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/cashed_network_image.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/edit_product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
@@ -16,11 +17,9 @@ import 'package:winto/features/organization/e_commerce/utils/common/styles/style
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/buttons/custom_button.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_widgets.dart';
-import 'package:winto/features/organization/e_commerce/utils/common/widgets/images/rounded_image.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/shimmers/shimmer.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/custom_styles.dart';
-import 'package:winto/features/organization/e_commerce/utils/constants/enums.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/sizes.dart';
 import 'package:winto/features/organization/e_commerce/utils/loader/circle_loader.dart';
 import 'package:winto/features/organization/e_commerce/utils/validators/validator.dart';
@@ -30,16 +29,20 @@ class EditProductForm extends StatelessWidget {
       {super.key, required this.product, required this.vendorId});
   final ProductModel product;
   final String vendorId;
+  
   @override
   Widget build(BuildContext context) {
+      EditProductController.instance.init(product);
+          final CategoryTabControllerX tabController = Get.put(CategoryTabControllerX());
     final controller = EditProductController.instance;
     var images = product.images!;
     if (CategoryController.instance.allItems.isEmpty) {
-      CategoryController.instance.fetchData();
+      
+      CategoryController.instance.fetchCategoryData();
     }
 
     controller.type = product.productType ?? '';
-    controller.init(product);
+  
     return SingleChildScrollView(
       child: Form(
         key: controller.formKey,
@@ -76,7 +79,7 @@ class EditProductForm extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     TabBar(
-                      // indicatorColor: TColors.red,
+                      onTap: tabController.changeTab,
                       isScrollable: true,
 
                       // indicatorColor: TColors.red,
@@ -106,6 +109,7 @@ class EditProductForm extends StatelessWidget {
                               children: [
                                 const SizedBox(height: 12),
                                 TextFormField(
+                                      focusNode: tabController.arabicFocusNode,
                                   style: titilliumBold.copyWith(fontSize: 18),
                                   controller: controller.arabicTitle,
                                   validator: (value) =>
@@ -120,6 +124,7 @@ class EditProductForm extends StatelessWidget {
                                   height: TSizes.spaceBtwInputFields,
                                 ),
                                 TextFormField(
+                                  
                                   style: titilliumBold.copyWith(fontSize: 18),
                                   controller: controller.arabicDescription,
                                   maxLines: 3,
@@ -136,6 +141,7 @@ class EditProductForm extends StatelessWidget {
                             children: [
                               const SizedBox(height: 12),
                               TextFormField(
+                                  focusNode: tabController.englishFocusNode,
                                 style: titilliumBold.copyWith(fontSize: 18),
                                 validator: (value) =>
                                     TValidator.validateEmptyText(

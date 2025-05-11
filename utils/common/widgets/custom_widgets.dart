@@ -4,7 +4,7 @@ import 'package:winto/features/organization/e_commerce/utils/common/styles/style
 class TCustomWidgets {
   static Widget buildDivider() {
     return Container(
-      margin: EdgeInsets.only(left: 16, right: 16, bottom: 10),
+      margin: EdgeInsets.only(left: 16, right: 16, bottom: 3),
       child: Divider(
         thickness: .5,
       ),

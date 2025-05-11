@@ -9,6 +9,7 @@ import 'package:simple_loading_dialog/simple_loading_dialog.dart';
 import 'package:winto/app/app_localization.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/controllers/category_controller.dart';
+import 'package:winto/features/organization/e_commerce/controllers/category_tab_controller.dart';
 import 'package:winto/features/organization/e_commerce/data/models/category_model.dart';
 import 'package:winto/features/organization/e_commerce/features/category/view/create_category/create_category.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
@@ -37,6 +38,7 @@ class CreateProductForm extends StatelessWidget {
   String type;
   @override
   Widget build(BuildContext context) {
+      final CategoryTabControllerX tabController = Get.put(CategoryTabControllerX());
     final controller = ProductController.instance;
 
     //if (suggestingCategory != null) controller.category = suggestingCategory!;
@@ -92,6 +94,7 @@ class CreateProductForm extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     TabBar(
+                            onTap: tabController.changeTab,
                       //  indicator: BoxDecoration(),
 
                       // indicatorColor: TColors.red,
@@ -129,6 +132,7 @@ class CreateProductForm extends StatelessWidget {
                               children: [
                                 const SizedBox(height: 12),
                                 TextFormField(
+                                   focusNode: tabController.arabicFocusNode,
                                   style: titilliumBold.copyWith(fontSize: 18),
                                   controller: controller.arabicTitle,
                                   validator: (value) =>
@@ -162,6 +166,7 @@ class CreateProductForm extends StatelessWidget {
                             children: [
                               const SizedBox(height: 12),
                               TextFormField(
+                                   focusNode: tabController.englishFocusNode,
                                 style: titilliumBold.copyWith(
                                   fontSize: 18,
                                 ),

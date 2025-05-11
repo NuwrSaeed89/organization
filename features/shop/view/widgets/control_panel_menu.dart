@@ -10,12 +10,9 @@ import 'package:winto/features/admin/presentation/pages/edit/edit_profile.dart';
 import 'package:winto/features/controls/presentation/control_center.dart';
 import 'package:winto/features/organization/e_commerce/features/banner/view/all/all_banners.dart';
 import 'package:winto/features/organization/e_commerce/features/category/view/all_category/all_categories.dart';
-import 'package:winto/features/organization/e_commerce/features/category/view/create_category/create_category.dart';
 import 'package:winto/features/organization/e_commerce/features/excel/view/excel_terms.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/add/add_product.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/all_products_list.dart';
-import 'package:winto/features/organization/e_commerce/features/product/views/saved_products_list.dart';
-import 'package:winto/features/organization/e_commerce/features/shop/view/category_list_test.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/market_place_view.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/policy_page.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
@@ -94,7 +91,7 @@ class ControlPanelMenu extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ImportExcelPage()));
+                          builder: (context) => ImportExcelPage(vendorId:vendorId)));
                 },
               ),
               PullDownMenuItem(
@@ -182,23 +179,23 @@ class ControlPanelMenu extends StatelessWidget {
                           builder: (context) => const ControlCenter()));
                 },
               ),
-              PullDownMenuItem(
-                icon: Icons.category,
-                title: localizations.translate('shop.categories'),
-                itemTheme: PullDownMenuItemTheme(
-                    onPressedBackgroundColor:
-                        TColors.primary.withValues(alpha: .5),
-                    textStyle: bodyText1.copyWith(color: Colors.black)),
-                iconColor: Colors.black,
-                onTap: () async {
-                  HapticFeedback.lightImpact;
+              // PullDownMenuItem(
+              //   icon: Icons.category,
+              //   title: localizations.translate('shop.categories'),
+              //   itemTheme: PullDownMenuItemTheme(
+              //       onPressedBackgroundColor:
+              //           TColors.primary.withValues(alpha: .5),
+              //       textStyle: bodyText1.copyWith(color: Colors.black)),
+              //   iconColor: Colors.black,
+              //   onTap: () async {
+              //     HapticFeedback.ligphtImpact;
 
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CategoryListTile()));
-                },
-              ),
+              //     Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => CategoryListTile()));
+              //   },
+              // ),
             ],
         buttonBuilder: (context, showMenu) => CupertinoButton(
               onPressed: showMenu,

@@ -30,17 +30,18 @@ class FavouriteButton extends StatelessWidget {
         radius: BorderRadius.circular(100),
         enableShadow: true,
         showBorder: true,
-        child: editMode
-            ? Center(
-                child: Padding(
-                    padding: const EdgeInsets.all(2),
-                    child: const Icon(CupertinoIcons.heart,
-                        // : CupertinoIcons.heart,
-                        // color: const Color(0xFFFF5050),
-                        color: Colors.black,
-                        size: 24)),
-              )
-            : Center(
+         child:
+        // editMode
+        //     ? Center(
+        //         child: Padding(
+        //             padding: const EdgeInsets.all(2),
+        //             child: const Icon(CupertinoIcons.heart,
+        //                 // : CupertinoIcons.heart,
+        //                 // color: const Color(0xFFFF5050),
+        //                 color: Colors.black,
+        //                 size: 24)),
+        //       )
+            Center(
                 child: Obx(
                   () => Padding(
                     padding: const EdgeInsets.all(2),

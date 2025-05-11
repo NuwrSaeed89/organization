@@ -169,10 +169,10 @@ class ProductWidgetMedium extends StatelessWidget {
             ),
           ),
           Visibility(
-            visible: false,
+            visible: true,
             child: Positioned(
-              bottom: 43,
-              right: -5,
+              bottom: 78,
+              left: 5,
               child: SavedButton(
                 product: product,
               ),

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/editing._controller.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/market_place_managment.dart';
-import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/market_header.dart';
+import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/market_header_organization.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
 

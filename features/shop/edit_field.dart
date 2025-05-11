@@ -13,6 +13,7 @@ import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/core/utils/dialogs/reusable_dialogs.dart';
 import 'package:winto/features/admin/data/firebase/update.dart';
 import 'package:winto/features/nav/static_bottom_navigator.dart';
+import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/loader/circle_loader.dart';
 
 class EditFieldPage extends ConsumerStatefulWidget {
@@ -92,12 +93,8 @@ class _EditNamePageState extends ConsumerState<EditFieldPage> {
         backgroundColor: Colors.white,
         title: Text(
           widget.label,
-          textScaleFactor: 1.0,
-          style: TextStyle(
-            fontSize: 22,
-            color: color1,
-            fontFamily: isLocaleEn(context) ? 'Poppins' : 'Almarai',
-          ),
+         
+          style: titilliumBold.copyWith(fontSize: 18, color: Colors.black),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -162,10 +159,10 @@ class _EditNamePageState extends ConsumerState<EditFieldPage> {
                   );
 
                   Navigator.pop(context, true);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const StaticBottomNavigator()));
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => const StaticBottomNavigator()));
                 },
                 child: Text(
                   'save',

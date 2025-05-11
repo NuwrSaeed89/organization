@@ -49,33 +49,36 @@ class TCategoryGridItem extends StatelessWidget {
                 child: CachedNetworkImage(
                     fit: BoxFit.fill,
                     imageUrl: category.image!,
-                    imageBuilder: (context, imageProvider) => GestureDetector(
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AllProducts(
-                                        title: Get.locale?.languageCode == 'en'
-                                            ? category.name
-                                            : category.arabicName,
-                                        categoryId: category.id!,
-                                        editMode: true,
-                                        vendorId: vendorId,
-                                        futureMethode: CategoryController
-                                            .instance
-                                            .getCategoryProduct(
-                                                categoryId: category.id!,
-                                                userId: FirebaseAuth
-                                                    .instance.currentUser!.uid,
-                                                limit: -1),
-                                      ))),
-                          child: Container(
+                    imageBuilder: (context, imageProvider) =>
+                    
+                    //  GestureDetector(
+                    //       onTap: () => Navigator.push(
+                    //           context,
+                    //           MaterialPageRoute(
+                    //               builder: (context) => AllProducts(
+                    //                     title: Get.locale?.languageCode == 'en'
+                    //                         ? category.name
+                    //                         : category.arabicName,
+                    //                     categoryId: category.id!,
+                    //                     editMode: editMode,
+                    //                     vendorId: vendorId,
+                    //                     futureMethode: CategoryController
+                    //                         .instance
+                    //                         .getCategoryProduct(
+                    //                             categoryId: category.id!,
+                    //                             userId: FirebaseAuth
+                    //                                 .instance.currentUser!.uid,
+                    //                             limit: -1),
+                    //                   ))),
+                    //       child: 
+                          Container(
                             // width: 80,
                             // height: 80,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
                               image: DecorationImage(image: imageProvider),
                             ),
-                          ),
+                          
                         ),
                     progressIndicatorBuilder:
                         (context, url, downloadProgress) => ClipRRect(

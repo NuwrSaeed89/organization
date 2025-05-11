@@ -8,6 +8,7 @@ import 'package:winto/core/constants/text_styles.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/market_place_managment.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/market_place_view.dart';
+import 'package:winto/features/organization/e_commerce/features/shop/view/seller.info.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
 
 class ControlPanelMenuVisitor extends StatelessWidget {
@@ -52,19 +53,24 @@ class ControlPanelMenuVisitor extends StatelessWidget {
               ),
               PullDownMenuItem(
                 icon: Icons.info,
-                title: isArabicLocale() ? 'من نحن' : 'About Us',
+                title: isArabicLocale() ? 'سياسة المتجر' : 'Our Policies',
                 itemTheme: PullDownMenuItemTheme(
                     textStyle: bodyText1.copyWith(color: Colors.black)),
                 iconColor: Colors.black,
-                onTap: () {},
-              ),
-              PullDownMenuItem(
-                  icon: Icons.people,
-                  title: isArabicLocale() ? 'فريقنا' : 'Team',
-                  itemTheme: PullDownMenuItemTheme(
-                      textStyle: bodyText1.copyWith(color: Colors.black)),
-                  iconColor: Colors.black,
-                  onTap: () {}),
+                onTap: () =>  Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PolicyDisplayPage(
+                                vendorId: vendorId))),
+
+              ),//
+              // PullDownMenuItem(
+              //     icon: Icons.people,
+              //     title: isArabicLocale() ? 'فريقنا' : 'Team',
+              //     itemTheme: PullDownMenuItemTheme(
+              //         textStyle: bodyText1.copyWith(color: Colors.black)),
+              //     iconColor: Colors.black,
+              //     onTap: () {}),
             ],
         buttonBuilder: (context, showMenu) => CupertinoButton(
               onPressed: showMenu,

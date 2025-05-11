@@ -129,7 +129,33 @@ class ProductDetails extends StatelessWidget {
                         },
                       ),
                     ),
-                  const SizedBox(height: 16),
+                  //const SizedBox(height: 10),
+                  Padding(
+                     padding: const EdgeInsets.symmetric(
+                        horizontal: TSizes.defaultSpace/2),
+                  child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                           
+                              children: [
+                                Visibility(
+                                  visible: edit,
+                                  child: ControlPanelProduct(
+                                      vendorId: vendorId, product: product),
+                                ),
+
+                                 FavouriteButton(
+                                  editMode: true,
+                                ),
+                               
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                SavedButton(product: product),
+                                
+                              ],
+                            ),
+                  ),
+                           const SizedBox(height: 16),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: TSizes.defaultSpace),
@@ -143,7 +169,7 @@ class ProductDetails extends StatelessWidget {
                                   ? product.arabicTitle
                                   : product.title,
                               trimLines: 2,
-                              style: titilliumBold.copyWith(fontSize: 20),
+                              style: titilliumBold.copyWith(fontSize: 22),
                               trimMode: TrimMode.Line,
                               trimCollapsedText:
                                   isLocaleEn(context) ? 'more' : 'المزيد',
@@ -155,50 +181,31 @@ class ProductDetails extends StatelessWidget {
                                   color: Colors.black),
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SavedButton(product: product),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              FavouriteButton(
-                                editMode: true,
-                              ),
-                              Visibility(
-                                visible: edit,
-                                child: ControlPanelProduct(
-                                    vendorId: vendorId, product: product),
-                              ),
-                            ],
-                          ),
+                          
                         ]),
                   ),
-
-                  const SizedBox(height: 5),
+    const SizedBox(height: 10),
+                
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: TSizes.defaultSpace),
-                    child: SizedBox(
-                      width: 80.w,
-                      child: ReadMoreText(
-                        isLocaleEn(context)
-                            ? product.description ?? ''
-                            : product.arabicDescription ?? '',
-                        trimLines: 2,
-                        style: robotoRegular.copyWith(fontSize: 16),
-                        trimMode: TrimMode.Line,
-                        trimCollapsedText:
-                            isLocaleEn(context) ? 'more' : 'المزيد',
-                        trimExpandedText: isLocaleEn(context) ? 'less' : ' أقل',
-                        moreStyle:
-                            robotoHintRegular.copyWith(color: Colors.black),
-                        lessStyle:
-                            robotoHintRegular.copyWith(color: Colors.black),
-                      ),
+                    child: ReadMoreText(
+                      isLocaleEn(context)
+                          ? product.description ?? ''
+                          : product.arabicDescription ?? '',
+                      trimLines: 2,
+                      style: robotoRegular.copyWith(fontSize: 18),
+                      trimMode: TrimMode.Line,
+                      trimCollapsedText:
+                          isLocaleEn(context) ? 'more' : 'المزيد',
+                      trimExpandedText: isLocaleEn(context) ? 'less' : ' أقل',
+                      moreStyle:
+                          robotoHintRegular.copyWith(color: Colors.black),
+                      lessStyle:
+                          robotoHintRegular.copyWith(color: Colors.black),
                     ),
                   ),
-
+    const SizedBox(height: 8),
                   const SizedBox(height: 8),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -219,18 +226,16 @@ class ProductDetails extends StatelessWidget {
                                       color: TColors.darkerGray,
                                       fontFamily: englishFonts,
                                       decoration: TextDecoration.lineThrough,
-                                      fontSize: 15)),
+                                      fontSize: 16)),
                         const SizedBox(width: 10),
                         Text("${product.salePrice} AED",
-                            // PriceConverter.convertPrice(context, product.unitPrice,
-                            //     discountType: product.discountType,
-                            //     discount: product.discount),
+                           
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyLarge!
                                 .copyWith(
                                     fontFamily: englishFonts,
-                                    fontSize: 17,
+                                    fontSize: 18,
                                     color: TColors.primary)),
                       ],
                     ),
@@ -245,9 +250,7 @@ class ProductDetails extends StatelessWidget {
                   const SizedBox(
                     height: TSizes.spaceBtWsections,
                   ),
-                  const SizedBox(
-                    height: TSizes.spaceBtWsections,
-                  ),
+                 
                   const SizedBox(
                     height: TSizes.spaceBtWsections * 2,
                   ),

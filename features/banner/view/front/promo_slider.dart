@@ -39,19 +39,18 @@ class TPromoSlider extends StatelessWidget {
   final childrenButtonSize = const Size(45.0, 45.0);
 
   Widget build(BuildContext context) {
-    final controller = BannerController.instance;
-   // final CarouselController _ctr=CarouselController();
-    controller.fetchBanners(vendorId);
+   final controller = BannerController.instance;
+  BannerController.instance.fetchUserBanners(vendorId);
     return Obx(() {
-      if (controller.loading.value) {
-        return Container(
-          color: Colors.transparent,
-          width: 364,
-          height: 214,
-          child: const Center(
-              child: SizedBox(height: 40, width: 40, child: TLoaderWidget())),
-        );
-      } 
+      // if (controller.isloadUserBanner.value) {
+      //   return Container(
+      //     color: Colors.transparent,
+        
+      //     child: const Center(
+      //         child: SizedBox(  width: 364,
+      //                       height: 200, child: TLoaderWidget())),
+      //   );
+      // } else
        if (controller.activeBanners.isEmpty) {
         return editMode
             ?
@@ -104,57 +103,6 @@ class TPromoSlider extends StatelessWidget {
       } 
       
       
-      //else {
-      // Rx<List<String>> images =
-      //       controller.activeBanners.map((e) => e.image).toList().obs;
-
-        // if (controller.activeBanners.isEmpty) {
-        //   return CarouselSlider(
-        //  // carouselController: CarouselSliderController(),
-        //       options: CarouselOptions(
-        //         viewportFraction: 0.85,
-        //         //autoPlay: true,
-        //         height: 214,
-        //         enlargeCenterPage: true,
-
-        //         autoPlay: true,
-        //       ),
-        //       items: List.generate(3, (index) {
-        //         return Stack(
-        //           alignment: Alignment.center,
-        //           children: [
-        //             Center(
-        //               child: TRoundedContainer(
-        //                 width: 364,
-        //                 height: 214,
-        //                 enableShadow: true,
-        //                 showBorder: true,
-        //                 backgroundColor: TColors.white,
-        //                 radius: BorderRadius.circular(15),
-        //               ),
-        //             ),
-        //             Visibility(
-        //               visible: editMode,
-        //               child: Center(
-        //                   child: InkWell(
-        //                 onTap: () => controller.addBanner('gallery', vendorId),
-        //                 child: TRoundedContainer(
-        //                   enableShadow: true,
-        //                   //showBorder: true,
-        //                   width: 50,
-        //                   height: 50,
-        //                   radius: BorderRadius.circular(300),
-        //                   child: const Icon(
-        //                     CupertinoIcons.add,
-        //                     color: TColors.primary,
-        //                   ),
-        //                 ),
-        //               )),
-        //             ),
-        //           ],
-        //         );
-        //       }));
-        // } 
         
         
         else {
@@ -215,7 +163,7 @@ class TPromoSlider extends StatelessWidget {
                   height: 224,
                   enableShadow: true,
                   radius: BorderRadius.circular(15),
-                  child: Center(
+                 child: Center(
                     child: InkWell(
                        onTap: () =>
                                     controller.addBanner('gallery', vendorId),
@@ -230,7 +178,7 @@ class TPromoSlider extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
+                 ),
                 ),
               ));
             }
@@ -244,21 +192,22 @@ class TPromoSlider extends StatelessWidget {
                   enableShadow: true,
                   radius: BorderRadius.circular(15),
                   child: Center(
-                    child: GestureDetector(
-                       onTap: () =>
-                                    controller.addBanner('gallery', vendorId),
-                      child: TRoundedContainer(
-                        enableShadow: true,
-                        //showBorder: true,
-                        width: 50,
-                        height: 50,
-                        radius: BorderRadius.circular(300),
-                        child: const Icon(
-                          CupertinoIcons.add,
-                          color: TColors.primary,
-                        ),
-                      ),
-                    ),
+                     child: CustomFloatActionButton(onTap: ()=> controller.addBanner('gallery', vendorId))
+                    // child: GestureDetector(
+                    //    onTap: () =>
+                    //                 controller.addBanner('gallery', vendorId),
+                    //   child: TRoundedContainer(
+                    //     enableShadow: true,
+                    //     //showBorder: true,
+                    //     width: 50,
+                    //     height: 50,
+                    //     radius: BorderRadius.circular(300),
+                    //     child: const Icon(
+                    //       CupertinoIcons.add,
+                    //       color: TColors.primary,
+                    //     ),
+                    //   ),
+                    // ),
                   ),
                 ),
               ));
@@ -269,12 +218,17 @@ class TPromoSlider extends StatelessWidget {
                 CarouselSlider(
                     options: CarouselOptions(
                         //  aspectRatio: 9 / 6,
-                        viewportFraction: 0.85,
+                      //  viewportFraction: 0.85,
+
                         //autoPlay: true,
                         height: 230,
                        
-                        enlargeCenterPage: true,
+                       // enlargeCenterPage: true,
                        
+
+                       //   aspectRatio: 16 / 9,
+        viewportFraction: 0.85,
+        enlargeCenterPage: true,
                        // enableInfiniteScroll: true,
                      
                         // تعطيل التكرار إذا كان عدد الصور = 1
@@ -283,8 +237,22 @@ class TPromoSlider extends StatelessWidget {
                         onPageChanged: (index, _) =>
                             controller.updatePageIndicator(index)),
                     items: items),
+                     Visibility(
+                      visible: editMode,
+                       child: Positioned(
+                             bottom: 15,
+                              right: isArabicLocale() ? null : 7,
+                              left: isArabicLocale() ? 7 : null,
+                        
+                        
+                        child: CustomFloatActionButton( onTap: () => Get.to(BannersMobileScreen(
+                                  vendorId: vendorId,
+                        )),icon: Icons.settings,)),
+                     ),
+
+
                 Visibility(
-                  visible: editMode,
+                  visible: false,
                   child: Container(
                     height: 214,
                     color: Colors.transparent,

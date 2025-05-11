@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:winto/features/organization/e_commerce/data/models/category_model.dart';
 import 'package:winto/features/organization/e_commerce/data/repositories/category_repository.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
@@ -27,28 +28,27 @@ class CategoryController extends GetxController {
   final categoryName = TextEditingController();
   final categoryArabicName = TextEditingController();
   final categoryImage = TextEditingController();
+  RxString storeId =''.obs;
+@override
+void onInit() {
+  ever(storeId, (id) =>   fetchCategoryData());
+  super.onInit();
+}
 
-  @override
-  void onInit() {
-    // Get.put(NetworkManager());
-
-    // Get.put(EditCategoryController());
-    fetchData();
-    super.onInit();
-  }
-
+ 
   var load = false.obs;
   Future<List<CategoryModel>> getCategoryOfUser(String userId) async {
-    load.value = true;
-    allItems.value = await categoryRepository.getAllCategoriesUserId(userId);
-    load.value = false;
+    load(true);
+   var s=  await categoryRepository.getAllCategoriesUserId(userId);
+     allItems.value=s;
+    load(false);
     return allItems;
     // .where((cat) => cat.parentId.isEmpty)
     // .take(8)
     // .toList();
   }
 
-  Future<void> fetchData() async {
+  Future<void> fetchCategoryData() async {
     try {
       isLoading.value = true;
       List<CategoryModel> fetchedItem = [];
@@ -73,7 +73,6 @@ class CategoryController extends GetxController {
 
   void addItemToLists(CategoryModel item) {
     allItems.add(item);
-    if (item.isFeature!) featureCategories.add(item);
     felteredItems.add(item);
   }
 
@@ -204,10 +203,10 @@ class CategoryController extends GetxController {
   RxList<ProductModel> filteredItem = <ProductModel>[].obs;
   Future<List<ProductModel>> getCategoryProduct(
       {required String categoryId,
-      int limit = 4,
+    
       required String userId}) async {
     final product = await ProductRepository.instance.getProductsForCategory(
-        categoryId: categoryId, vendorId: userId, limit: limit);
+        categoryId: categoryId, vendorId: userId);
     all.assignAll(product);
     filteredItem.assignAll(all);
     return product;

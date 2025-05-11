@@ -9,6 +9,7 @@ import 'package:winto/features/organization/e_commerce/features/product/views/ad
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_widget_medium.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_widget_small.dart';
+import 'package:winto/features/organization/e_commerce/features/product/views/widgets/saved_widget.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/data/sector_model.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/buttons/customFloatingButton.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
@@ -332,11 +333,25 @@ class SectorBuilder extends StatelessWidget {
                                             height: cardHeight,
                                             radius: BorderRadius.circular(15),
                                             enableShadow: true,
-                                            child: CustomCaChedNetworkImage(
-                                              url: spotList[index].images!.first,
-                                              width: cardWidth,
-                                              height: cardHeight,
-                                              raduis: BorderRadius.circular(15),
+                                            child: Stack(
+                                              children: [
+                                                CustomCaChedNetworkImage(
+                                                  url: spotList[index].images!.first,
+                                                  width: cardWidth,
+                                                  height: cardHeight,
+                                                  raduis: BorderRadius.circular(15),
+                                                ),
+                                                 Visibility(
+            visible: true,
+            child: Positioned(
+              bottom: 5,
+              left: 5,
+              child: SavedButton(
+                product: spotList[index],
+              ),
+            ),
+          ),
+                                              ],
                                             ),
                                           )
                                         : cardType == CardType.smallCard

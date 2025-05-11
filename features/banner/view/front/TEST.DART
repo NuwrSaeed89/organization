@@ -145,539 +145,498 @@ class CarouselScreen extends StatelessWidget {
 }
 
 
-import 'package:flutter/material.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body:
-        
-         Center(
-          child: Container(
-            padding: EdgeInsets.all(20),
-            width: double.infinity,
-            margin: EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(
-              color: Colors.blueAccent,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 8,
-                  offset: Offset(2, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.storefront, size: 60, color: Colors.white),
-                SizedBox(height: 10),
-                Text(
-                  "Start Your Business Now",
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  "قم بإضافة منتجاتك وابدأ البيع الآن!",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.white70),
-                ),
-                SizedBox(height: 15),
-                ElevatedButton(
-                  onPressed: () {
-                    // يمكن ربطه بصفحة إضافة منتج
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.blueAccent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Text("إضافة منتج"),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-
-import 'package:flutter/material.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: 
-        
-        Center(
-          child:
-          
-           Container(
-            padding: EdgeInsets.all(20),
-            width: double.infinity,
-            margin: EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(
-              color: Colors.deepPurpleAccent,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 8,
-                  offset: Offset(2, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.shopping_bag, size: 60, color: Colors.white),
-                SizedBox(height: 10),
-                Text(
-                  "COMING SOON",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 2.0,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  "ترقبوا افتتاح متجرنا قريبًا!",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.white70),
-                ),
-                SizedBox(height: 15),
-                CircularProgressIndicator(
-                  color: Colors.white,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 ////////////
+import 'package:get/get.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
+class FileController extends GetxController {
+  var filePath = ''.obs;
 
-                 Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Center(
-                      child: TRoundedContainer(
-                        width: 364,
-                        height: 214,
-                        borderColor: TColors.grey,
-                        radius: BorderRadius.circular(22),
-                      ),
-                    ),
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                              onPressed: () =>
-                                  controller.addBanner('gallery', vendorId),
-                              icon: TRoundedContainer(
-                                enableShadow: true,
-                                width: 50,
-                                height: 50,
-                                radius: BorderRadius.circular(300),
-                                child: Icon(
-                                  CupertinoIcons.add,
-                                  color: TColors.primary,
-                                ),
-                              )),
-                          Text(isLocaleEn(context) ? 'Add Banner' : "اضافة بنر")
-                        ],
-                      ),
-                    ),
-                  ],
-                )
-                //////////////////////
+  Future<void> downloadExcelFile() async {
+    try {
+      // ✅ 1. قراءة ملف Excel من `assets`
+      ByteData data = await rootBundle.load('assets/template.xlsx');
+      List<int> bytes = data.buffer.asUint8List();
 
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/material.dart';
+      // ✅ 2. حفظ الملف محليًا في مجلد المستندات
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/template.xlsx');
+      await file.writeAsBytes(bytes);
 
-void main() {
-  runApp(MyApp());
-}
+      // ✅ 3. تحديث المسار حتى يمكن عرضه للمستخدم
+      filePath.value = file.path;
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: Text('Carousel Slider')),
-        body: Center(
-          child:
-           CarouselSlider(
-            options: CarouselOptions(
-              height: 200.0,
-              enlargeCenterPage: true,
-              autoPlay: false,
-            ),
-            items: List.generate(3, (index) {
-              return Container(
-                width: double.infinity,
-                margin: EdgeInsets.symmetric(horizontal: 8.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300], // لون اللوحة الفارغة
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                child: Center(
-                  child: Text(
-                    'لوحة ${index + 1}',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              );
-            }),
-          ),
-        ),
-      ),
+      Get.snackbar("نجاح", "تم تحميل نموذج Excel بنجاح!");
+    } catch (e) {
+      Get.snackbar("خطأ", "حدث خطأ أثناء تحميل الملف!");
+    }
+  }
+
+  Future<void> pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['xlsx'],
     );
+
+    if (result != null) {
+      filePath.value = result.files.single.path!;
+      Get.snackbar("نجاح", "تم تحديد الملف: ${result.files.single.name}");
+    } else {
+      Get.snackbar("إلغاء", "لم يتم اختيار ملف.");
+    }
   }
 }
 
 
- await showSimpleLoadingDialog<String>(
-                      context: context,
-                      future: () async {
-                     //code here
-                       
 
-   if (widget.field == 'username' &&
-                      ref.read(userNameErrorProvider.notifier).state !=
-                          'Username is available') {
-                    showDialogError('Choose a unique username', context);
+
+  ///////////////category list on tow rows
+  ///
+
+            Visibility(
+    visible: false,
+              child: Obx(
+                () {
+                  if (CategoryController.instance.load.value) {
+                    return Column(
+                      children: [
+                        Container(
+                          color: Colors.transparent,
+                          height: 180,
+                          child: GridView.builder(
+                            scrollDirection: Axis.horizontal,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2, // عرض عنصرين لكل سطر
+                              childAspectRatio: 1, // نسبة العرض إلى الارتفاع
+                              crossAxisSpacing: 10, // تباعد بين العناصر عموديًا
+                              mainAxisSpacing: 10, // تباعد بين العناصر أفقيًا
+                            ),
+                            itemCount: 10,
+                            itemBuilder: (context, index) {
+                              return Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(4),
+                                    child: TRoundedContainer(
+                                      showBorder: true,
+                                      enableShadow: true,
+                                      //   borderColor: TColors.darkerGray,
+                                      // enableShadow: true,
+                                      // decoration: BoxDecoration(
+                                      //     border: Border.all(
+              
+                                      //         color: TColors.darkerGray,
+                                      //         width: 1,
+                                      //         strokeAlign: BorderSide
+                                      //             .strokeAlignOutside),
+                                      //     color: Colors.grey,
+                                      radius: BorderRadius.circular(100),
+                                      child: TShimmerEffect(
+                                        width: 70,
+                                        height: 70,
+                                        raduis: BorderRadius.circular(300),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        )
+                      ],
+                    );
                   } else {
-                    if (widget.field == 'username') {
-                      _controller.text = _controller.text.toLowerCase().trim();
-                    }
-                    final userMap = ref.read(userMapProvider.notifier).state!;
-                    final updates = {
-                      if (_controller.text != userMap[widget.field])
-                        widget.field: _controller.text,
-                    };
-                    for (var entry in updates.entries) {
-                      ref.read(userMapProvider.notifier).update(
-                          (state) => {...state!, entry.key: entry.value});
-                      await updateUserField(entry.key, entry.value);
-                    }
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Profile updated')),
-                    );
-
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const StaticBottomNavigator()));
-                  }
-                   return "done2";
-                      },
-                      // Custom dialog
-                      dialogBuilder: (context, _) {
-                        return AlertDialog(
-                          content: 
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
+                    if (CategoryController.instance.allItems.isEmpty) {
+                      return editMode
+                          ? Column(
                               children: [
-                                SizedBox(height: 20),
-                                TLoaderWidget(),
-                           
-                                SizedBox(height: 20),
+                                Container(
+                                  color: Colors.transparent,
+                                  height: 200,
+                                  child: GridView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2, // عرض عنصرين لكل سطر
+                                      childAspectRatio:
+                                          1, // نسبة العرض إلى الارتفاع
+                                      crossAxisSpacing:
+                                          2, // تباعد بين العناصر عموديًا
+                                      mainAxisSpacing:
+                                          10, // تباعد بين العناصر أفقيًا
+                                    ),
+                                    itemCount: 7,
+                                    itemBuilder: (context, index) {
+                                      if (index == 0) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: addCategoryItem(index, context),
+                                        );
+                                      } else {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TRoundedContainer(
+                                            backgroundColor: Colors.white,
+                                            showBorder: true,
+                                            enableShadow: true,
+                                            radius: BorderRadius.circular(300),
+                                            width: 70,
+                                            height: 70,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                )
                               ],
-                            ),
-                          
-                        );
-                      },
-                    );
-
-
-
-// FutureBuilder<List<ProductModel>>(
-//               future:controller.fetchProductPageinations(
-//                                         vendorId, 'newArrival', 9) ,
-//               child: Obx(() => MasonryGridView.count(
-//                     crossAxisCount: 2,
-//                     mainAxisSpacing: 8,
-//                     crossAxisSpacing: 8,
-//                     itemCount: controller.newArrivalDynamic.length + 1,
-//                     itemBuilder: (context, index) {
-//                       if (index == controller.newArrivalDynamic.length) {
-//                         return controller.isLoading.value
-//                             ? Center(child: CircularProgressIndicator())
-//                             : ElevatedButton(
-//                                 onPressed: () =>
-//                                     controller.fetchProductPageinations(
-//                                         vendorId, 'newArrival', 9),
-//                                 child: Text("عرض المزيد"),
-//                               );
-//                       }
-//                       return ProductWidgetMedium(
-//                         product: controller.newArrivalDynamic[index],
-//                         vendorId: vendorId,
-//                       );
-//                     },
-//                   )),
-//             )
-
-Obx(() => MasonryGridView.count(
-  crossAxisCount: 2,
-  mainAxisSpacing: 8,
-  crossAxisSpacing: 8,
-  itemCount: controller.products.length + 1,
-  itemBuilder: (context, index) {
-    if (index == controller.products.length) {
-      return controller.isLoading.value
-          ? Center(child: CircularProgressIndicator())
-          : ElevatedButton(
-              onPressed: controller.fetchProducts,
-              child: Text("عرض المزيد"),
-            );
-    }
-    return ProductCard(product: controller.products[index]);
-  },
-))
-
-  return Obx(
-              () => Column(
-                // mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TCustomWidgets.buildTitle(
-                      isArabicLocale() ? 'وصلنا حديثا' : 'New Arrival'),
-                  const SizedBox(
-                    height: TSizes.spaceBtWItems,
-                  ),
-                  Stack(
-                    children: [
-                      (newArriveal.length > 9)
-                          ? MasonryGridView.count(
-                              itemCount: newArriveal.sublist(0, 9).length,
-                              crossAxisCount: 3,
-                              mainAxisSpacing: 0,
-                              crossAxisSpacing: 0,
-                              padding: const EdgeInsets.all(0),
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (BuildContext context, int index) {
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        PageRouteBuilder(
-                                          transitionDuration: const Duration(
-                                              milliseconds: 1000),
-                                          pageBuilder:
-                                              (context, anim1, anim2) =>
-                                                  ProductDetails(
-                                            product: newArriveal.sublist(
-                                                0, 9)[index],
-                                            vendorId: vendorId,
-                                          ),
-                                        ));
-                                  },
-                                  child: TRoundedContainer(
-                                    width: 100.w / 3,
-                                    height: 227,
-                                    // showBorder: true,
-                                    child: CustomCaChedNetworkImage(
-                                        width: 100.w / 3,
-                                        height: 227,
-                                        raduis: BorderRadius.circular(0),
-                                        url: newArriveal
-                                            .sublist(0, 9)[index]
-                                            .images!
-                                            .first),
-                                  ),
-                                );
-                              },
                             )
-                          : MasonryGridView.count(
-                              itemCount: newArriveal.length,
-                              crossAxisCount: 3,
-                              mainAxisSpacing: 0,
-                              crossAxisSpacing: 0,
-                              padding: const EdgeInsets.all(0),
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (BuildContext context, int index) {
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        PageRouteBuilder(
-                                          transitionDuration: const Duration(
-                                              milliseconds: 1000),
-                                          pageBuilder:
-                                              (context, anim1, anim2) =>
-                                                  ProductDetails(
-                                            product: newArriveal[index],
-                                            vendorId: vendorId,
-                                          ),
-                                        ));
-                                  },
+                          : const SizedBox.shrink();
+                    } else {
+                      return editMode
+                          ? Stack(
+                              children: [
+                                Center(
                                   child: TRoundedContainer(
-                                    width: 100.w / 3,
-                                    height: 200,
-                                    // showBorder: true,
-                                    child: CustomCaChedNetworkImage(
-                                        width: 100.w / 3,
-                                        height: 200,
-                                        raduis: BorderRadius.circular(0),
-                                        url: newArriveal[index].images!.first),
+                                    backgroundColor: Colors.transparent,
+                                    height: 270,
+                                    width: 100 *
+                                        (CategoryController
+                                                .instance.allItems.length +
+                                            1 % 2 +
+                                            CategoryController
+                                                .instance.allItems.length +
+                                            1 / 2),
+                                    showBorder: false,
+              
+                                    //borderColor: Colors.red,
+                                    child: GridView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2, // عرض عنصرين لكل سطر
+                                        childAspectRatio:
+                                            1, // نسبة العرض إلى الارتفاع
+                                        crossAxisSpacing:
+                                            2, // تباعد بين العناصر عموديًا
+                                        mainAxisSpacing:
+                                            10, // تباعد بين العناصر أفقيًا
+                                      ),
+                                      itemCount: CategoryController
+                                              .instance.allItems.length +
+                                          1,
+                                      itemBuilder: (context, index) {
+                                        // if (index == categories.length + 2) {
+                                        //   // العنصر الثابت في النهاية
+                                        //   return Padding(
+                                        //       padding: const EdgeInsets.only(
+                                        //           bottom: 41.0),
+                                        //       child:
+                                        //           addCategoryItem(index, context));
+                                        // }
+              
+                                        if (index ==
+                                            CategoryController
+                                                .instance.allItems.length) {
+                                          // العنصر الثابت في النهاية
+                                          return Center(
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10,
+                                                            right: 10,
+                                                            bottom: 45.0),
+                                                    child: addCategoryItem(
+                                                        index, context)),
+                                                const SizedBox(
+                                                  width: 10,
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        }
+              
+                                        return Row(
+                                          children: [
+                                            if (index == 0)
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                            TCategoryGridItem(
+                                                category: CategoryController
+                                                    .instance.allItems[index],
+                                                editMode: editMode,
+                                                vendorId: vendorId),
+                                          ],
+                                        );
+                                      },
+                                    ),
                                   ),
-                                );
-                              },
-                            ),
-                      Visibility(
-                        visible: editMode,
-                        child: Positioned(
-                            bottom: 0,
-                            right: isArabicLocale() ? null : 0,
-                            left: isArabicLocale() ? 0 : null,
-                            child: CustomFloatActionButton(
-                              onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => CreateProduct(
-                                            vendorId: vendorId,
-                                            type: 'newArrival',
-                                            sectionId: 'all',
-                                          ))),
-                            )),
-                      )
-                    ],
-                  )
-                ],
+                                ),
+                              ],
+                            )
+                          : Center(
+                              child: Container(
+                                color: Colors.transparent,
+                                height: 240,
+                                width: 100 *
+                                    (CategoryController.instance.allItems.length %
+                                            2 +
+                                        CategoryController
+                                                .instance.allItems.length /
+                                            2),
+                                child: GridView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2, // عرض عنصرين لكل سطر
+                                    childAspectRatio:
+                                        1.1, // نسبة العرض إلى الارتفاع
+                                    crossAxisSpacing:
+                                        2, // تباعد بين العناصر عموديًا
+                                    mainAxisSpacing:
+                                        10, // تباعد بين العناصر أفقيًا
+                                  ),
+                                  itemCount:
+                                      CategoryController.instance.allItems.length,
+                                  itemBuilder: (context, index) {
+                                    return TCategoryGridItem(
+                                        category: CategoryController
+                                            .instance.allItems[index],
+                                        editMode: editMode,
+                                        vendorId: vendorId);
+                                  },
+                                ),
+                              ),
+                            );
+                    }
+                  }
+                },
               ),
-            );
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'category_controller.dart';
-import 'add_category_screen.dart'; // تأكد من إنشاء هذه الصفحة
+            ),
 
-class AddProductScreen extends StatelessWidget {
-  final CategoryController categoryController = Get.put(CategoryController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Add Product")),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Obx(() {
-              // إنشاء القائمة مع خيار "إضافة فئة"
-              List<String> dropdownItems = [...categoryController.categories, "إضافة فئة"];
-              
-              return DropdownButtonFormField<String>(
-                value: categoryController.selectedCategory.value,
-                items: dropdownItems.map((category) {
-                  return DropdownMenuItem(
-                    value: category,
-                    child: Text(category),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  if (value == "إضافة فئة") {
-                    Get.to(AddCategoryScreen()); // فتح صفحة إضافة الفئة
-                  } else {
-                    categoryController.setSelectedCategory(value!);
-                  }
-                },
-                decoration: InputDecoration(
-                  labelText: "Select Category",
-                  border: OutlineInputBorder(),
-                ),
-              );
-            }),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                String selectedCategory = categoryController.selectedCategory.value;
-                print("Product will be assigned to category: $selectedCategory");
-                // يمكنك إرسال الفئة مع بيانات المنتج إلى Firebase هنا
-              },
-              child: Text("Add Product"),
+      appBar: AppBar(title: Text('قائمة المنتجات')),
+      body: Column(
+        children: [
+          // قائمة الفئات الأفقية
+          SizedBox(
+            height: 50,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: categories.map((category) {
+                return GestureDetector(
+                  onTap: () => controller.selectCategory(category),
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(category.name, style: TextStyle(color: Colors.white)),
+                  ),
+                );
+              }).toList(),
             ),
-          ],
-        ),
+          ),
+
+          // قائمة المنتجات العمودية الممتدة مع Animation
+          
+        ],
       ),
     );
   }
+class ProductController extends GetxController {
+  var selectedCategory = Rx<CategoryModel?>(null);
+  var isExpanded = false.obs;
+  var products = <ProductModel>[].obs;
+  var isLoading = false.obs;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  // جلب المنتجات الخاصة بالفئة من Firestore
+  Future<void> fetchProducts(String categoryId) async {
+    isLoading.value = true;
 
+    try {
+      QuerySnapshot querySnapshot = await firestore
+          .collection('products')
+          .where('categoryId', isEqualTo: categoryId)
+          .get();
 
-  class SavedProductsController extends GetxController {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  var savedProducts = <Product>[].obs;
-  final String userId = "user123"; // Example User ID
+      List<ProductModel> fetchedProducts = querySnapshot.docs
+          .map((doc) => ProductModel.fromDocument(doc))
+          .toList();
 
-  @override
-  void onInit() {
-    super.onInit();
-    fetchSavedProducts();
-  }
-
-  // Fetch saved products list from Firebase
-  void fetchSavedProducts() async {
-    var snapshot = await _firestore.collection('saved_products')
-        .where('userId', isEqualTo: userId)
-        .get();
-
-    savedProducts.value = snapshot.docs.map((doc) => 
-      Product.fromJson(doc.data())).toList();
-  }
-
-  // Save product only if it's not already in the fetched list
-  void saveProduct(Product product) async {
-    if (savedProducts.any((p) => p.id == product.id)) {
-      print("Product already saved.");
-      return;
+      products.assignAll(fetchedProducts);
+    } catch (e) {
+      print('Error fetching products: $e');
     }
 
-    savedProducts.add(product); // Update local list
+    isLoading.value = false;
+  }
 
-    // Push the entire updated list to Firebase
-    List<Map<String, dynamic>> updatedList = savedProducts.map((p) => p.toJson()).toList();
+  void selectCategory(CategoryModel category) async {
+    if (selectedCategory.value == category && isExpanded.value) {
+      isExpanded.value = false;
+    } else {
+      selectedCategory.value = category;
+      await fetchProducts(category.id);
+      isExpanded.value = true;
+    }
+  }
 
-    await _firestore.collection('saved_products').doc(userId).set({
-      'userId': userId,
-      'products': updatedList,
-    });
-
-    fetchSavedProducts(); // Refresh list after update
+  void closeList() {
+    isExpanded.value = false;
   }
 }
+
+
+
+
+
+class ProductScreen extends StatelessWidget {
+  final ProductController controller = Get.put(ProductController());
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('قائمة المنتجات')),
+      body: Column(
+        children: [
+          // جلب قائمة الفئات من Firestore
+          FutureBuilder<QuerySnapshot>(
+            future: firestore.collection('categories').get(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('حدث خطأ في جلب الفئات'));
+              } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return Center(child: Text('لا توجد فئات متاحة'));
+              }
+
+              List<CategoryModel> categories = snapshot.data!.docs
+                  .map((doc) => CategoryModel.fromDocument(doc))
+                  .toList();
+
+              return SizedBox(
+                height: 50,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: categories.map((category) {
+                    return GestureDetector(
+                      onTap: () => controller.selectCategory(category),
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(category.name, style: TextStyle(color: Colors.white)),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              );
+            },
+          ),
+
+          // قائمة المنتجات العمودية مع حالة التحميل
+          Obx(() {
+            return 
+            AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              height: controller.isExpanded.value ? 300 : 0,
+              child: controller.isExpanded.value
+                  ? Column(
+                      children: [
+                        Expanded(
+                          child: Obx(() {
+                            if (controller.isLoading.value) {
+                              return Center(child: CircularProgressIndicator());
+                            } else if (controller.products.isEmpty) {
+                              return Center(child: Text('لا توجد منتجات لهذه الفئة'));
+                            }
+                            return ListView.builder(
+                              itemCount: controller.products.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  title: Text(controller.products[index].name),
+                                  tileColor: Colors.grey.shade200,
+                                );
+                              },
+                            );
+                          }),
+                        ),
+
+                        // زر الإغلاق
+                        ElevatedButton(
+                          onPressed: controller.closeList,
+                          child: Text('إغلاق القائمة'),
+                        ),
+                      ],
+                    )
+                  : SizedBox.shrink(),
+            );
+          }),
+        ],
+      ),
+    );
+  }
 }
+   MasonryGridView.count(
+                                      itemCount: spotList.length,
+                                      crossAxisCount: 2,
+                                      mainAxisSpacing: 16,
+                                      crossAxisSpacing: 16,
+                                      padding: const EdgeInsets.all(0),
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return 
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                PageRouteBuilder(
+                                                  transitionDuration:
+                                                      const Duration(
+                                                          milliseconds: 1000),
+                                                  pageBuilder:
+                                                      (context, anim1, anim2) =>
+                                                          ProductDetails(
+                                                    product: spotList[index],
+                                                    vendorId: vendorId,
+                                                  ),
+                                                ));
+                                          },
+                                          child: ProductWidgetMedium(
+                                            prefferWidth: 174,
+                                            prefferHeight: 226,
+                                            product: spotList[index],
+                                            vendorId: vendorId,
+                                            editMode: editMode,
+                                          ),
+                                        );
+                                      },
+                                    )

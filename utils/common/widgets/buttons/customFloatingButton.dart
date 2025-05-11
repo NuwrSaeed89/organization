@@ -5,7 +5,7 @@ import 'package:winto/features/organization/e_commerce/utils/constants/color.dar
 
 class CustomFloatActionButton extends StatelessWidget {
   CustomFloatActionButton(
-      {super.key, required this.onTap, this.icon = CupertinoIcons.add_circled});
+      {super.key, required this.onTap, this.icon = CupertinoIcons.add});
   final VoidCallback onTap;
   final IconData icon;
   @override
@@ -24,8 +24,8 @@ class CustomFloatActionButton extends StatelessWidget {
         width: 50,
         height: 50,
         radius: BorderRadius.circular(300),
-        child: Icon(
-          CupertinoIcons.add,
+        child: Icon(icon
+  ,
           color: TColors.primary,
         ),
       )),

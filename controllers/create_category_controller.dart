@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:winto/core/constants/app_urls.dart';
+import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/core/utils/uploads.dart';
 import 'package:winto/features/organization/e_commerce/controllers/category_controller.dart';
 import 'package:winto/features/organization/e_commerce/utils/http/network.dart';
@@ -87,20 +88,7 @@ class CreateCategoryController extends GetxController {
   }
 
   Future<void> createCategory() async {
-    //  isLoading.value = true;
-
-    // final isConnected = await NetworkManager.instance.isConnected();
-    // if (!isConnected) {
-    //   LoadingFullscreen.stopLoading();
-    //   isLoading(false);
-    // }
-    // if (formKey.currentState!.validate()) {
-    //   isLoading.value = false;
-
-    //   return;
-    // }
-
-    message.value = "upload photos ..";
+    message.value =  isArabicLocale()?"جاري رفع الصورة" :"upload photo ..";
     await uploadImage();
     final newCat = CategoryModel(
         name: name.text.trim(),
@@ -108,33 +96,14 @@ class CreateCategoryController extends GetxController {
         parentId: selectedParent.value.id ?? '',
         createdAt: DateTime.now(),
         arabicName: arabicName.text.trim(),
-        isFeature: isFeatured.value);
+        isFeature: true);
 
-// third send category values
-
+  message.value = isArabicLocale()?"جاري ارسال البيانات": "send data..";
     try {
-      var userId = FirebaseAuth.instance.currentUser!.uid;
-      if (userId.isEmpty) {
-        throw 'Unable to find user information. try again later';
-        // LoadingFullscreen.stopLoading();
-      }
-      message.value = "send data..";
-      var docCategory = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('organization')
-          .doc('1')
-          .collection('category')
-          .add(newCat.toJson());
-      newCat.id = docCategory.id;
-      final json = newCat.toJson();
-      await docCategory.set(json);
-      //  isLoading.value = false;
-      //LoadingFullscreen.stopLoading();
-      message.value = "evry thing done";
+      categoryRepository.addCategory(newCat);
+      message.value = isArabicLocale() ?"تمت الإضافة" :"evry thing done";
       CategoryController.instance.addItemToLists(newCat);
       resetFields();
-      LoadingFullscreen.stopLoading();
       message.value = "";
     } catch (e) {
       throw 'some thing go wrong while add category';

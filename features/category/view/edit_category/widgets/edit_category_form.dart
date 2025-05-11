@@ -5,6 +5,7 @@ import 'package:simple_loading_dialog/simple_loading_dialog.dart';
 import 'package:sizer/sizer.dart';
 import 'package:winto/app/app_localization.dart';
 import 'package:winto/core/functions/lang_f.dart';
+import 'package:winto/features/organization/e_commerce/controllers/category_tab_controller.dart';
 import 'package:winto/features/organization/e_commerce/controllers/edit_category_controller.dart';
 import 'package:winto/features/organization/e_commerce/data/models/category_model.dart';
 import 'package:winto/features/organization/e_commerce/features/category/view/create_category/widget/image_uploader.dart';
@@ -20,8 +21,9 @@ import 'package:winto/features/organization/e_commerce/utils/loader/circle_loade
 import 'package:winto/features/organization/e_commerce/utils/validators/validator.dart';
 
 class EditCategoryForm extends StatelessWidget {
-  const EditCategoryForm({super.key, required this.category});
+   EditCategoryForm({super.key, required this.category});
   final CategoryModel category;
+     final CategoryTabControllerX tabController = Get.put(CategoryTabControllerX());
   @override
   Widget build(BuildContext context) {
     final editController = EditCategoryController.instance;
@@ -47,6 +49,7 @@ class EditCategoryForm extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     TabBar(
+                        onTap: tabController.changeTab,
                       //backgroundColor: Colors.red,
 
                       isScrollable: true,
@@ -97,6 +100,8 @@ class EditCategoryForm extends StatelessWidget {
                                 height: TSizes.sm,
                               ),
                               TextFormField(
+                               focusNode: tabController.arabicFocusNode,
+                                style: titilliumBold.copyWith(fontSize: 18),
                                 controller: editController.arabicName,
                                 validator: (value) =>
                                     TValidator.validateEmptyText(
@@ -114,6 +119,8 @@ class EditCategoryForm extends StatelessWidget {
                                 height: TSizes.sm,
                               ),
                               TextFormField(
+                                focusNode: tabController.englishFocusNode,
+                                 style: titilliumBold.copyWith(fontSize: 18),
                                 controller: editController.name,
                                 validator: (value) =>
                                     TValidator.validateEmptyText(

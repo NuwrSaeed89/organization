@@ -11,7 +11,7 @@ import 'package:winto/features/organization/e_commerce/features/shop/data/sectio
 import 'package:winto/features/organization/e_commerce/features/shop/view/all_tab.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/hello_client.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/hello_vendor.dart';
-import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/market_header.dart';
+import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/market_header_organization.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/loader/circle_loader.dart';
 
@@ -22,10 +22,33 @@ class MarketPlaceView extends StatelessWidget {
   final String vendorId;
   @override
   Widget build(BuildContext context) {
+ CategoryController.instance
+   .getCategoryOfUser(vendorId);
+return SafeArea(child: Scaffold(
+  body: _buildBody(),
+));
+
+
+
+   
+  }
+  
+  _buildBody() {
+    return Obx(() {
+
+if (CategoryController.instance.load.value)
+    {
+      return TLoaderWidget();
+    }else 
+  
     return NestedScrollViewForHome(
       vendorId: vendorId,
       editMode: editMode,
     );
+    });
+ 
+
+
   }
 }
 
@@ -41,94 +64,100 @@ class NestedScrollViewForHome extends StatelessWidget {
     // final profileController = ProfileController.instance;
     // var user = ProfileController.instance.fetchVendorData(vendorId);
     var categoryController=CategoryController.instance;
-   categoryController.getCategoryOfUser(vendorId);
+   //categoryController.getCategoryOfUser(vendorId);
     RxList<CategoryModel> categories  = categoryController.allItems;
 
     final TabControllerX tabControllerX = Get.put(TabControllerX(vendorId));
     final SectionsController secControllerX =
         Get.put(SectionsController(vendorId));
- Duration(seconds: 5);
+ 
     secControllerX.fetchSections();
-    return SafeArea(
-        child: Scaffold(
-            body:
-        
-            // categoryController.load.value ? TLoaderWidget() :
-             categoryController.allItems.isEmpty
-                ? editMode
-                    ?  HellowVendor(vendorId: vendorId, editMode: editMode)
-                    : HelloClient(vendorId: vendorId, editMode: editMode)
-                :
-                 DefaultTabController(
-                    length: 1, //getLength(secControllerX.sections, editMode),
-                    child: NestedScrollView(
-                      headerSliverBuilder:
-                          (BuildContext context, bool innerBoxIsScrolled) {
-                        return <Widget>[
-                          SliverToBoxAdapter(
-                            child: marketHeaderSection(
-                                vendorId,
-                                editMode,
-                                vendorId ==
-                                    FirebaseAuth.instance.currentUser!.uid),
-                          ),
-                          SliverPersistentHeader(
-                            delegate: _SliverAppBarDelegate(
-                              TabBar(
-                                  isScrollable: true,
-                              
-                                  // indicatorColor: TColors.red,
-                                  indicatorSize: TabBarIndicatorSize.tab,
-                                  indicatorPadding: const EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 0),
-                                  controller: tabControllerX.tabController,
-                                  indicator: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(40),
-                                  ),
-                                  labelColor: Colors.white,
-                                  unselectedLabelColor: TColors.darkerGray,
-                                  tabs: [
-                                    Tab(
-                                        text: isLocaleEn(context)
-                                            ? 'All'
-                                            : 'الكل'),
-                                    // ...secControllerX.sections
-                                    //     .map((section) => Tab(text: section.name)),
-                                    // if (editMode)
-                                    //   Tab(
-                                    //     icon: IconButton(
-                                    //       onPressed: () => addSection(
-                                    //           context, secControllerX, vendorId),
-                                    //       icon: Icon(CupertinoIcons.add_circled),
-                                    //     ),
-                                    //   )
-                                  ]
-                                  //   onTap: (index) {
-                                  //     // إذا كانت الأقسام فارغة أو الضغط على تاب "الإضافة"
-                              
-                                  //     // عرض نموذج الإضافة
-                              
-                                  //   },
-                                  ),
-                            ),
-                          ),
-                        ];
-                      },
-                      body: TabBarView(
-                        
-                        controller: tabControllerX.tabController,
-                        children: [
-                          AllTab(
-                            vendorId: vendorId,
-                            editMode: editMode,
-                          ),
-                          // ...secControllerX.sections
-                          //     .map((section) => _buildTabContent(section.name)),
-                        ],
+   
+      // 
+       if  (categoryController.allItems.isEmpty){
+if(editMode) {
+  return  HellowVendor(vendorId: vendorId, editMode: editMode);
+} else {
+  return HelloClient(vendorId: vendorId, editMode: editMode);
+}
+
+
+       }
+           else {
+         return    DefaultTabController(
+                length: 1, //getLength(secControllerX.sections, editMode),
+                child: NestedScrollView(
+                  headerSliverBuilder:
+                      (BuildContext context, bool innerBoxIsScrolled) {
+                    return <Widget>[
+                      SliverToBoxAdapter(
+                        child: marketHeaderSection(
+                            vendorId,
+                            editMode,
+                            vendorId ==
+                                FirebaseAuth.instance.currentUser!.uid),
                       ),
-                    ),
-                  )) );
+                      // SliverPersistentHeader(
+                      //   delegate: _SliverAppBarDelegate(
+                      //     TabBar(
+                      //         isScrollable: true,
+                          
+                      //         // indicatorColor: TColors.red,
+                      //         indicatorSize: TabBarIndicatorSize.tab,
+                      //         indicatorPadding: const EdgeInsets.symmetric(
+                      //             vertical: 5, horizontal: 0),
+                      //         controller: tabControllerX.tabController,
+                      //         indicator: BoxDecoration(
+                      //           color: Colors.black,
+                      //           borderRadius: BorderRadius.circular(40),
+                      //         ),
+                      //         labelColor: Colors.white,
+                      //         unselectedLabelColor: TColors.darkerGray,
+                      //         tabs: [
+                      //           // Tab(
+                      //           //     text: isLocaleEn(context)
+                      //           //         ? 'All'
+                      //           //         : 'الكل'),
+                      //           // ...secControllerX.sections
+                      //           //     .map((section) => Tab(text: section.name)),
+                      //           // if (editMode)
+                      //           //   Tab(
+                      //           //     icon: IconButton(
+                      //           //       onPressed: () => addSection(
+                      //           //           context, secControllerX, vendorId),
+                      //           //       icon: Icon(CupertinoIcons.add_circled),
+                      //           //     ),
+                      //           //   )
+                      //         ]
+                      //         //   onTap: (index) {
+                      //         //     // إذا كانت الأقسام فارغة أو الضغط على تاب "الإضافة"
+                          
+                      //         //     // عرض نموذج الإضافة
+                          
+                      //         //   },
+                      //         ),
+                      //   ),
+                      // ),
+                    ];
+                  },
+                  body: TabBarView(
+                    
+                    controller: tabControllerX.tabController,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top:28.0),
+                        child: AllTab(
+                          vendorId: vendorId,
+                          editMode: editMode,
+                        ),
+                      ),
+                      // ...secControllerX.sections
+                      //     .map((section) => _buildTabContent(section.name)),
+                    ],
+                  ),
+                ),
+              );
+       }
               
              
   }

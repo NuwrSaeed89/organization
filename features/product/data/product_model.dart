@@ -85,18 +85,18 @@ class ProductModel {
       DocumentSnapshot<Map<String, dynamic>> document) {
     if (document.data() == null) return ProductModel.empty();
     final data = document.data()!;
-    TLoggerHelper.info(data['Title']);
+   
     return ProductModel(
       id: data['Id'] ?? '',
-      title: data['Title'],
+      title: data['Title']??'',
       // thumbnail: data['Thumbnail'] ?? '',
-      arabicTitle: data['ArabicTitle'],
-      description: data['Description'],
-      arabicDescription: data['ArabicDescription'],
+      arabicTitle: data['ArabicTitle']??'',
+      description: data['Description']??'',
+      arabicDescription: data['ArabicDescription']??'',
       vendorId: data['VendorId'] ?? '',
       productType: data['ProductType'] ?? '',
       // sku: data['SKU'] ?? '',
-      category: CategoryModel.fromJson(data['Category']),
+      category: CategoryModel.fromJson(data['Category']??''),
       // vendor: data['Vendor'] != null
       //     ? ProfileModel.fromJson(data['Vendor'])
       //     : ProfileModel.empty(),

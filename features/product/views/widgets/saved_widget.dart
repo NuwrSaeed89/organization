@@ -37,7 +37,15 @@ class SavedButton extends StatelessWidget {
         child: Obx(
           () =>
          // Transform.rotate(angle: 45,
-          Icon( !like.value ?Icons.data_saver_on_outlined:Icons.download_done_outlined, size:23),
+          TRoundedContainer(
+       
+            radius: BorderRadius.circular(100),
+            showBorder: true,
+enableShadow: true,
+            child: Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: Icon( !like.value ?Icons.bookmark_add_outlined :Icons.download_done_outlined, size:23),
+            )),
           
           
           

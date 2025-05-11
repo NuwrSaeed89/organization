@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ import 'package:winto/app/app_localization.dart';
 import 'package:winto/core/constants/app_urls.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/core/utils/uploads.dart';
+import 'package:winto/features/organization/e_commerce/controllers/category_controller.dart';
 import 'package:winto/features/organization/e_commerce/data/models/category_model.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_repository.dart';
@@ -497,6 +499,52 @@ class ProductController extends GetxController {
 
     allItems.refresh();
   }
+//////////////////////
+
+   var selectedCategory = Rx<CategoryModel?>(null);
+  var isExpanded = false.obs;
+
+ 
+  
+  void selectCategory(CategoryModel category, String vendorId) async {
+    if (selectedCategory.value == category && isExpanded.value) {
+      isExpanded.value = false;
+    } else {
+      selectedCategory.value = category;
+      await fetchProducts(category,vendorId);
+      isExpanded.value = true;
+    }
+  }
+
+ 
+
+  void closeList() {
+    isExpanded.value = false;
+  }
+ final RxList<ProductModel>products=  <ProductModel>[].obs;
+RxBool loadProduct =false.obs;
+   Future<void> fetchProducts( CategoryModel category, String vendorId) async {
+    loadProduct.value = true;
+
+    try {
+     var list = await   //productRepository.getAllProducts(vendorId);
+      CategoryController.instance
+                                            .getCategoryProduct(
+                                                categoryId: category.id!,
+                                                userId: vendorId
+                                              );
+
+  
+
+      products.assignAll(list);
+    } catch (e) {
+      print('Error fetching products: $e');
+    }
+
+    loadProduct.value = false;
+  }
+
+ 
 
   // Widget updateProductImage(BuildContext context) {}
 }

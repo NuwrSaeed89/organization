@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
@@ -11,18 +12,16 @@ import 'package:winto/features/organization/e_commerce/features/category/view/cr
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/add/add_product.dart';
+import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_widget_medium.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/data/sector_model.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/grid_builder.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/grid_builder_custom_card.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/sector_builder.dart';
-import 'package:winto/features/organization/e_commerce/utils/common/widgets/buttons/customFloatingButton.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
-import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_widgets.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/shimmers/shimmer.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/enums.dart';
-import 'package:winto/features/organization/e_commerce/utils/constants/sizes.dart';
 
 class AllTab extends StatelessWidget {
   const AllTab({super.key, required this.editMode, required this.vendorId});
@@ -30,7 +29,7 @@ class AllTab extends StatelessWidget {
   final String vendorId;
   @override
   Widget build(BuildContext context) {
-    CategoryController.instance.getCategoryOfUser(vendorId);
+   // CategoryController.instance.getCategoryOfUser(vendorId);
     // var categories = CategoryController.instance.allItems;
     List<ProductModel> featureProduct = [];
     List<ProductModel> all = [];
@@ -38,6 +37,7 @@ class AllTab extends StatelessWidget {
     featureProduct.assignAll(ProductController.instance.allItems
         .where((p0) => p0.isFeature == true));
     var controller = ProductController.instance;
+    controller.closeList;
 
     return SingleChildScrollView(
       child: Column(
@@ -56,190 +56,7 @@ class AllTab extends StatelessWidget {
               height: 25,
             ),
 
-            Obx(
-              () {
-                if (CategoryController.instance.load.value) {
-                  return Column(
-                    children: [
-                      Container(
-                        color: Colors.transparent,
-                        height: 100,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 10,
-                          itemBuilder: (context, index) {
-                            return Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(4),
-                                  child: TRoundedContainer(
-                                    showBorder: true,
-                                    enableShadow: true,
-                                    //   borderColor: TColors.darkerGray,
-                                    // enableShadow: true,
-                                    // decoration: BoxDecoration(
-                                    //     border: Border.all(
-
-                                    //         color: TColors.darkerGray,
-                                    //         width: 1,
-                                    //         strokeAlign: BorderSide
-                                    //             .strokeAlignOutside),
-                                    //     color: Colors.grey,
-                                    radius: BorderRadius.circular(100),
-                                    child: TShimmerEffect(
-                                      width: 70,
-                                      height: 70,
-                                      raduis: BorderRadius.circular(300),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                       Container(
-                        color: Colors.transparent,
-                        height: 20,
-                      )
-                    ],
-                  );
-                } else {
-                  if (CategoryController.instance.allItems.isEmpty) {
-                    return editMode
-                        ? Column(
-                            children: [
-                              Container(
-                                color: Colors.transparent,
-                                height: 86,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: 7,
-                                  itemBuilder: (context, index) {
-                                    if (index == 0) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: addCategoryItem(index, context),
-                                      );
-                                    } else {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: TRoundedContainer(
-                                          backgroundColor: Colors.white,
-                                          showBorder: true,
-                                          enableShadow: true,
-                                          radius: BorderRadius.circular(300),
-                                          width: 70,
-                                          height: 70,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              )
-                            ],
-                          )
-                        : const SizedBox.shrink();
-                  } else {
-                    return editMode
-                        ? Stack(
-                            children: [
-                              Center(
-                                child: TRoundedContainer(
-                                  backgroundColor: Colors.transparent,
-                                  height: 120,
-                                  showBorder: false,
-                                  width: 85 *
-                                      (CategoryController
-                                              .instance.allItems.length +
-                                          1),
-                                  //borderColor: Colors.red,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: CategoryController
-                                            .instance.allItems.length +
-                                        1,
-                                    itemBuilder: (context, index) {
-                                      // if (index == categories.length + 2) {
-                                      //   // العنصر الثابت في النهاية
-                                      //   return Padding(
-                                      //       padding: const EdgeInsets.only(
-                                      //           bottom: 41.0),
-                                      //       child:
-                                      //           addCategoryItem(index, context));
-                                      // }
-
-                                      if (index ==
-                                          CategoryController
-                                              .instance.allItems.length) {
-                                        // العنصر الثابت في النهاية
-                                        return Center(
-                                          child: Row(
-                                            children: [
-                                              Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 10,
-                                                          right: 10,
-                                                          bottom: 45.0),
-                                                  child: addCategoryItem(
-                                                      index, context)),
-                                              const SizedBox(
-                                                width: 10,
-                                              )
-                                            ],
-                                          ),
-                                        );
-                                      }
-
-                                      return Row(
-                                        children: [
-                                          if (index == 0)
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                          TCategoryGridItem(
-                                              category: CategoryController
-                                                  .instance.allItems[index],
-                                              editMode: editMode,
-                                              vendorId: vendorId),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        : Center(
-                            child: Container(
-                              color: Colors.transparent,
-                              height: 120,
-                              width: 85 *
-                                  (CategoryController.instance.allItems.length +
-                                      0),
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount:
-                                    CategoryController.instance.allItems.length,
-                                itemBuilder: (context, index) {
-                                  return TCategoryGridItem(
-                                      category: CategoryController
-                                          .instance.allItems[index],
-                                      editMode: editMode,
-                                      vendorId: vendorId);
-                                },
-                              ),
-                            ),
-                          );
-                  }
-                }
-              },
-            ),
+            viewCategories(),
           
             SectorBuilder(
               cardWidth: 95,
@@ -414,97 +231,118 @@ class AllTab extends StatelessWidget {
            
             Visibility(
               visible:  ProductController.instance.allItems.length>3,
-              child: Obx(
-                () {
-                  if (CategoryController.instance.load.value) {
-                    return Column(
-                      children: [
-                        Container(
-                          color: Colors.transparent,
-                          height: 100,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: 10,
-                            itemBuilder: (context, index) {
-                              return Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(4),
-                                    child: TRoundedContainer(
-                                      showBorder: true,
-                                      enableShadow: true,
-                                      //   borderColor: TColors.darkerGray,
-                                      // enableShadow: true,
-                                      // decoration: BoxDecoration(
-                                      //     border: Border.all(
-              
-                                      //         color: TColors.darkerGray,
-                                      //         width: 1,
-                                      //         strokeAlign: BorderSide
-                                      //             .strokeAlignOutside),
-                                      //     color: Colors.grey,
-                                      radius: BorderRadius.circular(100),
-                                      child: TShimmerEffect(
-                                        width: 70,
-                                        height: 70,
-                                        raduis: BorderRadius.circular(300),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-                         Container(
-                          color: Colors.transparent,
-                          height: 20,
-                        )
-                      ],
-                    );
-                  } else {
-                    if (CategoryController.instance.allItems.isEmpty) {
-                      return editMode
-                          ? Column(
-                              children: [
-                                Container(
-                                  color: Colors.transparent,
-                                  height: 86,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: 7,
-                                    itemBuilder: (context, index) {
-                                      if (index == 0) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: addCategoryItem(index, context),
-                                        );
-                                      } else {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: TRoundedContainer(
-                                            backgroundColor: Colors.white,
-                                            showBorder: true,
-                                            enableShadow: true,
-                                            radius: BorderRadius.circular(300),
-                                            width: 70,
-                                            height: 70,
-                                          ),
-                                        );
-                                      }
-                                    },
+              child: viewCategories()
+            ),
+        
+
+            // CategoryGrid(
+            //   vendorId: vendorId,
+            //   editMode: editMode,
+            // ),
+            // const SizedBox(
+            //   height: 50,
+            // ),
+          
+          ]),
+    );
+  }
+
+  Obx viewCategories() {
+    var controller=ProductController.instance;
+    return Obx(
+            () {
+              if (CategoryController.instance.load.value) {
+                return Column(
+                  children: [
+                    Container(
+                      color: Colors.transparent,
+                      height: 100,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 10,
+                        itemBuilder: (context, index) {
+                          return Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: TRoundedContainer(
+                                  showBorder: true,
+                                  enableShadow: true,
+                                  //   borderColor: TColors.darkerGray,
+                                  // enableShadow: true,
+                                  // decoration: BoxDecoration(
+                                  //     border: Border.all(
+
+                                  //         color: TColors.darkerGray,
+                                  //         width: 1,
+                                  //         strokeAlign: BorderSide
+                                  //             .strokeAlignOutside),
+                                  //     color: Colors.grey,
+                                  radius: BorderRadius.circular(100),
+                                  child: TShimmerEffect(
+                                    width: 70,
+                                    height: 70,
+                                    raduis: BorderRadius.circular(300),
                                   ),
                                 ),
-                                const SizedBox(
-                                  height: 20,
-                                )
-                              ],
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                     Container(
+                      color: Colors.transparent,
+                      height: 20,
+                    )
+                  ],
+                );
+              } else {
+                if (CategoryController.instance.allItems.isEmpty) {
+                  return editMode
+                      ? Column(
+                          children: [
+                            Container(
+                              color: Colors.transparent,
+                              height: 86,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 7,
+                                itemBuilder: (context, index) {
+                                  if (index == 0) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: addCategoryItem(index, context),
+                                    );
+                                  } else {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TRoundedContainer(
+                                        backgroundColor: Colors.white,
+                                        showBorder: true,
+                                        enableShadow: true,
+                                        radius: BorderRadius.circular(300),
+                                        width: 70,
+                                        height: 70,
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
                             )
-                          : const SizedBox.shrink();
-                    } else {
-                      return editMode
-                          ? Stack(
+                          ],
+                        )
+                      : const SizedBox.shrink();
+                } else {
+                  return editMode
+                      ?
+                       Column(
+                        children: [
+                          Stack(
                               children: [
                                 Center(
                                   child: TRoundedContainer(
@@ -530,7 +368,7 @@ class AllTab extends StatelessWidget {
                                         //       child:
                                         //           addCategoryItem(index, context));
                                         // }
-              
+                          
                                         if (index ==
                                             CategoryController
                                                 .instance.allItems.length) {
@@ -553,18 +391,22 @@ class AllTab extends StatelessWidget {
                                             ),
                                           );
                                         }
-              
+                          
                                         return Row(
                                           children: [
                                             if (index == 0)
                                               const SizedBox(
                                                 width: 5,
                                               ),
-                                            TCategoryGridItem(
-                                                category: CategoryController
-                                                    .instance.allItems[index],
-                                                editMode: editMode,
-                                                vendorId: vendorId),
+                                            GestureDetector(
+                                               onTap: () => controller.selectCategory(CategoryController
+                                                      .instance.allItems[index],vendorId),
+                                              child: TCategoryGridItem(
+                                                  category: CategoryController
+                                                      .instance.allItems[index],
+                                                  editMode: editMode,
+                                                  vendorId: vendorId),
+                                            ),
                                           ],
                                         );
                                       },
@@ -572,8 +414,172 @@ class AllTab extends StatelessWidget {
                                   ),
                                 ),
                               ],
-                            )
-                          : Center(
+                            ),
+                      
+                    
+        
+       Obx(() {
+            return 
+            AnimatedContainer(
+              duration: Duration(milliseconds: 250),
+              curve: Curves.easeInOut,
+              height: controller.isExpanded.value ? 390 : 0,
+              child: controller.isExpanded.value
+                  ? Column(
+                      children: [
+                        Expanded(
+                          child: Obx(() {
+                            if (controller.loadProduct.value) {
+                              return Center(child: CircularProgressIndicator());
+                            } else if (controller.products.isEmpty) {
+                              return 
+                               Center(
+                                child: Stack(
+                                    alignment: Alignment.topCenter,
+                                    children: [
+                                      TRoundedContainer(
+                                        borderColor: TColors.grey,
+                                        showBorder: true,
+                                        enableShadow: true,
+                                        height: 326,
+                                        width: 174,
+                                        radius: BorderRadius.circular(15),
+                                      ),
+                                      InkWell(
+                                        onTap: () {},
+                                        child: Stack(
+                                          //   alignment: Alignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 20.0),
+                                              child: TRoundedContainer(
+                                                showBorder: true,
+                                                // enableShadow: true,
+                                                  
+                                                // backgroundColor: TColors.grey,
+                                                width: 174,
+                                                borderColor: TColors.grey
+                                                    .withValues(alpha: .5),
+                                                radius: const BorderRadius.only(
+                                                    topLeft: Radius.circular(15),
+                                                    topRight: Radius.circular(15)),
+                                                height: 226,
+                                                child: Center(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 20.0),
+                                                    child: TRoundedContainer(
+                                                      enableShadow: true,
+                                                      width: 50,
+                                                      height: 50,
+                                                      radius:
+                                                          BorderRadius.circular(
+                                                              300),
+                                                      child: const Icon(
+                                                        CupertinoIcons.add,
+                                                        color: TColors.primary,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                              );
+                            }
+                            var spotList=controller.products;
+                            return   Padding(
+                                     padding: const EdgeInsets.only(left:0, right: 0),
+                                    child:ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: spotList.length,
+                                      itemBuilder: (context, index) =>
+
+ InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                PageRouteBuilder(
+                                                  transitionDuration:
+                                                      const Duration(
+                                                          milliseconds: 1000),
+                                                  pageBuilder:
+                                                      (context, anim1, anim2) =>
+                                                          ProductDetails(
+                                                    product: spotList[index],
+                                                    vendorId: vendorId,
+                                                  ),
+                                                ));
+                                          },
+                                          child: Padding(
+                                                                          padding: isLocaleEn(context)
+                                                                              ? EdgeInsets.only(
+                                                                                  left: 14.0,
+                                                                                  bottom: 22,
+                                                                                  right:
+                                          index == spotList.length - 1 ? 14 : 0)
+                                                                              : EdgeInsets.only(
+                                                                                  right: 14.0,
+                                                                                  bottom: 22,
+                                                                                  left: index == spotList.length - 1
+                                          ? 14
+                                          : 0),
+                                            child: SizedBox(
+                                            width: 174,
+                                              child: ProductWidgetMedium(
+                                                prefferWidth: 174,
+                                                prefferHeight: 226,
+                                                product: spotList[index],
+                                                vendorId: vendorId,
+                                                editMode: editMode,
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      
+                                    )
+                                    
+                                  ,
+
+                                  );
+                         
+                          }),
+                        ),
+
+                        // زر الإغلاق
+                         GestureDetector(
+        onTap: controller.closeList,
+        child: Center(
+          child: Container(
+            width: 50,
+            padding: const EdgeInsets.fromLTRB(5, 7, 5, 7),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.black,
+            ),
+            child: Center(
+              child: Icon(Icons.arrow_circle_up_sharp,color: Colors.white,)
+            ),
+          ),
+        )),
+                       
+                      ],
+                    )
+                  : SizedBox.shrink(),
+            );
+          }),
+                      
+                        ],
+                      )
+                      : Column(
+                        children: [
+                          Center(
                               child: Container(
                                 color: Colors.transparent,
                                 height: 120,
@@ -585,263 +591,131 @@ class AllTab extends StatelessWidget {
                                   itemCount:
                                       CategoryController.instance.allItems.length,
                                   itemBuilder: (context, index) {
-                                    return TCategoryGridItem(
-                                        category: CategoryController
-                                            .instance.allItems[index],
-                                        editMode: editMode,
-                                        vendorId: vendorId);
+                                    return GestureDetector(
+                                         onTap: () => controller.selectCategory(CategoryController
+                                              .instance.allItems[index],vendorId),
+                                      child: TCategoryGridItem(
+                                          category: CategoryController
+                                              .instance.allItems[index],
+                                          editMode: editMode,
+                                          vendorId: vendorId),
+                                    );
                                   },
                                 ),
                               ),
-                            );
-                    }
-                  }
-                },
-              ),
-            ),
-        
-
-            Visibility(
-visible: false,
-              child: Obx(
-                () {
-                  if (CategoryController.instance.load.value) {
-                    return Column(
-                      children: [
-                        Container(
-                          color: Colors.transparent,
-                          height: 180,
-                          child: GridView.builder(
-                            scrollDirection: Axis.horizontal,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2, // عرض عنصرين لكل سطر
-                              childAspectRatio: 1, // نسبة العرض إلى الارتفاع
-                              crossAxisSpacing: 10, // تباعد بين العناصر عموديًا
-                              mainAxisSpacing: 10, // تباعد بين العناصر أفقيًا
                             ),
-                            itemCount: 10,
-                            itemBuilder: (context, index) {
-                              return Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(4),
-                                    child: TRoundedContainer(
-                                      showBorder: true,
-                                      enableShadow: true,
-                                      //   borderColor: TColors.darkerGray,
-                                      // enableShadow: true,
-                                      // decoration: BoxDecoration(
-                                      //     border: Border.all(
-              
-                                      //         color: TColors.darkerGray,
-                                      //         width: 1,
-                                      //         strokeAlign: BorderSide
-                                      //             .strokeAlignOutside),
-                                      //     color: Colors.grey,
-                                      radius: BorderRadius.circular(100),
-                                      child: TShimmerEffect(
-                                        width: 70,
-                                        height: 70,
-                                        raduis: BorderRadius.circular(300),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        )
-                      ],
-                    );
-                  } else {
-                    if (CategoryController.instance.allItems.isEmpty) {
-                      return editMode
-                          ? Column(
-                              children: [
-                                Container(
-                                  color: Colors.transparent,
-                                  height: 200,
-                                  child: GridView.builder(
+                            
+       Obx(() {
+            return 
+            AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              height: controller.isExpanded.value ? 390 : 0,
+              child: controller.isExpanded.value
+                  ? Column(
+                      children: [
+                        Expanded(
+                          child: Obx(() {
+                          
+                            if (controller.loadProduct.value) {
+                              return Center(child: CircularProgressIndicator());
+                            } else if (controller.products.isEmpty) {
+                              
+                              return Center(child: Text('لا توجد منتجات لهذه الفئة'));
+                            }
+                              if (kDebugMode) {
+                                print("-------------------${ controller.products.length}");
+                              print( controller.products.length);
+                            }
+                            var spotList=controller.products;
+                            return
+                            
+                            Padding(
+                                   padding: const EdgeInsets.only(left:0, right: 0),
+                                  child:ListView.builder(
                                     scrollDirection: Axis.horizontal,
-                                    gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2, // عرض عنصرين لكل سطر
-                                      childAspectRatio:
-                                          1, // نسبة العرض إلى الارتفاع
-                                      crossAxisSpacing:
-                                          2, // تباعد بين العناصر عموديًا
-                                      mainAxisSpacing:
-                                          10, // تباعد بين العناصر أفقيًا
-                                    ),
-                                    itemCount: 7,
-                                    itemBuilder: (context, index) {
-                                      if (index == 0) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: addCategoryItem(index, context),
-                                        );
-                                      } else {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: TRoundedContainer(
-                                            backgroundColor: Colors.white,
-                                            showBorder: true,
-                                            enableShadow: true,
-                                            radius: BorderRadius.circular(300),
-                                            width: 70,
-                                            height: 70,
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                )
-                              ],
-                            )
-                          : const SizedBox.shrink();
-                    } else {
-                      return editMode
-                          ? Stack(
-                              children: [
-                                Center(
-                                  child: TRoundedContainer(
-                                    backgroundColor: Colors.transparent,
-                                    height: 270,
-                                    width: 100 *
-                                        (CategoryController
-                                                .instance.allItems.length +
-                                            1 % 2 +
-                                            CategoryController
-                                                .instance.allItems.length +
-                                            1 / 2),
-                                    showBorder: false,
-              
-                                    //borderColor: Colors.red,
-                                    child: GridView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2, // عرض عنصرين لكل سطر
-                                        childAspectRatio:
-                                            1, // نسبة العرض إلى الارتفاع
-                                        crossAxisSpacing:
-                                            2, // تباعد بين العناصر عموديًا
-                                        mainAxisSpacing:
-                                            10, // تباعد بين العناصر أفقيًا
-                                      ),
-                                      itemCount: CategoryController
-                                              .instance.allItems.length +
-                                          1,
-                                      itemBuilder: (context, index) {
-                                        // if (index == categories.length + 2) {
-                                        //   // العنصر الثابت في النهاية
-                                        //   return Padding(
-                                        //       padding: const EdgeInsets.only(
-                                        //           bottom: 41.0),
-                                        //       child:
-                                        //           addCategoryItem(index, context));
-                                        // }
-              
-                                        if (index ==
-                                            CategoryController
-                                                .instance.allItems.length) {
-                                          // العنصر الثابت في النهاية
-                                          return Center(
-                                            child: Row(
-                                              children: [
-                                                Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 10,
-                                                            right: 10,
-                                                            bottom: 45.0),
-                                                    child: addCategoryItem(
-                                                        index, context)),
-                                                const SizedBox(
-                                                  width: 10,
-                                                )
-                                              ],
+                                    itemCount: spotList.length,
+                                    itemBuilder: (context, index) =>
+            
+             InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              PageRouteBuilder(
+                                                transitionDuration:
+                                                    const Duration(
+                                                        milliseconds: 1000),
+                                                pageBuilder:
+                                                    (context, anim1, anim2) =>
+                                                        ProductDetails(
+                                                  product: spotList[index],
+                                                  vendorId: vendorId,
+                                                ),
+                                              ));
+                                        },
+                                        child: Padding(
+                                                                        padding: isLocaleEn(context)
+                                                                            ? EdgeInsets.only(
+                                                                                left: 14.0,
+                                                                                bottom: 22,
+                                                                                right:
+                                          index == spotList.length - 1 ? 14 : 0)
+                                                                            : EdgeInsets.only(
+                                                                                right: 14.0,
+                                                                                bottom: 22,
+                                                                                left: index == spotList.length - 1
+                                          ? 14
+                                          : 0),
+                                          child: SizedBox(
+                                            width: 174,
+                                            child: ProductWidgetMedium(
+                                              prefferWidth: 174,
+                                              prefferHeight: 226,
+                                              product: spotList[index],
+                                              vendorId: vendorId,
+                                              editMode: editMode,
                                             ),
-                                          );
-                                        }
-              
-                                        return Row(
-                                          children: [
-                                            if (index == 0)
-                                              const SizedBox(
-                                                width: 5,
-                                              ),
-                                            TCategoryGridItem(
-                                                category: CategoryController
-                                                    .instance.allItems[index],
-                                                editMode: editMode,
-                                                vendorId: vendorId),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Center(
-                              child: Container(
-                                color: Colors.transparent,
-                                height: 240,
-                                width: 100 *
-                                    (CategoryController.instance.allItems.length %
-                                            2 +
-                                        CategoryController
-                                                .instance.allItems.length /
-                                            2),
-                                child: GridView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2, // عرض عنصرين لكل سطر
-                                    childAspectRatio:
-                                        1.1, // نسبة العرض إلى الارتفاع
-                                    crossAxisSpacing:
-                                        2, // تباعد بين العناصر عموديًا
-                                    mainAxisSpacing:
-                                        10, // تباعد بين العناصر أفقيًا
-                                  ),
-                                  itemCount:
-                                      CategoryController.instance.allItems.length,
-                                  itemBuilder: (context, index) {
-                                    return TCategoryGridItem(
-                                        category: CategoryController
-                                            .instance.allItems[index],
-                                        editMode: editMode,
-                                        vendorId: vendorId);
-                                  },
-                                ),
-                              ),
-                            );
-                    }
-                  }
-                },
-              ),
+                                          ),
+                                        ),
+                                      )
+                                    
+                                  )
+                                  
+                                ,
+            
+                                );
+                          }),
+                        ),
+            
+                        // زر الإغلاق
+                       // زر الإغلاق
+                         GestureDetector(
+        onTap: controller.closeList,
+        child: Center(
+          child: Container(
+            width: 50,
+            padding: const EdgeInsets.fromLTRB(5, 7, 5, 7),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.black,
             ),
-
-            // CategoryGrid(
-            //   vendorId: vendorId,
-            //   editMode: editMode,
-            // ),
-            // const SizedBox(
-            //   height: 50,
-            // ),
-          
-          ]),
-    );
+            child: Center(
+              child: Icon(Icons.arrow_circle_up_sharp,color: Colors.white,)
+            ),
+          ),
+        )),
+                      ],
+                    )
+                  : SizedBox.shrink(),
+            );
+          }),
+              
+                        ],
+                      );
+                }
+              }
+            },
+          );
   }
 
   Stack addCategoryItem(int index, BuildContext context) {

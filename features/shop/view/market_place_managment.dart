@@ -7,7 +7,7 @@ import 'package:winto/features/organization/e_commerce/features/shop/controller/
 import 'package:winto/features/organization/e_commerce/features/shop/controller/tab_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/data/section_model.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/all_tab.dart';
-import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/market_header.dart';
+import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/market_header_organization.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 
 class MarketPlaceManagment extends StatelessWidget {
@@ -35,7 +35,7 @@ class NestedScrollViewForHome extends StatelessWidget {
   Widget build(BuildContext context) {
     // final profileController = ProfileController.instance;
     // var user = ProfileController.instance.fetchVendorData(vendorId);
-    CategoryController.instance.getCategoryOfUser(vendorId);
+   // CategoryController.instance.getCategoryOfUser(vendorId);
     var categories = CategoryController.instance.allItems;
     // List<ProductModel> featureProduct = [];
     // List<ProductModel> saleProduct = ProductController.instance.saleProduct;

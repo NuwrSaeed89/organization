@@ -76,7 +76,8 @@ class CategoryMobileScreen extends StatelessWidget {
             //  fetchData()
             body: RefreshIndicator(
               onRefresh: () async {
-                controller.fetchData();
+                controller.storeId.value=vendorId;
+                controller.fetchCategoryData();
               },
               child: SingleChildScrollView(
                 child: Padding(
@@ -141,7 +142,7 @@ class CategoryList extends StatelessWidget {
           : Obx(
               () => RefreshIndicator(
                 onRefresh: () async {
-                  controller.fetchData();
+                  controller.fetchCategoryData();
                 },
                 child: TRoundedContainer(
                   child: ListView.separated(

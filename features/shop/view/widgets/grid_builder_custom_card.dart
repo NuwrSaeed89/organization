@@ -92,7 +92,7 @@ class GridBuilderCustomCard extends StatelessWidget {
                               TCustomWidgets.buildDivider(),
                         
                         Padding(
-                             padding: const EdgeInsets.all(10),
+                              padding: const EdgeInsets.only(left:14, right: 14),
                           child: MasonryGridView.count(
                             itemCount: 8,
                              crossAxisCount: 2,
@@ -234,7 +234,7 @@ class GridBuilderCustomCard extends StatelessWidget {
                           ? Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.all(10),
+                                 padding: const EdgeInsets.only(left:14, right: 14),
                                   child: MasonryGridView.count(
                                     itemCount: spotList.sublist(0, 12).length,
                                     crossAxisCount: 2,
@@ -322,7 +322,7 @@ class GridBuilderCustomCard extends StatelessWidget {
                           : Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.all(10),
+                                   padding: const EdgeInsets.only(left:14, right: 14),
                                   child: MasonryGridView.count(
                                     itemCount: spotList.length,
                                     crossAxisCount: 2,

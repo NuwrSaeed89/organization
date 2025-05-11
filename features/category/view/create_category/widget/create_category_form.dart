@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:simple_loading_dialog/simple_loading_dialog.dart';
 import 'package:winto/app/app_localization.dart';
 import 'package:winto/core/functions/lang_f.dart';
+import 'package:winto/features/organization/e_commerce/controllers/category_tab_controller.dart';
 import 'package:winto/features/organization/e_commerce/controllers/create_category_controller.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/buttons/custom_button.dart';
@@ -13,16 +14,17 @@ import 'package:winto/features/organization/e_commerce/utils/constants/custom_st
 import 'package:winto/features/organization/e_commerce/utils/constants/enums.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/image_strings.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/sizes.dart';
+import 'package:winto/features/organization/e_commerce/utils/loader/circle_loader.dart';
 
 import 'image_uploader.dart';
 
 class CreateCategoryForm extends StatelessWidget {
-  const CreateCategoryForm({super.key});
-
+   CreateCategoryForm({super.key});
+  final CategoryTabControllerX tabController = Get.put(CategoryTabControllerX());
   @override
   Widget build(BuildContext context) {
     final createController = Get.put(CreateCategoryController());
-
+tabController.selectedIndex=0.obs;
     return SingleChildScrollView(
       child: Form(
         key: createController.formKey,
@@ -40,6 +42,7 @@ class CreateCategoryForm extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     TabBar(
+                        onTap: tabController.changeTab,
                       // indicatorPadding:
                       //     EdgeInsets.symmetric(vertical: 5, horizontal: 22),
                       // indicator: BoxDecoration(
@@ -83,6 +86,9 @@ class CreateCategoryForm extends StatelessWidget {
                                 height: TSizes.sm,
                               ),
                               TextFormField(
+                                 focusNode: tabController.arabicFocusNode,
+                             //     textAlign: TextAlign.right,
+                              style: titilliumBold.copyWith(fontSize: 18),
                                 controller: createController.arabicName,
                                 validator: (value) {
                                   if (value == null || value == '') {
@@ -91,6 +97,7 @@ class CreateCategoryForm extends StatelessWidget {
                                   return null;
                                 },
                                 decoration: inputTextField.copyWith(
+                                 // contentPadding: EdgeInsets.only(right: 5),
                                   labelText: 'التصنيف *',
                                 ),
                               ),
@@ -103,6 +110,9 @@ class CreateCategoryForm extends StatelessWidget {
                                 height: TSizes.sm,
                               ),
                               TextFormField(
+                                 style: titilliumBold.copyWith(fontSize: 18),
+                                 focusNode: tabController.englishFocusNode,
+                                  
                                 controller: createController.name,
                                 validator: (value) {
                                   if (value == null || value == '') {
@@ -111,6 +121,7 @@ class CreateCategoryForm extends StatelessWidget {
                                   return null;
                                 },
                                 decoration: inputTextField.copyWith(
+                                   contentPadding: EdgeInsets.only(left: 5),
                                   labelText: "Category Name *",
                                 ),
                               ),
@@ -125,27 +136,7 @@ class CreateCategoryForm extends StatelessWidget {
               const SizedBox(
                 height: TSizes.spaceBtwInputFields,
               ),
-              // Obx(() => CategoryController.instance.isLoading.value
-              //     ? const TShimmerEffect(width: double.infinity, height: 55)
-              //     : DropdownButtonFormField(
-              //         decoration: InputDecoration(
-              //             hintText: AppLocalizations.of(context)
-              //                 .translate('category.parentCategory'),
-              //             labelText: 'Parent Category',
-              //             prefixIcon: Icon(Icons.category_rounded)),
-              //         items: CategoryController.instance.allItems
-              //             .map((item) => DropdownMenuItem(
-              //                 value: item,
-              //                 child: Row(
-              //                   crossAxisAlignment: CrossAxisAlignment.end,
-              //                   children: [Text(item.name)],
-              //                 )))
-              //             .toList(),
-              //         onChanged: (newValue) =>
-              //             createController.selectedParent.value = newValue!)),
-              // const SizedBox(
-              //   height: TSizes.spaceBtwInputFields * 2,
-              // ),
+           
               Text(
                 isArabicLocale() ? 'الصورة' : 'Image',
                 style: titilliumSemiBold.copyWith(
@@ -196,21 +187,7 @@ class CreateCategoryForm extends StatelessWidget {
                   ),
                 ),
               ),
-              // const SizedBox(
-              //   height: TSizes.spaceBtwInputFields,
-              // ),
-              // Obx(
-              //   () => CheckboxMenuButton(
-              //       value: createController.isFeatured.value,
-              //       onChanged: (value) =>
-              //           createController.isFeatured.value = value ?? false,
-              //       child: Text(
-              //         isLocaleEn(context) ? "featured" : "تصنيف مميز",
-              //         style: titilliumSemiBold.copyWith(
-              //           fontSize: 16,
-              //         ),
-              //       )),
-              // ),
+            
               const SizedBox(
                 height: TSizes.spaceBtwInputFields,
               ),
@@ -221,7 +198,7 @@ class CreateCategoryForm extends StatelessWidget {
                       context: context,
                       future: () async {
                         await createController.createCategory();
-                        return "done1";
+                        return "add category done";
                       },
                       // Custom dialog
                       dialogBuilder: (context, _) {
@@ -231,9 +208,9 @@ class CreateCategoryForm extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 const SizedBox(height: 20),
-                                const CircularProgressIndicator(),
+                                const TLoaderWidget(),
                                 const SizedBox(height: 16),
-                                Text(createController.message.value),
+                                Text(createController.message.value, style:titilliumBold),
                                 const SizedBox(height: 16),
                               ],
                             ),
