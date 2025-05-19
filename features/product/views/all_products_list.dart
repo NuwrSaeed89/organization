@@ -9,6 +9,7 @@ import 'package:winto/features/organization/e_commerce/features/product/data/pro
 import 'package:winto/features/organization/e_commerce/features/product/views/add/add_product.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/all_products_grid.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_item.dart';
+import 'package:winto/features/organization/e_commerce/features/sector/model/sector_model.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/appbar/custom_app_bar.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
@@ -24,53 +25,55 @@ class ProductsList extends StatelessWidget {
     // ScrollController scrollController = ScrollController();
     final controller = Get.put(ProductController());
 
-    return SafeArea(
-      child: Directionality(
-        textDirection: isArabicLocale() ? TextDirection.rtl : TextDirection.ltr,
-        child: Scaffold(
-            floatingActionButton: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SizedBox(
-                  width: 50,
-                  child: FloatingActionButton(
-                    backgroundColor: Colors.black.withValues(alpha: .5),
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ProductsGrid(
-                                  vendorId: vendorId,
-                                ))),
-                    child: const SizedBox(
-                        width: 30, child: Icon(CupertinoIcons.grid)),
-                  ),
+    return Directionality(
+      textDirection: isArabicLocale() ? TextDirection.rtl : TextDirection.ltr,
+      child: Scaffold(
+          floatingActionButton: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: 50,
+                child: FloatingActionButton(
+                  backgroundColor: Colors.black.withValues(alpha: .5),
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProductsGrid(
+                                vendorId: vendorId,
+                              ))),
+                  child: const SizedBox(
+                      width: 30, child: Icon(CupertinoIcons.grid)),
                 ),
-                SizedBox(
-                  width: 50,
-                  child: FloatingActionButton(
-                    backgroundColor: Colors.black.withValues(alpha: .5),
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CreateProduct(
-                                  vendorId: vendorId,
-                                  type: '',
-                                  sectionId: '',
-                                ))),
-                    child: SizedBox(
-                      width: 30,
-                      child: Image.asset(
-                        TImages.add,
-                      ),
+              ),
+              SizedBox(
+                width: 50,
+                child: FloatingActionButton(
+                  backgroundColor: Colors.black.withValues(alpha: .5),
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CreateProduct(
+                            initialList: [],
+                                vendorId: vendorId,
+                                 sectorTitle: SectorModel( arabicName: '',id: '',englishName: '', name: ''),
+                                type: '',
+                                sectionId: 'all',
+                              ))),
+                  child: SizedBox(
+                    width: 30,
+                    child: Image.asset(
+                      TImages.add,
                     ),
                   ),
                 ),
-              ],
-            ),
-            appBar: CustomAppBar(
-              title: AppLocalizations.of(context).translate('shop.products'),
-            ),
-            body: RefreshIndicator(
+              ),
+            ],
+          ),
+          appBar: CustomAppBar(
+            title: AppLocalizations.of(context).translate('shop.products'),
+          ),
+          body: SafeArea(
+            child: RefreshIndicator(
               onRefresh: () async {
                 controller.fetchdata(vendorId);
               },
@@ -94,7 +97,7 @@ class ProductsList extends StatelessWidget {
                                   ],
                                 );
                               }
-
+                
                               return ProductsTable(
                                 vendorId: vendorId,
                               );
@@ -106,8 +109,8 @@ class ProductsList extends StatelessWidget {
                   ),
                 ),
               ),
-            )),
-      ),
+            ),
+          )),
     );
   }
 }

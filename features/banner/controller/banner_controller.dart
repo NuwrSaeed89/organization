@@ -34,11 +34,18 @@ class BannerController extends GetxController {
   }
 
 RxBool isloadUserBanner =false.obs;
-
+  String? lastFetchedUserId; 
  void fetchUserBanners(String vendorId) async {
     isloadUserBanner.value = true;
+
+    if (lastFetchedUserId == vendorId && banners.isNotEmpty) {
+      print("📌 البيانات مخزنة بالفعل، لا حاجة لإعادة الجلب!");
+      isloadUserBanner(false);
+      return;
+    }
     var snapshot = await bannersRepo.fetchBanners(vendorId);
      isloadUserBanner.value = false;
+      lastFetchedUserId = vendorId;
      banners.value=snapshot;
    
     activeBanners.assignAll(banners.where(

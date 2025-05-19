@@ -5,6 +5,7 @@ import 'package:winto/features/organization/e_commerce/features/product/data/pro
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_image_slider_mini.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
+import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_widgets.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/constant.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/sizes.dart';
@@ -17,7 +18,7 @@ class ProductWidgetSmall2 extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = ProductController.instance;
     final salePrecentage =
-        controller.calculateSalePresentage(product.price, product.salePrice);
+        controller.calculateSalePresentage(product.price, product.oldPrice);
     // String ratting =
     //     product.rating != null && product.rating!.isNotEmpty
     //         ? product.rating![0].average!
@@ -58,7 +59,8 @@ class ProductWidgetSmall2 extends StatelessWidget {
                 children: <Widget>[
                   const SizedBox(height: 8),
 
-                  Text(isArabicLocale() ? product.arabicTitle : product.title,
+                  Text( isArabicLocale() ? product.arabicTitle==''? product.title : product.arabicTitle : product.title,
+                       
                       textAlign: TextAlign.center,
                       style: titilliumRegular.copyWith(fontSize: 16),
                       maxLines: 1,
@@ -81,20 +83,10 @@ class ProductWidgetSmall2 extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      if (product.salePrice < product.price)
-                        Text(product.price.toString(),
-                            // PriceConverter.convertPrice(
-                            //     context, product.unitPrice),
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge!
-                                .copyWith(
-                                    color: TColors.darkerGray,
-                                    fontFamily: englishFonts,
-                                    decoration: TextDecoration.lineThrough,
-                                    fontSize: 14)),
-                      const SizedBox(width: 10),
-                      Text(product.salePrice.toString(),
+                        if (product.oldPrice !=null)
+                     TCustomWidgets.viewSalePrice(product.oldPrice.toString(),12)
+                   ,   const SizedBox(width: 10),
+                      Text(product.price.toString(),
                           // PriceConverter.convertPrice(context, product.unitPrice,
                           //     discountType: product.discountType,
                           //     discount: product.discount),

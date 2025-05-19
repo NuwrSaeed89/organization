@@ -24,7 +24,7 @@ class TSectionHeading extends StatelessWidget {
       children: [
         Text(
           title,
-          style: titilliumSemiBold.copyWith(
+          style: titilliumSemiBold.copyWith(fontSize: 20,
               fontFamily: isLocaleEn(context) ? englishFonts : arabicFonts),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,

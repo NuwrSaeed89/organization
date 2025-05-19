@@ -23,14 +23,7 @@ class CustomCaChedNetworkImage extends StatelessWidget {
         imageBuilder: (context, imageProvider) => Container(
               decoration: BoxDecoration(
                 boxShadow: enableShadow
-                    ? [
-                        BoxShadow(
-                          color: TColors.grey,
-                          spreadRadius: 1,
-                          blurRadius: 6,
-                          offset: Offset(0, 3),
-                        ),
-                      ]
+                    ?TColors.tboxShadow
                     : null,
                 borderRadius: raduis,
                 color: TColors.light,

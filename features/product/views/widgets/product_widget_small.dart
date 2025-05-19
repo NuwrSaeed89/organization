@@ -1,15 +1,22 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:winto/core/functions/lang_f.dart';
+import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_client_controller.dart';
+import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_vendor_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
+import 'package:winto/features/organization/e_commerce/features/product/views/widgets/favorite_widget.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_image_slider_mini.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/saved_widget.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
+import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_widgets.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/images/custom_image.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/constant.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/sizes.dart';
+import 'package:winto/features/organization/e_commerce/utils/formatters/formatter.dart';
 
 class ProductWidgetSmall extends StatelessWidget {
   const ProductWidgetSmall(
@@ -18,9 +25,18 @@ class ProductWidgetSmall extends StatelessWidget {
   final String vendorId;
   @override
   Widget build(BuildContext context) {
+     bool edit = false;
+    if (vendorId == FirebaseAuth.instance.currentUser!.uid) {
+      edit = true;
+    }
+      var floatControllerClient =
+      Get.put(FloatingButtonsClientController());
+      var floatControllerVendor =
+      Get.put(FloatingButtonsVendorController());
     final controller = ProductController.instance;
+    var oldPrice=product.oldPrice??0;
     final salePrecentage =
-        controller.calculateSalePresentage(product.price, product.salePrice) ??
+        controller.calculateSalePresentage(product.price, product.oldPrice) ??
             0;
     // String ratting =
     //     product.rating != null && product.rating!.isNotEmpty
@@ -41,18 +57,19 @@ class ProductWidgetSmall extends StatelessWidget {
       },
       child: Container(
         padding: const EdgeInsets.only(bottom: TSizes.paddingSizeSmall),
-        decoration: BoxDecoration(),
-        child: Stack(children: [
+        decoration: BoxDecoration(
+
+          color: Colors.transparent
+        ),
+        child:
+         Stack(children: [
           Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-            Container(
-                height: 170,
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(15)),
-                child: TProductImageSliderMini(
-                  product: product,
-                  prefferHeight: 170,
-                  prefferWidth: 127,
-                )),
+            TProductImageSliderMini(
+              product: product,
+              prefferHeight: 127*(4/3),
+              prefferWidth: 127,
+              radius: BorderRadius.circular(15),
+            ),
 
             // Product Details
             Center(
@@ -60,73 +77,78 @@ class ProductWidgetSmall extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(height: 8),
+                  Container(
+                    color: Colors.transparent,
+                    height: 10),
 
-                  Text(isArabicLocale() ? product.arabicTitle : product.title,
-                      textAlign: TextAlign.center,
-                      style: titilliumBold.copyWith(
-                          fontSize: 15, fontWeight: FontWeight.w400),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis),
-                  SizedBox(height: 4),
+                  ProductController.getTitle(product ,isLocaleEn(context),12.5 ),
+                       
+                      // textAlign: TextAlign.center,
+                      // style: titilliumBold.copyWith(
+                      //     fontSize: 14, fontWeight: FontWeight.w400),
+                      // maxLines: 1,
+                      // overflow: TextOverflow.ellipsis),
+                //  SizedBox(height: 2),
 
-                  // Text(
-                  //     isArabicLocale()
-                  //         ? product.arabicDescription!
-                  //         : product.description!,
-                  //     textAlign: TextAlign.center,
-                  //     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  //         fontSize: TSizes.fontSizeDefault,
-                  //         fontWeight: FontWeight.w400),
-                  //     maxLines: 3,
-                  //     overflow: TextOverflow.ellipsis),
+       
 
                   Column(
                     //crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      if (product.salePrice < product.price)
-                        Text(product.price.toString(),
-                            // PriceConverter.convertPrice(
-                            //     context, product.unitPrice),
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge!
-                                .copyWith(
-                                    color: TColors.darkerGray,
-                                    fontFamily: englishFonts,
-                                    decoration: TextDecoration.lineThrough,
-                                    fontSize: 13)),
-                      SizedBox(height: 4),
-                      Text("${product.salePrice} AED",
-                          // PriceConverter.convertPrice(context, product.unitPrice,
-                          //     discountType: product.discountType,
-                          //     discount: product.discount),
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(
-                                  fontFamily: englishFonts,
-                                  fontSize: 13,
-                                  color: TColors.primary)),
+            if (product.oldPrice !=null)
+                     TCustomWidgets.viewSalePrice(oldPrice.toString(),12),
+                     //, SizedBox(height: 2),
+                     TCustomWidgets.formattedPrice( product.price,'AED',14)
+                      // Text("${ TFormatter.formateNumber(product.price)} AED",
+                      //     // PriceConverter.convertPrice(context, product.unitPrice,
+                      //     //     discountType: product.discountType,
+                      //     //     discount: product.discount),
+                      //     style: titilliumBold
+                      //         .copyWith(
+                      //             fontFamily: englishFonts,
+                      //             fontSize: 16,
+                      //             color: TColors.primary)),
                     ],
                   ),
-                  // SizedBox(height: 4),
-                  // Padding(
-                  //     padding: const EdgeInsets.only(bottom: 0),
-                  //     child: Text("تبقى منه  ${product.stock}  ",
-                  //         style:
-                  //             robotoRegular.copyWith(color: TColors.primary))),
+               
                 ],
               ),
             ),
           ]),
+              Visibility(  visible: edit,
+                                                                    child: Positioned(
+                                                                      right:5,
+                                                                      top:146,
+                                                                      child:  GestureDetector(
+                                                                        onTapDown: (details) {
+                                                                              if(edit){
+                                                                     floatControllerVendor.p=product;
+                                                                                  floatControllerVendor.showFloatingButtons(context, details.globalPosition);
+                                                                                }
+                                                                                
+                                                                        },
+                                                                        child:  Icon(Icons.more_horiz, color: Colors.white),
+                                                                                          
+                                                                                        
+                                                                      ),
+                                                                      
+                                                                    ),
+                                                                  ),
+          Positioned(
+            top: 5,
+            right: 5,
+            child: FavouriteButton(
+              editMode: false,
+              productId: product.id,
+            ),
+          ),
           Visibility(
             visible: false,
             child: Positioned(
-              bottom: 50,
-              right: -10,
+              bottom: 75,
+              left: 5,
               child: SavedButton(
                 product: product,
               ),

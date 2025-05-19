@@ -16,12 +16,12 @@ class TValidator {
   }
 
   static String? validateSaleprice(String? value, String? valuPrice) {
-    var salePrice = double.parse(value!);
-    var price = double.parse(valuPrice!);
+    
 
-    if (salePrice > price) {
-      return 'سعر التخفيض يجب أن يكون أقل من السعر الأساسي';
+    if ( double.parse(value!) <= double.parse(valuPrice!)) {
+      return 'سعر التخفيض يجب أن يكون أقل من السعر القديم';
     }
+
     return null;
   }
 

@@ -48,9 +48,9 @@ class AllProductController extends GetxController {
       // break;
       case 'Sale':
         products.sort((a, b) {
-          if (b.salePrice > 0) {
-            return b.salePrice.compareTo(a.salePrice);
-          } else if (a.salePrice > 0) {
+          if (b.price! > 0) {
+            return b.price.compareTo(a.price);
+          } else if (a.price > 0) {
             return -1;
           } else {
             return 1;

@@ -86,7 +86,7 @@ class CreateCategoryController extends GetxController {
     }
     return;
   }
-
+ RxList<CategoryModel> tempItems = <CategoryModel>[].obs;
   Future<void> createCategory() async {
     message.value =  isArabicLocale()?"جاري رفع الصورة" :"upload photo ..";
     await uploadImage();
@@ -103,13 +103,14 @@ class CreateCategoryController extends GetxController {
       categoryRepository.addCategory(newCat);
       message.value = isArabicLocale() ?"تمت الإضافة" :"evry thing done";
       CategoryController.instance.addItemToLists(newCat);
+      tempItems.add(newCat);
       resetFields();
       message.value = "";
     } catch (e) {
       throw 'some thing go wrong while add category';
     }
   }
-
+void deleteTempItems()=>tempItems = <CategoryModel>[].obs;
   void resetFields() {
     selectedParent(CategoryModel.empty());
     isLoading(false);

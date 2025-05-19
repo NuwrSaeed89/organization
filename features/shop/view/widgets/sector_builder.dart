@@ -1,16 +1,22 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/features/product/cashed_network_image.dart';
+import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_client_controller.dart';
+import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_vendor_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/add/add_product.dart';
+import 'package:winto/features/organization/e_commerce/features/product/views/widgets/favorite_widget.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
+import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_image_slider_mini.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_widget_medium.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_widget_small.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/saved_widget.dart';
-import 'package:winto/features/organization/e_commerce/features/shop/data/sector_model.dart';
+import 'package:winto/features/organization/e_commerce/features/sector/model/sector_model.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/buttons/customFloatingButton.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_widgets.dart';
@@ -46,8 +52,15 @@ class SectorBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var spotList = [].obs;
-
+     List<IconData> icons = [Icons.favorite, Icons.share, Icons.shopping_cart, Icons.delete];
+const  double padding=10;
+var floatControllerClient =
+      Get.put(FloatingButtonsClientController());
+      var floatControllerVendor =
+      Get.put(FloatingButtonsVendorController());
+    RxList<ProductModel> spotList = <ProductModel>[].obs;
+  // final FloatingButtonsController controllerf =
+// Get.put(FloatingButtonsController());
     return FutureBuilder<List<ProductModel>>(
       future:
           ProductController.instance.fetchListData(vendorId, sectorTitle.name),
@@ -60,7 +73,7 @@ class SectorBuilder extends StatelessWidget {
               children: [
                 Container(
                   color: Colors.transparent,
-                  height: cardHeight + 10,
+                  height: cardHeight + 16,
                   child: ListView.separated(
                     separatorBuilder: (context, index) => const SizedBox(
                       width: 8,
@@ -69,7 +82,7 @@ class SectorBuilder extends StatelessWidget {
                     itemCount: 7,
                     itemBuilder: (context, index) => TShimmerEffect(
                       raduis: BorderRadius.circular(15),
-                      height: cardHeight,
+                      height: cardHeight+2,
                       width: cardWidth,
                     ),
                   ),
@@ -82,7 +95,7 @@ class SectorBuilder extends StatelessWidget {
           if (spotList.isEmpty) {
             return editMode
                 ? Padding(
-                  padding:   withPadding? EdgeInsets.only(top:30):EdgeInsets.only(top:0),
+                  padding:   withPadding? EdgeInsets.only(top:20):EdgeInsets.only(top:10),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,92 +113,103 @@ class SectorBuilder extends StatelessWidget {
                           visible: cardType == CardType.mediumCard,
                           child: Container(
                             color: Colors.transparent,
-                            height: cardHeight + 100,
-                            child: ListView.builder(
-                              itemCount: 5,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) => Padding(
-                                padding: isLocaleEn(context)
-                                    ? EdgeInsets.only(
-                                        left: 14.0,
-                                        bottom: 20,
-                                        right: index == 5 - 1 ? 14 : 0)
-                                    : EdgeInsets.only(
-                                        right: 14.0,
-                                        bottom: 20,
-                                        left: index == 5 - 1 ? 14 : 0),
-                                child: 
-                                Stack(
-                                  alignment: Alignment.topCenter,
-                                  children: [
-                                    TRoundedContainer(
-                                      borderColor: TColors.grey,
-                                      showBorder: true,
-                                      enableShadow: true,
-                                      height: cardHeight + 100,
-                                      width: cardWidth,
-                                      radius: BorderRadius.circular(15),
-                                    ),
-                                    InkWell(
-                                      onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => CreateProduct(
-                                                    vendorId: vendorId,
-                                                    type: sectorTitle.name,
-                                                    sectionId: sctionTitle,
-                                                  ))),
-                                      child: Stack(
-                                        //   alignment: Alignment.center,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 20.0),
-                                            child: TRoundedContainer(
-                                              showBorder: true,
-                                              // enableShadow: true,
-                  
-                                              // backgroundColor: TColors.grey,
-                                              width: cardWidth,
-                                              borderColor: TColors.grey
-                                                  .withValues(alpha: .5),
-                                              radius: const BorderRadius.only(
-                                                  topLeft: Radius.circular(15),
-                                                  topRight: Radius.circular(15)),
-                                              height: cardHeight,
-                                              child: Visibility(
-                                                visible: index == 0,
-                                                child: Center(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 20.0),
-                                                    child: TRoundedContainer(
-                                                      enableShadow: true,
-                                                      width: 50,
-                                                      height: 50,
-                                                      radius:
-                                                          BorderRadius.circular(
-                                                              300),
-                                                      child: const Icon(
-                                                        CupertinoIcons.add,
-                                                        color: TColors.primary,
+                            height: cardHeight + 110,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top:10),
+                              child: ListView.builder(
+                                itemCount: 5,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (context, index) => Padding(
+                                  padding: isLocaleEn(context)
+                                      ? EdgeInsets.only(
+                                          left:padding,
+                                          bottom: 20,
+                                          right: index == 5 - 1 ?padding : 0)
+                                      : EdgeInsets.only(
+                                          right: padding,
+                                          bottom: 20,
+                                          left: index == 5 - 1 ?padding : 0),
+                                  child: 
+                                  Stack(
+                                    alignment: Alignment.topCenter,
+                                    children: [
+                                      TRoundedContainer(
+                                        borderColor: TColors.grey,
+                                        showBorder: true,
+                                        enableShadow: true,
+                                        height: cardHeight + 100,
+                                        width: cardWidth,
+                                        radius: BorderRadius.circular(15),
+                                      ),
+                                      InkWell(
+                                         onTap: () {
+                                           var controller =Get.put(ProductController());
+                                  controller.deleteTempItems();
+                                           Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => CreateProduct(
+                                                      vendorId: vendorId,
+                                                      type: sectorTitle.name,
+                                                      initialList: spotList.isNotEmpty ? spotList:[] ,
+                                                      sectorTitle:sectorTitle,
+                                                      sectionId: sctionTitle,
+                                                    )));},
+                                        child: Stack(
+                                          //   alignment: Alignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 20.0),
+                                              child: TRoundedContainer(
+                                                showBorder: true,
+                                                // enableShadow: true,
+                                                
+                                                // backgroundColor: TColors.grey,
+                                                width: cardWidth,
+                                                borderColor: TColors.grey
+                                                    .withValues(alpha: .5),
+                                                radius: const BorderRadius.only(
+                                                    topLeft: Radius.circular(15),
+                                                    topRight: Radius.circular(15)),
+                                                height: cardHeight,
+                                                child: Visibility(
+                                                  visible: index == 0,
+                                                  child: Center(
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 20.0),
+                                                      child: TRoundedContainer(
+                                                        enableShadow: true,
+                                                        width: 50,
+                                                        height: 50,
+                                                        radius:
+                                                            BorderRadius.circular(
+                                                                300),
+                                                        child: const Icon(
+                                                          CupertinoIcons.add,
+                                                          color: TColors.primary,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
+                                    ],
+                                  ),
+                                )
                               ),
                             ),
                           ),
                         ),
+                       
+                        
+                       
                         Visibility(
                           visible: cardType != CardType.mediumCard,
                           child: Container(
@@ -197,20 +221,26 @@ class SectorBuilder extends StatelessWidget {
                               itemBuilder: (context, index) => Padding(
                                 padding: isLocaleEn(context)
                                     ? EdgeInsets.only(
-                                        left: 14.0,
-                                        right: index == 5 - 1 ? 14 : 0)
+                                        left: padding,
+                                        right: index == 5 - 1 ?padding : 0)
                                     : EdgeInsets.only(
-                                        right: 14.0,
-                                        left: index == 5 - 1 ? 14 : 0),
+                                        right: padding,
+                                        left: index == 5 - 1 ?padding : 0),
                                 child: InkWell(
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => CreateProduct(
-                                                vendorId: vendorId,
-                                                type: sectorTitle.name,
-                                                sectionId: sctionTitle,
-                                              ))),
+                                   onTap: () {
+             var controller =Get.put(ProductController());
+    controller.deleteTempItems();
+             Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CreateProduct(
+                        vendorId: vendorId,
+                        initialList:spotList,
+
+                        type: sectorTitle.name,
+                           sectorTitle:sectorTitle,
+                        sectionId: sctionTitle,
+                      )));},
                                   child: Stack(
                                     alignment: Alignment.center,
                                     children: [
@@ -230,8 +260,8 @@ class SectorBuilder extends StatelessWidget {
                                           border: Border.all(color: TColors.grey),
                                         ),
                                         //showBorder: true,
-                                        height: cardHeight - 10,
-                                        width: cardWidth - 10,
+                                        height: cardHeight,
+                                        width: cardWidth,
                                         //enableShadow: true,
                                         //radius: BorderRadius.circular(15),
                                       ),
@@ -269,9 +299,12 @@ class SectorBuilder extends StatelessWidget {
                 )
                 : const SizedBox.shrink();
           } else {
+            if (kDebugMode) {
+              print("SSSSSSSSSSSSSS${sectorTitle.arabicName}potlengthis  ${spotList.length}");
+            }
             spotList.value = getSpotList(sectorTitle.name);
             return Padding(
-                 padding:   withPadding? EdgeInsets.only(top:30):EdgeInsets.only(top:0),
+                 padding:   withPadding? EdgeInsets.only(top:30):EdgeInsets.only(top:10),
               child: Column(
                 // mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -289,33 +322,80 @@ class SectorBuilder extends StatelessWidget {
                       Container(
                         color: Colors.transparent,
                         height: cardType == CardType.justImage
-                            ? cardHeight + 25
+                            ? cardHeight + 70
                             : cardType == CardType.smallCard
-                                ? cardHeight + 100
-                                : cardHeight + 100,
+                                ? cardHeight + 120
+                                : cardHeight + 130,
                         child: Obx(
                           () => ListView.builder(
                             // padding: EdgeInsets.symmetric(vertical: 5),
                             scrollDirection: Axis.horizontal,
-                            itemCount: spotList.length,
+                            itemCount: editMode?  spotList.length+2 : spotList.length,
                             itemBuilder: (context, index) {
+                                GlobalKey itemKey = GlobalKey();
+
+if(editMode && index == spotList.length+1){
+  return Padding(
+    
+                                padding: isLocaleEn(context)
+                                    ? EdgeInsets.only(
+                                        left: 7.0,
+                                        bottom: 22,
+                                        right:14
+                                           )
+                                    : EdgeInsets.only(
+                                        right: 7.0,
+                                        bottom: 22,
+                                        left:padding
+                                            ),
+    child:  EmptyAddItem(cardHeight: cardHeight,cardWidth: cardWidth,sctionTitle: sctionTitle,vendorId: vendorId,sectorTitle: sectorTitle, cardType: cardType,),
+  );
+}
+if(editMode && index == spotList.length){
+  return Padding(
+                                padding: isLocaleEn(context)
+                                    ? EdgeInsets.only(
+                                        left: 0.0,
+                                        bottom: 22,
+                                        right:
+                                             7 )
+                                    : EdgeInsets.only(
+                                        right: 0.0,
+                                        bottom: 22,
+                                        left: 
+                                            7
+                                          ),child: EmptyAddItem(cardHeight: cardHeight,cardWidth: cardWidth,sctionTitle: sctionTitle,vendorId: vendorId,sectorTitle: sectorTitle, cardType: cardType,));
+}
+
                               return Padding(
                                 padding: isLocaleEn(context)
                                     ? EdgeInsets.only(
-                                        left: 14.0,
-                                        bottom: 22,
+                                        left: padding,
+                                        bottom: 20,
                                         right:
-                                            index == spotList.length - 1 ? 14 : 0)
+                                            index == spotList.length - 1 ?padding : 0)
                                     : EdgeInsets.only(
-                                        right: 14.0,
-                                        bottom: 22,
+                                        right: padding,
+                                        bottom: 20,
                                         left: index == spotList.length - 1
-                                            ? 14
+                                            ?padding
                                             : 0),
                                 child: SizedBox(
                                   height: cardHeight,
                                   width: cardWidth,
                                   child: GestureDetector(
+                                     key: itemKey,
+          onLongPressStart: (details) {
+            if(editMode){
+ floatControllerVendor.p=spotList[index];
+              floatControllerVendor.showFloatingButtons(context, details.globalPosition);
+            }else{
+
+ floatControllerClient.p=spotList[index];
+              floatControllerClient.showFloatingButtons(context, details.globalPosition);
+            }
+           
+            },
                                     onTap: () => Navigator.push(
                                         context,
                                         PageRouteBuilder(
@@ -330,27 +410,56 @@ class SectorBuilder extends StatelessWidget {
                                     child: cardType == CardType.justImage
                                         ? TRoundedContainer(
                                             width: cardWidth,
-                                            height: cardHeight,
-                                            radius: BorderRadius.circular(15),
-                                            enableShadow: true,
-                                            child: Stack(
+                                            height: cardHeight+50,
+                                           // radius: BorderRadius.circular(15),
+                                          //  enableShadow: true,
+                                            child: Column(
+                                                   mainAxisAlignment: MainAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                CustomCaChedNetworkImage(
-                                                  url: spotList[index].images!.first,
-                                                  width: cardWidth,
-                                                  height: cardHeight,
-                                                  raduis: BorderRadius.circular(15),
+                                                TRoundedContainer(
+                                                      width: cardWidth,
+                                                    height: cardHeight,
+                                                    radius: BorderRadius.circular(15),
+                                                    enableShadow: true,
+                                                    showBorder: true,
+                                                  child:
+                                                  Stack(
+                                                    children: [
+                                                      TProductImageSliderMini(
+                                                                    product: spotList[index],
+                                                                    prefferHeight:cardWidth*(4/3),
+                                                                    prefferWidth:cardWidth,
+                                                                    radius: BorderRadius.circular(15),
+                                                                  ),
+                                                                  Visibility(
+                                                                    visible: editMode,
+                                                                    child: Positioned(
+                                                                      bottom:0,
+                                                                      right: padding/2,
+                                                                      child:  GestureDetector(
+                                                                        onTapDown: (details) {
+                                                                              if(editMode){
+                                                                     floatControllerVendor.p=spotList[index];
+                                                                                  floatControllerVendor.showFloatingButtons(context, details.globalPosition);
+                                                                                }
+                                                                                
+                                                                        },
+                                                                        child:  Icon(Icons.more_horiz, color: Colors.white),
+                                                                                          
+                                                                                        
+                                                                      ),
+                                                                      
+                                                                    ),
+                                                                  ),
+                                                    ],
+                                                  ),
+                                                  
+                                             
                                                 ),
-                                                 Visibility(
-            visible: true,
-            child: Positioned(
-              bottom: 5,
-              left: 5,
-              child: SavedButton(
-                product: spotList[index],
-              ),
-            ),
-          ),
+                                                SizedBox(height: 12,),
+                                                  ProductController.getTitle(spotList[index] ,isLocaleEn(context), cardWidth> 50.w ? 15:13 ),
+                                               // Text("jjjjjjjjj")
                                               ],
                                             ),
                                           )
@@ -382,14 +491,19 @@ class SectorBuilder extends StatelessWidget {
                             right: isArabicLocale() ? null : 7,
                             left: isArabicLocale() ? 7 : null,
                             child: CustomFloatActionButton(
-                              onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => CreateProduct(
-                                            vendorId: vendorId,
-                                            type: sectorTitle.name,
-                                            sectionId: sctionTitle,
-                                          ))),
+                                onTap: () {
+             var controller =Get.put(ProductController());
+    controller.deleteTempItems();
+             Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CreateProduct(
+                    initialList: spotList,
+                        vendorId: vendorId,
+                        type: sectorTitle.name,
+                           sectorTitle:sectorTitle,
+                        sectionId: sctionTitle,
+                      )));},
                             )),
                       )
                     ],
@@ -434,6 +548,8 @@ class SectorBuilder extends StatelessWidget {
         return ProductController.instance.allLine1Dynamic;
       case 'all2':
         return ProductController.instance.allLine2Dynamic;
+         case 'all3':
+        return ProductController.instance.allLine3Dynamic;
       case 'sales':
         return ProductController.instance.salesDynamic;
       case 'foryou':
@@ -451,5 +567,63 @@ class SectorBuilder extends StatelessWidget {
         return <ProductModel>[]
             .obs; // القيمة الافتراضية إذا لم يكن المدخل صحيحاً
     }
+  }
+}
+
+class EmptyAddItem extends StatelessWidget {
+  const EmptyAddItem({
+    super.key,
+    required this.cardHeight,
+    required this.cardWidth,
+    required this.vendorId,
+    required this.sectorTitle,
+    required this.sctionTitle,
+    required this.cardType
+  
+  });
+
+  final double cardHeight;
+  final double cardWidth;
+  final String vendorId;
+  final SectorModel sectorTitle;
+  final String sctionTitle;
+  final CardType cardType;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: cardWidth,
+      height: cardHeight,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+         InkWell(
+            onTap: () {
+               var controller =Get.put(ProductController());
+      controller.deleteTempItems();
+               Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CreateProduct(
+                          vendorId: vendorId,
+                          initialList: [],
+                          type: sectorTitle.name,
+                             sectorTitle:sectorTitle,
+                          sectionId: sctionTitle,
+                        )));},
+            child: TRoundedContainer(
+              borderColor: TColors.grey,
+              showBorder: true,
+              enableShadow: true,
+              height: cardType == CardType.mediumCard?cardHeight+120 : cardHeight ,
+              width: cardWidth,
+              radius: BorderRadius.circular(15),
+            ),
+          ),
+         
+        ],
+      ),
+    );
   }
 }

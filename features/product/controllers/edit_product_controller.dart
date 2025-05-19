@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,6 +14,8 @@ import 'package:winto/features/organization/e_commerce/data/models/category_mode
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_repository.dart';
+import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
+import 'package:winto/features/organization/e_commerce/utils/loader/loaders.dart';
 
 class EditProductController extends GetxController {
   static EditProductController get instance => Get.find();
@@ -29,13 +30,16 @@ class EditProductController extends GetxController {
   final description = TextEditingController();
   final arabicDescription = TextEditingController();
   final price = TextEditingController();
-  final salePrice = TextEditingController();
-
+  final oldPrice = TextEditingController();
+var salePrice = 00.0.obs;
+  final saleprecentage = TextEditingController();
   final categoryTextField = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  Rx<CategoryModel> category = CategoryModel.empty().obs;
+ CategoryModel category = CategoryModel.empty();
   RxList<String> images = <String>[].obs;
+  RxList<String> initialImage = <String>[].obs;
   RxString message = ''.obs;
+   Rx<CategoryModel> selectedCategory =CategoryModel.empty().obs;
   String oldthumb = '';
   String type = '';
   List<String> oldExtraImages = [];
@@ -51,6 +55,25 @@ class EditProductController extends GetxController {
     }
   }
 
+
+
+  void changePrice(String value) {
+    if(oldPrice.text==''){
+   TLoader.warningSnackBar(title: '',message:  isArabicLocale()?"فضلا أدخل السعر ثم ادخل النسبة" :"Please type the price first");
+     return;
+}
+if (double.parse(value) >100){
+  TLoader.warningSnackBar(title: '',message:  isArabicLocale()?"نسبة الادخال الصحيحة اقل من 100" :"Sale precentage should be less than 100");
+   return;
+}
+
+
+
+var s=double.parse(oldPrice.text.toString());
+var p=    (s-(s*(double.parse(value)/100)));
+price.text=p.toString();
+
+}
   Future<void> cropImage(String imagePath) async {
     var croppedFile = await ImageCropper().cropImage(
         sourcePath: imagePath,
@@ -73,8 +96,13 @@ class EditProductController extends GetxController {
         ]);
 
     if (croppedFile != null) {
+
+       var i= selectedImage.indexWhere((img) => img.path == imagePath);
       selectedImage.removeWhere((img) => img.path == imagePath);
-      selectedImage.add(XFile(croppedFile.path));
+
+      selectedImage.insert(i,XFile(croppedFile.path));
+      // selectedImage.removeWhere((img) => img.path == imagePath);
+      // selectedImage.add(XFile(croppedFile.path));
     }
   }
 
@@ -84,15 +112,15 @@ class EditProductController extends GetxController {
     }
     localThumbnail.value = "";
     title.text = product.title;
-
+    initialImage.value=product.images!;
     arabicTitle.text = product.arabicTitle;
     description.text = product.description!;
     arabicDescription.text = product.arabicDescription!;
-    salePrice.text = product.salePrice.toString();
+    oldPrice.text = product.oldPrice.toString();
     price.text = product.price.toString();
 
     images.value = product.images!;
-    category.value = product.category!;
+    selectedCategory.value = product.category!;
 
     categoryTextField.text = product.category!.arabicName;
     oldExtraImages.assignAll(product.images!);
@@ -105,9 +133,9 @@ class EditProductController extends GetxController {
     arabicTitle.clear();
     description.clear();
     arabicDescription.clear();
-    price.text = 0.toString();
-    salePrice.text = 0.toString();
-
+    price.text = 0.0.toString();
+    oldPrice.text = '';
+selectedImage.clear();
     selectedImage.value = [];
     thumbnailUrl.value = "";
     localThumbnail.value = "";
@@ -124,8 +152,7 @@ class EditProductController extends GetxController {
 
     // update Extra images
     // List<XFile> forNewUpload = [];
-
-    // forNewUpload.assignAll(selectedImage);
+product.images=initialImage;
     if (selectedImage.isNotEmpty) {
       message.value = isArabicLocale()
           ? "يتم الان رفع الصور"
@@ -143,12 +170,12 @@ class EditProductController extends GetxController {
     // product.sku = skuCode.text.trim();
     product.arabicTitle = arabicTitle.text.trim();
     product.price = double.parse(price.text.toString());
-    product.salePrice = double.parse(salePrice.text.toString());
+    product.oldPrice=  double.tryParse(oldPrice.text.toString());
     product.description = description.text.trim();
     product.arabicDescription = arabicDescription.text.trim();
 
     product.isFeature = true;
-    product.category = category.value;
+    product.category = selectedCategory.value;
 
 // third send category values
     //productRepository.updateProduct(product);
@@ -169,7 +196,9 @@ class EditProductController extends GetxController {
     } catch (e) {
       throw 'some thing go wrong while updating category';
     }
-
+ // Navigator.pop(Get.context!);
+    Navigator.pop(Get.context!);
+   Get.to(ProductDetails(product: product, vendorId: vendorId));
     ProductController.instance.updateList(product);
     resetFields();
 
@@ -219,6 +248,8 @@ class EditProductController extends GetxController {
     }
     return [];
   }
+ var regularPrice = 0.0.obs;
+  var discountPrice = Rxn<double>(); // يسمح بأن يكون فارغًا
 
   Future<void> uploadThumbnail() async {
     message.value = "uploading thumbnail";

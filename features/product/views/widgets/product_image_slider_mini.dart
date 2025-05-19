@@ -11,6 +11,7 @@ import 'package:winto/features/organization/e_commerce/utils/common/widgets/shim
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/image_strings.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/sizes.dart';
+import 'package:winto/features/social/presentation/widgets/posts/network/display/display_image_full.dart';
 
 class TProductImageSliderMini extends StatelessWidget {
   const TProductImageSliderMini(
@@ -35,38 +36,48 @@ class TProductImageSliderMini extends StatelessWidget {
     if (images.length > 1) {
       return Stack(
         children: [
-          CarouselSlider(
-            options: CarouselOptions(
-              onPageChanged: (index, _) => selectdindex.value = index,
-              height: prefferHeight ?? 220,
-
-              viewportFraction: 1,
-              enlargeStrategy: CenterPageEnlargeStrategy.height,
-              // enlargeCenterPage: true,
-            ),
-            items: images
-                .map((item) => CachedNetworkImage(
-                    imageUrl: item,
-                    imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            borderRadius: radius ?? BorderRadius.circular(15),
-                            color: TColors.light,
-                            image: DecorationImage(
-                                image: imageProvider, fit: BoxFit.fill),
+          TRoundedContainer(
+              radius: BorderRadius.circular(15),
+              showBorder: true,
+                    enableShadow: true,
+            child: CarouselSlider(
+              options: CarouselOptions(
+                onPageChanged: (index, _) => selectdindex.value = index,
+                height: prefferHeight ?? 220,
+            
+                viewportFraction: 1,
+                enlargeStrategy: CenterPageEnlargeStrategy.height,
+                // enlargeCenterPage: true,
+              ),
+                items: images
+                  .map((item) => 
+                 
+                 
+                  CachedNetworkImage(
+                      imageUrl: item,
+                      imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              borderRadius: radius ?? BorderRadius.circular(15),
+                              color: TColors.light,
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.fill),
+                            ),
                           ),
-                        ),
-                    progressIndicatorBuilder:
-                        (context, url, downloadProgress) => ClipRRect(
-                            //  borderRadius: BorderRadius.circular(0),
-                            child: TShimmerEffect(
-                                raduis: BorderRadius.circular(15),
-                                width: prefferWidth ?? 120,
-                                height: prefferHeight ?? 220)),
-                    errorWidget: (context, url, error) => const Icon(
-                          Icons.error,
-                          size: 50,
-                        )))
-                .toList(),
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) => ClipRRect(
+                              //  borderRadius: BorderRadius.circular(0),
+                              child: TShimmerEffect(
+                                  raduis: BorderRadius.circular(15),
+                                  width: prefferWidth ?? 120,
+                                
+                                  height: prefferHeight ?? 220)),
+                      errorWidget: (context, url, error) => const Icon(
+                            Icons.error,
+                            size: 50,
+                          )))
+                 
+                  .toList(),
+            ),
           ),
           if (images.length > 1)
             Positioned(
@@ -82,14 +93,16 @@ class TProductImageSliderMini extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     physics: const AlwaysScrollableScrollPhysics(),
                     itemBuilder: (_, index) => Obx(
-                      () => TCirculerContainer(
+                      () => TRoundedContainer(
                         width: index == selectdindex.value ? 8 : 4,
-                        padding: 1,
+                       enableShadow: true,
+                        radius: BorderRadius.circular(100),
+                        showBorder: true,
                         //  height: .5,
                         // margin: const EdgeInsets.only(right: 2, left: 2),
                         backgroundColor: index == selectdindex.value
                             ? TColors.primary
-                            : TColors.darkGrey,
+                            : TColors.white,
                       ),
                     ),
                     separatorBuilder: (_, __) => const SizedBox(
@@ -105,8 +118,10 @@ class TProductImageSliderMini extends StatelessWidget {
       return TRoundedContainer(
         width: prefferWidth ?? 120,
         height: prefferHeight ?? 220,
+        showBorder: true,
+       // borderColor: Colors.red,
         radius: radius ?? BorderRadius.circular(15),
-        enableShadow: true,
+       // enableShadow: true,
         child: CustomCaChedNetworkImage(
             width: prefferWidth ?? 120,
             height: prefferHeight ?? 220,

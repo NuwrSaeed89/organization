@@ -32,20 +32,22 @@ class ProfileController extends GetxController {
     }
   }
 
-  // Future<ProfileModel> fetchVendorData(String vendorId) async {
-  //   try {
-  //     isLoading.value = true;
+  Future<void> fetchVendorData(String vendorId) async {
+    try {
+      isLoading.value = true;
 
-  //     profilData = await repository.fetchVendoByIdr(vendorId);
-  //   } catch (e) {
-  //     if (kDebugMode) {
-  //       print(e);
-  //     }
-  //     return profilData;
-  //     //TLoader.erroreSnackBar(title: 'oh Snap!', message: e.toString());
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  //   return ProfileModel.empty();
-  // }
+      var c = await repository.fetchVendoByIdr(vendorId);
+        profilData.value=c;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    
+     // return profilData;
+      //TLoader.erroreSnackBar(title: 'oh Snap!', message: e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+   
+  }
 }

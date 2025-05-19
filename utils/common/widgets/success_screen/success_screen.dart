@@ -21,43 +21,45 @@ class SuccessScreen extends StatelessWidget {
           ? TextDirection.ltr
           : TextDirection.rtl,
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.only(
-                top: THelperFunctions.screenHeight() / 5,
-                left: TSizes.defaultSpace,
-                right: TSizes.defaultSpace),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image(
-                    image: AssetImage(
-                      image,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                  top: THelperFunctions.screenHeight() / 5,
+                  left: TSizes.defaultSpace,
+                  right: TSizes.defaultSpace),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image(
+                      image: AssetImage(
+                        image,
+                      ),
+                      width: THelperFunctions.screenwidth() * 0.6,
                     ),
-                    width: THelperFunctions.screenwidth() * 0.6,
-                  ),
-                  const SizedBox(
-                    height: TSizes.spaceBtWsections,
-                  ),
-                  Text(title,
-                      style: Theme.of(context).textTheme.headlineMedium,
-                      textAlign: TextAlign.center),
-                  const SizedBox(
-                    height: TSizes.spaceBtWItems,
-                  ),
-                  Text(title,
-                      style: Theme.of(context).textTheme.labelMedium,
-                      textAlign: TextAlign.center),
-                  const SizedBox(
-                    height: TSizes.spaceBtWsections,
-                  ),
-                  SizedBox(
-                    width: THelperFunctions.screenwidth() * 0.6,
-                    child: ElevatedButton(
-                        onPressed: onPressed, child: const Text('Continue')),
-                  )
-                ],
+                    const SizedBox(
+                      height: TSizes.spaceBtWsections,
+                    ),
+                    Text(title,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                        textAlign: TextAlign.center),
+                    const SizedBox(
+                      height: TSizes.spaceBtWItems,
+                    ),
+                    Text(title,
+                        style: Theme.of(context).textTheme.labelMedium,
+                        textAlign: TextAlign.center),
+                    const SizedBox(
+                      height: TSizes.spaceBtWsections,
+                    ),
+                    SizedBox(
+                      width: THelperFunctions.screenwidth() * 0.6,
+                      child: ElevatedButton(
+                          onPressed: onPressed, child: const Text('Continue')),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

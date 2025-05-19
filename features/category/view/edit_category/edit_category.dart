@@ -15,13 +15,11 @@ class EditCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: isArabicLocale() ? TextDirection.rtl : TextDirection.ltr,
-      child: SafeArea(
-        child: Scaffold(
-            appBar: CustomAppBar(
-                title:
-                    isLocaleEn(context) ? 'update Category' : "تعديل التصنيف "),
-            body: EditCategoryForm(category: category)),
-      ),
+      child: Scaffold(
+          appBar: CustomAppBar(
+              title:
+                  isLocaleEn(context) ? 'update Category' : "تعديل التصنيف "),
+          body: SafeArea(child: EditCategoryForm(category: category))),
     );
   }
 }

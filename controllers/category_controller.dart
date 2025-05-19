@@ -19,6 +19,7 @@ class CategoryController extends GetxController {
   final isLoading = false.obs;
   final categoryRepository = Get.put(CategoryRepository());
   RxList<CategoryModel> allItems = <CategoryModel>[].obs;
+  
   RxList<CategoryModel> featureCategories = <CategoryModel>[].obs;
   final searchTextController = TextEditingController();
   RxList<CategoryModel> felteredItems = <CategoryModel>[].obs;
@@ -31,18 +32,25 @@ class CategoryController extends GetxController {
   RxString storeId =''.obs;
 @override
 void onInit() {
-  ever(storeId, (id) =>   fetchCategoryData());
+  //ever(storeId, (id) =>   fetchCategoryData());
   super.onInit();
 }
 
- 
+   String? lastFetchedUserId; 
   var load = false.obs;
-  Future<List<CategoryModel>> getCategoryOfUser(String userId) async {
+  getCategoryOfUser(String userId) async {
     load(true);
+
+    if (lastFetchedUserId == userId && allItems.isNotEmpty) {
+      print("📌 البيانات مخزنة بالفعل، لا حاجة لإعادة الجلب!");
+      load(false);
+      return;
+    }
    var s=  await categoryRepository.getAllCategoriesUserId(userId);
      allItems.value=s;
     load(false);
-    return allItems;
+     lastFetchedUserId = userId;
+   // return allItems;
     // .where((cat) => cat.parentId.isEmpty)
     // .take(8)
     // .toList();
@@ -74,6 +82,7 @@ void onInit() {
   void addItemToLists(CategoryModel item) {
     allItems.add(item);
     felteredItems.add(item);
+    
   }
 
   void updateItemFromLists(CategoryModel item) {
@@ -212,7 +221,7 @@ void onInit() {
     return product;
   }
 
-  searchQuery(String query) {
+  searchQuery(String query , ) {
     filteredItem.assignAll(all.where((item) =>
         item.arabicTitle.toLowerCase().contains(query.trim().toLowerCase()) ||
         item.title.toLowerCase().contains(query.trim().toLowerCase())));

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:winto/core/functions/lang_f.dart';
+import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_client_controller.dart';
+import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_vendor_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_image_slider_mini.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/saved_widget.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
+import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_widgets.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/sizes.dart';
 
@@ -26,9 +30,13 @@ class ProductWidgetMedium extends StatelessWidget {
   final String vendorId;
   @override
   Widget build(BuildContext context) {
+    var floatControllerClient =
+      Get.put(FloatingButtonsClientController());
+      var floatControllerVendor =
+      Get.put(FloatingButtonsVendorController());
     final controller = ProductController.instance;
     final salePrecentage =
-        controller.calculateSalePresentage(product.price, product.salePrice);
+        controller.calculateSalePresentage(product.price, product.oldPrice);
     // String ratting =
     //     product.rating != null && product.rating!.isNotEmpty
     //         ? product.rating![0].average!
@@ -89,49 +97,74 @@ class ProductWidgetMedium extends StatelessWidget {
 
             // Product Details
             Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const SizedBox(height: 12),
-                  Text(isArabicLocale() ? product.arabicTitle : product.title,
-                      textAlign: TextAlign.center,
-                      style: robotoRegular.copyWith(
-                          fontSize: 16, fontWeight: FontWeight.w400),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis),
-                  const SizedBox(
-                    height: 6,
-                  ),
-                  Row(
-                    //crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      if (product.salePrice < product.price)
-                        Text(product.price.toString(),
-                            // PriceConverter.convertPrice(
-                            //     context, product.unitPrice),
-                            style: titilliumSemiBold.copyWith(
-                                color: TColors.darkGrey,
-                                decoration: TextDecoration.lineThrough,
-                                fontSize: 12)),
-                      const SizedBox(width: 10),
-                      Text(product.salePrice.toString(),
-                          // PriceConverter.convertPrice(context, product.unitPrice,
-                          //     discountType: product.discountType,
-                          //     discount: product.discount),
-                          style: titilliumSemiBold.copyWith(
-                              color: Colors.blueAccent))
+              child: SizedBox(
+                height: 98,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      const SizedBox(height: 10),
+                      ProductController.getTitle(product ,isLocaleEn(context), 15 ),
+                                             
+                      const SizedBox(
+                        height: 4,
+                      ),
+                       Text(isArabicLocale() ? product.arabicDescription! : product.description!,
+                         
+                          style: robotoRegular.copyWith(
+                              fontSize: 12, fontWeight: FontWeight.normal,color: TColors.darkerGray),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis),
+                    const SizedBox(
+                        height: 4,
+                      ),
+                    Spacer(),
+
+                      Center(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                    //           if (product.oldPrice !=null)
+                    //  TCustomWidgets.viewSalePrice(product.oldPrice.toString(),12)
+                    //         ,  const SizedBox(width: 4),
+                        TCustomWidgets.formattedPrice( product.price,'AED',18)
+                               
+                        
+                           
+                          ],
+                        ),
+                      )
                     ],
-                  )
-                ],
+                  ),
+                ),
               ),
             ),
           ]),
 
           // Off
-
+                                    Visibility(  visible: editMode,
+                                                                    child: Positioned(
+                                                                      right:5,
+                                                                      top:205,
+                                                                      child:  GestureDetector(
+                                                                        onTapDown: (details) {
+                                                                              if(editMode){
+                                                                     floatControllerVendor.p=product;
+                                                                                  floatControllerVendor.showFloatingButtons(context, details.globalPosition);
+                                                                                }
+                                                                                
+                                                                        },
+                                                                        child:  Icon(Icons.more_horiz, color: Colors.white),
+                                                                                          
+                                                                                        
+                                                                      ),
+                                                                      
+                                                                    ),
+                                                                  ),
           if (salePrecentage != null)
             Positioned(
               top: 20,
@@ -169,9 +202,9 @@ class ProductWidgetMedium extends StatelessWidget {
             ),
           ),
           Visibility(
-            visible: true,
+            visible: false,
             child: Positioned(
-              bottom: 78,
+              top: prefferHeight!-40,
               left: 5,
               child: SavedButton(
                 product: product,
@@ -183,3 +216,6 @@ class ProductWidgetMedium extends StatelessWidget {
     );
   }
 }
+
+
+  

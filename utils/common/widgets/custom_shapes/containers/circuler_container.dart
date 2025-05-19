@@ -29,6 +29,16 @@ class TCirculerContainer extends StatelessWidget {
       margin: margin,
       padding: EdgeInsets.all(padding),
       decoration: BoxDecoration(
+          boxShadow: 
+               [
+                  BoxShadow(
+                    color: TColors.shadow.withValues(alpha: .2),
+                    spreadRadius: 0,
+                    blurRadius: 3,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+      //  boxShadow: BoxShadow(),
           borderRadius: BorderRadius.circular(400), color: backgroundColor),
     );
   }

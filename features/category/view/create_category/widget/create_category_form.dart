@@ -4,11 +4,15 @@ import 'package:get/get.dart';
 import 'package:simple_loading_dialog/simple_loading_dialog.dart';
 import 'package:winto/app/app_localization.dart';
 import 'package:winto/core/functions/lang_f.dart';
+import 'package:winto/features/organization/e_commerce/controllers/category_controller.dart';
 import 'package:winto/features/organization/e_commerce/controllers/category_tab_controller.dart';
 import 'package:winto/features/organization/e_commerce/controllers/create_category_controller.dart';
+import 'package:winto/features/organization/e_commerce/features/category/view/all_category/widgets/category_grid_item.dart';
+import 'package:winto/features/organization/e_commerce/features/category/view/edit_category/edit_category.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/buttons/custom_button.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
+import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_widgets.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/custom_styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/enums.dart';
@@ -24,7 +28,7 @@ class CreateCategoryForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final createController = Get.put(CreateCategoryController());
-tabController.selectedIndex=0.obs;
+tabController.selectedIndex= isArabicLocale()?0.obs:1.obs;
     return SingleChildScrollView(
       child: Form(
         key: createController.formKey,
@@ -37,20 +41,15 @@ tabController.selectedIndex=0.obs;
                 height: TSizes.appBarHeight,
               ),
 
+ viewTempCategory(),
               DefaultTabController(
+                initialIndex: isArabicLocale()?0:1,
                 length: 2,
                 child: Column(
                   children: <Widget>[
                     TabBar(
                         onTap: tabController.changeTab,
-                      // indicatorPadding:
-                      //     EdgeInsets.symmetric(vertical: 5, horizontal: 22),
-                      // indicator: BoxDecoration(
-                      //     color: TColors.darkGrey.withValues(alpha: .2),
-                      //     border: Border.all(color: TColors.darkGrey),
-                      //     borderRadius: BorderRadius.circular(30))
-
-                      //const BoxDecoration()
+                      
                       isScrollable: true,
 
                       // indicatorColor: TColors.red,
@@ -85,7 +84,13 @@ tabController.selectedIndex=0.obs;
                               const SizedBox(
                                 height: TSizes.sm,
                               ),
+                              Directionality(
+                                
+                                textDirection: TextDirection.rtl,
+                                child: TCustomWidgets.buildLabel('التصنيف *')),
+
                               TextFormField(
+                                
                                  focusNode: tabController.arabicFocusNode,
                              //     textAlign: TextAlign.right,
                               style: titilliumBold.copyWith(fontSize: 18),
@@ -96,10 +101,11 @@ tabController.selectedIndex=0.obs;
                                   }
                                   return null;
                                 },
-                                decoration: inputTextField.copyWith(
+                                decoration: inputTextField.copyWith(contentPadding: isArabicLocale()? EdgeInsets.only(right:5):EdgeInsets.only(left:5),
+                                )
                                  // contentPadding: EdgeInsets.only(right: 5),
-                                  labelText: 'التصنيف *',
-                                ),
+                                
+                                
                               ),
                             ],
                           ),
@@ -109,6 +115,8 @@ tabController.selectedIndex=0.obs;
                               const SizedBox(
                                 height: TSizes.sm,
                               ),
+                              TCustomWidgets.buildLabel('Category *'),
+                         
                               TextFormField(
                                  style: titilliumBold.copyWith(fontSize: 18),
                                  focusNode: tabController.englishFocusNode,
@@ -121,8 +129,8 @@ tabController.selectedIndex=0.obs;
                                   return null;
                                 },
                                 decoration: inputTextField.copyWith(
-                                   contentPadding: EdgeInsets.only(left: 5),
-                                  labelText: "Category Name *",
+                                   contentPadding: isArabicLocale()? EdgeInsets.only(right:5):EdgeInsets.only(left:5),
+                                
                                 ),
                               ),
                             ],
@@ -136,14 +144,8 @@ tabController.selectedIndex=0.obs;
               const SizedBox(
                 height: TSizes.spaceBtwInputFields,
               ),
-           
-              Text(
-                isArabicLocale() ? 'الصورة' : 'Image',
-                style: titilliumSemiBold.copyWith(
-                  fontSize: 16,
-                ),
-              ),
-
+           TCustomWidgets.buildLabel( isArabicLocale() ? 'الصورة' : 'Image'),
+             
               Obx(
                 () => Visibility(
                   visible: createController.localImage.isEmpty,
@@ -228,4 +230,42 @@ tabController.selectedIndex=0.obs;
       ),
     );
   }
+
+  Center viewTempCategory() {
+    var controller=CreateCategoryController.instance;
+    return Center(
+                            child:
+                            
+                             Obx(
+                               ()=> controller.tempItems.isNotEmpty?
+                                Container(
+                                color: Colors.transparent,
+                                height: 120,
+                                width: 85 *
+                                    (controller.tempItems.length +
+                                        0),
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount:
+                                     controller.tempItems.length,
+                                  itemBuilder: (context, index) {
+                                    return GestureDetector(
+                                      onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              EditCategory(category: controller.tempItems[index]))), 
+                                      child: TCategoryGridItem(
+                                          category: controller.tempItems[index],
+                                          editMode: false,
+                                        ),
+                                    );
+                                  },
+                                ),
+                                                           ):const SizedBox.shrink(),
+                             ),
+                          );
+  }
 }
+
+

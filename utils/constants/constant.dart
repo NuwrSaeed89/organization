@@ -6,5 +6,5 @@ const secondaryColor = Color(0xFFFFFFFF);
 const backgroundColor = Color(0xFF15131C);
 const seleccionColor = Color.fromARGB(255, 137, 165, 221);
 const arabicFonts = 'Tajawal-Medium';
-const englishFonts = 'Arial';
+const englishFonts = 'Tajawal-Medium';
 const defaultPadding = 20.0;

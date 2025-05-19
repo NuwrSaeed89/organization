@@ -9,6 +9,8 @@ class ProfileModel {
   String profileImage;
   bool isOrganization;
   String website;
+  String ? organizationLogo;
+  String ? organizationCover;
   String youtube;
   String x;
   String facebook;
@@ -27,6 +29,8 @@ class ProfileModel {
     this.facebook = '',
     this.instagram = '',
     this.linkedIn = '',
+    this.organizationCover='',
+    this.organizationLogo=''
   });
 
   factory ProfileModel.fromSnapshot(
@@ -35,6 +39,8 @@ class ProfileModel {
     final map = document.data()!;
     return ProfileModel(
         organizationName: map['organizationName'] as String,
+        organizationCover: map['organizationCover'] ??"",
+        organizationLogo: map['organizationLogo']??"",
         bio: map['bio'] as String,
         bannerImage: map['bannerImage'] as String,
         profileImage: map['profileImage'] as String,

@@ -8,6 +8,7 @@ import 'package:winto/app/data.dart';
 import 'package:winto/core/constants/colors.dart' as TColors;
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/controllers/category_controller.dart';
+import 'package:winto/features/organization/e_commerce/controllers/create_category_controller.dart';
 import 'package:winto/features/organization/e_commerce/data/models/category_model.dart';
 import 'package:winto/features/organization/e_commerce/features/category/view/all_category/widgets/category_grid_item.dart';
 import 'package:winto/features/organization/e_commerce/features/category/view/create_category/create_category.dart';
@@ -31,86 +32,83 @@ class CategoryMobileScreen extends StatelessWidget {
     // ScrollController scrollController = ScrollController();
     final controller = CategoryController.instance;
 
-    return SafeArea(
-      child: Directionality(
-        textDirection: isArabicLocale() ? TextDirection.rtl : TextDirection.ltr,
-        child: Scaffold(
-            floatingActionButton: SizedBox(
-              width: 50,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Obx(
-                    () => FloatingActionButton(
-                      backgroundColor: Colors.black.withValues(alpha: .5),
-                      onPressed: () => gridType.value = !gridType.value,
-                      child: SizedBox(
-                          width: 30,
-                          child: Icon(
-                              gridType.value ? Icons.grid_3x3 : Icons.list)),
-                    ),
-                  ),
-                  FloatingActionButton(
+    return Directionality(
+      textDirection: isArabicLocale() ? TextDirection.rtl : TextDirection.ltr,
+      child: Scaffold(
+          floatingActionButton: SizedBox(
+            width: 50,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Obx(
+                  () => FloatingActionButton(
                     backgroundColor: Colors.black.withValues(alpha: .5),
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CreateCategory(
-                                  vendorId: vendorId,
-                                ))),
+                    onPressed: () => gridType.value = !gridType.value,
                     child: SizedBox(
-                      width: 30,
-                      child: Image.asset(
-                        TImages.add,
-                      ),
+                        width: 30,
+                        child: Icon(
+                            gridType.value ? Icons.grid_3x3 : Icons.list)),
+                  ),
+                ),
+                FloatingActionButton(
+                  backgroundColor: Colors.black.withValues(alpha: .5),
+                  onPressed: () {
+                    
+                     var controller =Get.put(CreateCategoryController());
+    controller.deleteTempItems();
+                     Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) {
+                             
+                            return CreateCategory(
+                                vendorId: vendorId,
+                              );}));},
+                  child: SizedBox(
+                    width: 30,
+                    child: Image.asset(
+                      TImages.add,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            appBar: CustomAppBar(
-              title:
-                  AppLocalizations.of(context).translate('shop.allCategories'),
-            ),
-
-            //  fetchData()
-            body: RefreshIndicator(
+          ),
+          appBar: CustomAppBar(
+            title:
+                AppLocalizations.of(context).translate('shop.allCategories'),
+          ),
+    
+          //  fetchData()
+          body: SafeArea(
+            child: RefreshIndicator(
               onRefresh: () async {
                 controller.storeId.value=vendorId;
-                controller.fetchCategoryData();
+                controller.getCategoryOfUser(vendorId);
               },
               child: SingleChildScrollView(
                 child: Padding(
+                  
+           
                   padding: EdgeInsets.all(TSizes.sm),
-                  child: Column(
-                    children: [
-                      TRoundedContainer(
-                        child: Column(
-                          children: [
-                            Obx(() {
-                              if (controller.isLoading.value) {
-                                return const TLoaderWidget();
-                              }
-
-                              return gridType.value
-                                  ? CategoryGrid(
-                                      vendorId: vendorId,
-                                      editMode: true,
-                                    )
-                                  : CategoryList(
-                                      vendorId: vendorId,
-                                      editMode: true,
-                                    );
-                            })
-                          ],
-                        ),
-                      )
-                    ],
+                  child: Obx(()=>
+                     Column(
+                      children: [
+                        gridType.value
+                              ? CategoryGrid(
+                                  vendorId: vendorId,
+                                  editMode: true,
+                                )
+                              : CategoryList(
+                                  vendorId: vendorId,
+                                  editMode: true,)
+                      ],
+                    ),
                   ),
                 ),
               ),
-            )),
-      ),
+            ),
+          )),
     );
   }
 }
@@ -123,10 +121,10 @@ class CategoryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = CategoryController.instance;
-    final categories = controller.felteredItems;
+  var categories=controller.allItems;
     return Padding(
       padding: const EdgeInsets.only(left: 1.0, right: 1, top: 1, bottom: 70),
-      child: categories.isEmpty
+      child: controller.allItems.isEmpty
           ? Column(
               children: [
                 SizedBox(
@@ -170,70 +168,9 @@ class CategoryGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = CategoryController.instance;
-    //var categories = controller.getCategoryOfUser(vendorId);
+    var categories = controller.allItems;
     //controller.felteredItems;
 
-    return FutureBuilder<List<CategoryModel>>(
-      future: CategoryController.instance.getCategoryOfUser(vendorId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Wrap(
-            children: [
-              SizedBox(
-                width: 10,
-              ),
-              TShimmerEffect(
-                  raduis: BorderRadius.circular(100), width: 65, height: 65),
-              SizedBox(
-                width: 10,
-              ),
-              TShimmerEffect(
-                  raduis: BorderRadius.circular(100), width: 65, height: 65),
-              SizedBox(
-                width: 10,
-              ),
-              TShimmerEffect(
-                  raduis: BorderRadius.circular(100), width: 65, height: 65),
-              SizedBox(
-                width: 10,
-              ),
-              TShimmerEffect(
-                  raduis: BorderRadius.circular(100), width: 65, height: 65),
-              SizedBox(
-                width: 10,
-              ),
-            ],
-          );
-        } else {
-          if (snapshot.data!.isEmpty) {
-            return editMode
-                ? InkWell(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CreateCategory(
-                                  vendorId: vendorId,
-                                  // suggestingCategory:
-                                  //     category,
-                                ))),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 20.0, right: 20),
-                      child: TRoundedContainer(
-                        width: 50,
-                        height: 50,
-                        backgroundColor: Colors.white,
-                        enableShadow: true,
-                        radius: BorderRadius.circular(300),
-                        child: Icon(
-                          CupertinoIcons.add,
-                          color: TColors.primary,
-                        ),
-                      ),
-                    ),
-                  )
-                : const SizedBox.shrink();
-          } else {
-            var categories = snapshot.data!;
             return Stack(
               children: [
                 MasonryGridView.count(
@@ -246,7 +183,7 @@ class CategoryGrid extends StatelessWidget {
                   shrinkWrap: true,
                   itemBuilder: (BuildContext context, int index) {
                     return TCategoryGridItem(
-                      vendorId: userId_,
+                    
                       category: categories[index],
                       editMode: false,
                     );
@@ -274,7 +211,5 @@ class CategoryGrid extends StatelessWidget {
             );
           }
         }
-      },
-    );
-  }
-}
+      
+

@@ -5,9 +5,11 @@ import 'package:winto/features/organization/e_commerce/utils/constants/color.dar
 
 class CustomFloatActionButton extends StatelessWidget {
   CustomFloatActionButton(
-      {super.key, required this.onTap, this.icon = CupertinoIcons.add});
+      {super.key, required this.onTap, this.icon = CupertinoIcons.add, this.isIcon=true, this.widget});
   final VoidCallback onTap;
   final IconData icon;
+  final bool isIcon;
+  Widget? widget;
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
@@ -24,10 +26,10 @@ class CustomFloatActionButton extends StatelessWidget {
         width: 50,
         height: 50,
         radius: BorderRadius.circular(300),
-        child: Icon(icon
+        child:   isIcon? Icon(icon
   ,
           color: TColors.primary,
-        ),
+        ): widget,
       )),
     );
   }

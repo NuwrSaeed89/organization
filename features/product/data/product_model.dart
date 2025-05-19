@@ -12,7 +12,7 @@ class ProductModel {
   double price;
   String title;
   String arabicTitle;
-  double salePrice;
+  double? oldPrice;
   String vendorId;
   bool? isFeature;
   int? salePersent;
@@ -39,7 +39,7 @@ class ProductModel {
     //this.brand,
     this.images,
     this.thumbnail,
-    this.salePrice = 0.0,
+    this.oldPrice ,
     this.isFeature,
     this.description,
     this.arabicDescription,
@@ -62,7 +62,7 @@ class ProductModel {
       //'Brand': brand!.toJson(),
       'Images': images ?? [],
       'Price': price,
-      'SalePrice': salePrice,
+      'SalePrice': oldPrice??price,
       'Category': category!.toJson(),
       //  'Vendor': vendor!.toJson(),
       //'Stock': stock,
@@ -83,7 +83,12 @@ class ProductModel {
 
   factory ProductModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> document) {
-    if (document.data() == null) return ProductModel.empty();
+    if (document.data() == null) {
+      if (kDebugMode) {
+        print("Profile is is  Null Nulll");
+      }
+      
+       return ProductModel.empty();};
     final data = document.data()!;
    
     return ProductModel(
@@ -105,7 +110,7 @@ class ProductModel {
       images: data['Images'] != null ? List<String>.from(data['Images']) : [],
       // stock: int.parse((data['Stock'] ?? 0).toString()),
       //stock: data['Stock'] ?? 0,
-      salePrice: double.parse((data['SalePrice'] ?? 0.0).toString()),
+      oldPrice: double.parse((data['SalePrice'] ??0).toString()),
 
       // productAtributes: (data['ProductAttributs'] as List<dynamic>)
       //     .map((e) => ProductAtributeModel.fromJason(e))
@@ -143,7 +148,7 @@ class ProductModel {
       price: double.parse((data['Price'] ?? 0.0).toString()),
       images: data['Images'] != null ? List<String>.from(data['Images']) : [],
       // stock: data['Stock'] ?? 0,
-      salePrice: double.parse((data['SalePrice'] ?? 0.0).toString()),
+      oldPrice: double.parse((data['SalePrice'] ?? 0).toString()),
       //  stock: int.parse((data['Stock'] ?? 0).toString()),
 
       // productAtributes: (data['ProductAttributs'] as List<dynamic>)

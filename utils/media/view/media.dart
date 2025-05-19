@@ -11,9 +11,9 @@ class MediaScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //final controller = Get.put(MediaController());
-    return const SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
+    return const Scaffold(
+        body: SafeArea(
+      child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.all(TSizes.defaultSpace),
             child: Column(

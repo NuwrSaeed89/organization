@@ -4,10 +4,12 @@ import 'package:winto/app/app_localization.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/controllers/category_controller.dart';
 import 'package:winto/features/organization/e_commerce/data/models/category_model.dart';
+import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/add/add_product.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/shemmer/product_horizental_list_shimmer.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_widget_small.dart';
+import 'package:winto/features/organization/e_commerce/features/sector/model/sector_model.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/shimmers/shimmer.dart';
@@ -37,8 +39,6 @@ class TCategoryTab extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: ListView(
-          // shrinkWrap: true,
-          // physics: const NeverScrollableScrollPhysics(),
           children: [
             Column(
               children: [
@@ -91,8 +91,10 @@ class TCategoryTab extends StatelessWidget {
                                               builder: (context) =>
                                                   CreateProduct(
                                                     vendorId: userId,
+                                                    initialList: [],
+                                                     sectorTitle: SectorModel( arabicName: '',id: '',englishName: '', name: ''),
                                                     type: '',
-                                                    sectionId: '',
+                                                    sectionId: 'all',
                                                     // suggestingCategory:
                                                     //     category,
                                                   ))),
@@ -126,7 +128,7 @@ class TCategoryTab extends StatelessWidget {
                         }
                         final products = snapshot.data!;
                         offersItems
-                            .assignAll(products.where((p) => p.salePrice > 0));
+                            .assignAll(products.where((p) => p.oldPrice! > 0));
                         // .where((p) =>
                         //     int.parse(ProductController.instance
                         //         .calculateSalePresentage(
@@ -140,17 +142,23 @@ class TCategoryTab extends StatelessWidget {
                               ? Column(
                                   children: [
                                     InkWell(
-                                      onTap: () => Navigator.push(
+                                      onTap: () {
+                                      
+                                      ProductController.instance.deleteTempItems();
+                                      
+                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   CreateProduct(
                                                     vendorId: userId,
+                                                    initialList: [],
                                                     type: '',
-                                                    sectionId: '',
+                                                    sectionId: 'all',
+                                                     sectorTitle: SectorModel( arabicName: '',id: '',englishName: '', name: ''),
                                                     // suggestingCategory:
                                                     //     category,
-                                                  ))),
+                                                  )));},
                                       child: const Icon(
                                         Icons.add,
                                         size: 30,

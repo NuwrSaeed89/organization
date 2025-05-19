@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/features/banner/controller/banner_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/banner/view/all/all_banners.dart';
@@ -13,6 +14,7 @@ import 'package:winto/features/organization/e_commerce/utils/common/widgets/cust
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/image_strings.dart';
 import 'package:winto/features/organization/e_commerce/utils/loader/circle_loader.dart';
+import 'package:winto/features/social/presentation/widgets/posts/network/display/display_image_full.dart';
 
 class TPromoSlider extends StatelessWidget {
   TPromoSlider(
@@ -59,10 +61,13 @@ class TPromoSlider extends StatelessWidget {
                child: CarouselSlider(
                 carouselController: CarouselSliderController(),
                   options: CarouselOptions(
-                    viewportFraction: 0.85,
+                                aspectRatio:364/214,
+               height: 48.w,
+        viewportFraction: 0.8,
+        enlargeCenterPage: true,
                     //autoPlay: true,
-                    height: 200,
-                    enlargeCenterPage: true,
+                   // height: 200,
+                 //   enlargeCenterPage: true,
                
                     autoPlay: true,
                   ),
@@ -72,8 +77,8 @@ class TPromoSlider extends StatelessWidget {
                       children: [
                         Center(
                           child: TRoundedContainer(
-                            width: 364,
-                            height: 200,
+                          width: 214,
+              height: 364,
                             enableShadow: true,
                             showBorder: true,
                             backgroundColor: TColors.white,
@@ -115,14 +120,21 @@ class TPromoSlider extends StatelessWidget {
                       padding: EdgeInsets.only(bottom: 10),
                       child: TRoundedContainer(
                           showBorder: true,
-                          width: 364,
-                          height: 224,
+                         
+             
                           radius: BorderRadius.circular(15),
-                          child: CustomCaChedNetworkImage(
-                            width: 364,
-                            height: 214,
-                            url: item,
-                            raduis: BorderRadius.circular(15),
+                          child: GestureDetector(
+                            onTap: ()=> Navigator.push(  context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  NetworkImageContainerFullSize(
+                                     item))),
+                            child: CustomCaChedNetworkImage(
+                               width: 80.w,
+                                          height: 40.w,
+                              url: item,
+                              raduis: BorderRadius.circular(15),
+                            ),
                           )),
                     ))
                 .toList();
@@ -131,8 +143,8 @@ class TPromoSlider extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 10),
                 child:  TRoundedContainer(
                   showBorder: true,
-                  width: 364,
-                  height: 224,
+                height: 214,
+              width: 364,
                   enableShadow: true,
                   radius: BorderRadius.circular(15),
                   child: Center(
@@ -159,8 +171,8 @@ class TPromoSlider extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 10),
                 child: TRoundedContainer(
                   showBorder: true,
-                  width: 364,
-                  height: 224,
+              // height: 214,
+              // width: 364,
                   enableShadow: true,
                   radius: BorderRadius.circular(15),
                  child: Center(
@@ -187,8 +199,8 @@ class TPromoSlider extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 10),
                 child: TRoundedContainer(
                   showBorder: true,
-                  width: 364,
-                  height: 214,
+              //  height: 214,
+              // width: 364,
                   enableShadow: true,
                   radius: BorderRadius.circular(15),
                   child: Center(
@@ -217,17 +229,19 @@ class TPromoSlider extends StatelessWidget {
               children: [
                 CarouselSlider(
                     options: CarouselOptions(
-                        //  aspectRatio: 9 / 6,
+                      //    aspectRatio: 4 / 2,
                       //  viewportFraction: 0.85,
-
+      aspectRatio:364/214,
+               height: 48.w,
+             
                         //autoPlay: true,
-                        height: 230,
+                       // height: 230,
                        
                        // enlargeCenterPage: true,
                        
 
-                       //   aspectRatio: 16 / 9,
-        viewportFraction: 0.85,
+                     //  aspectRatio: 1/0.588,
+        viewportFraction: 0.8,
         enlargeCenterPage: true,
                        // enableInfiniteScroll: true,
                      

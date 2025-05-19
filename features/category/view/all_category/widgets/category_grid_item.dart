@@ -13,15 +13,17 @@ import 'package:winto/features/organization/e_commerce/utils/constants/color.dar
 import 'package:winto/features/organization/e_commerce/utils/constants/sizes.dart';
 
 class TCategoryGridItem extends StatelessWidget {
-  TCategoryGridItem(
+  const TCategoryGridItem(
       {super.key,
       required this.category,
       required this.editMode,
-      required this.vendorId});
+      this.selected=false
+     });
   final CategoryModel category;
 
   final bool editMode;
-  final String vendorId;
+  final bool selected;
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,7 @@ class TCategoryGridItem extends StatelessWidget {
                   ),
                 ],
                 border: Border.all(
-                    color: TColors.white,
+                     color: TColors.white,
                     strokeAlign: BorderSide.strokeAlignOutside),
                 color: TColors.white,
                 borderRadius: BorderRadius.circular(100)),
@@ -95,18 +97,30 @@ class TCategoryGridItem extends StatelessWidget {
         const SizedBox(
           height: TSizes.spaceBtWItems / 2,
         ),
+    
         Wrap(children: [
-          SizedBox(
+          Container(
+          
             width: 85,
-            height: 35,
+         //   height: 60,
+            
               child: Align(
                 alignment: Alignment.topCenter,
-              child: Text(
-                isArabicLocale() ? category.arabicName : category.name,
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                style: titilliumRegular.copyWith(fontSize: 12),
+              child: Container(
+                 decoration: selected?
+           BoxDecoration(border:Border(
+      bottom: BorderSide(
+        color: Colors.black, // لون الحد
+        width: 2, // سمك الحد
+       )))
+           :null,
+                child: Text(
+                  isArabicLocale() ? category.arabicName : category.name,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: titilliumRegular.copyWith(fontSize: selected?15:13 , fontWeight:selected? FontWeight.w600:FontWeight.normal ),
+                ),
               ),
             ),
           ),

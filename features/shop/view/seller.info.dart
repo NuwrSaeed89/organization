@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sizer/sizer.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/policy_page.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
@@ -19,10 +20,10 @@ class PolicyDisplayPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
         appBar: CustomAppBar(title: isArabicLocale() ? "سياسات المتجر" : "Store Policies"),
-        body: FutureBuilder<DocumentSnapshot>(
+        body: SafeArea(
+      child: FutureBuilder<DocumentSnapshot>(
           future: FirebaseFirestore.instance.collection('users')
             .doc(vendorId).collection('store_policies').doc(vendorId).get(),
           builder: (context, snapshot) {
@@ -30,7 +31,11 @@ class PolicyDisplayPage extends StatelessWidget {
               return Center(child: TLoaderWidget());
             }
             if (!snapshot.hasData || !snapshot.data!.exists) {
-              return Center(child: Text(isArabicLocale() ? "لا توجد بيانات متاحة" : "No data available"));
+              return Center(child: Image.asset(
+                          'assets/images/liquid_loading.gif',
+                          width: 50.w,
+                          height: 50.w,
+                        ));
             }
       
             var data = snapshot.data!;

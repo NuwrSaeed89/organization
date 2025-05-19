@@ -176,58 +176,60 @@ class _EditNamePageState extends ConsumerState<EditFieldPage> {
           )
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _controller,
-              maxLength:
-                  widget.maxCharacters == 0 ? null : widget.maxCharacters,
-              maxLines: widget.maxLines,
-              autofocus: true,
-              decoration: InputDecoration(
-                hintText: widget.hintText,
-                /* suffixIcon: Icon(
-                  Icons.clear,
-                ), */
-                border: const UnderlineInputBorder(), // Only a bottom border
-                focusedBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            children: [
+              TextField(
+                controller: _controller,
+                maxLength:
+                    widget.maxCharacters == 0 ? null : widget.maxCharacters,
+                maxLines: widget.maxLines,
+                autofocus: true,
+                decoration: InputDecoration(
+                  hintText: widget.hintText,
+                  /* suffixIcon: Icon(
+                    Icons.clear,
+                  ), */
+                  border: const UnderlineInputBorder(), // Only a bottom border
+                  focusedBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                  ),
+                  enabledBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
                 ),
-                enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                ),
-              ),
-              onChanged: (String text) {
-                if (widget.field == 'username') {
-                  ref.read(userNameErrorProvider.notifier).state =
-                      'checking ...';
-                  _onUserNameChanged(ref);
-                }
-              },
-            ),
-            const SizedBox(
-              height: 12,
-            ),
-            if (widget.field == 'username')
-              Consumer(
-                builder: (context, ref, child) {
-                  var validityHint = ref.watch(userNameErrorProvider);
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          validityHint,
-                          style: getUsernameHntStyle(ref),
-                        ),
-                      ),
-                    ],
-                  );
+                onChanged: (String text) {
+                  if (widget.field == 'username') {
+                    ref.read(userNameErrorProvider.notifier).state =
+                        'checking ...';
+                    _onUserNameChanged(ref);
+                  }
                 },
               ),
-          ],
+              const SizedBox(
+                height: 12,
+              ),
+              if (widget.field == 'username')
+                Consumer(
+                  builder: (context, ref, child) {
+                    var validityHint = ref.watch(userNameErrorProvider);
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            validityHint,
+                            style: getUsernameHntStyle(ref),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+            ],
+          ),
         ),
       ),
     );

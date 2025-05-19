@@ -2,14 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:excel/excel.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:winto/features/organization/e_commerce/data/models/category_model.dart';
 import 'dart:io';
 
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
+import 'package:winto/features/organization/e_commerce/features/product/data/product_repository.dart';
 
 class ExcelController extends GetxController {
   var filePath = ''.obs;
@@ -32,31 +35,81 @@ String vendorId=FirebaseAuth.instance.currentUser!.uid;
   }
 
   Future<void> downloadExcelFile() async {
-    try {
 
 
-       var status = await Permission.storage.request();
-  if (status.isGranted) {
-    print("تم منح الإذن للوصول إلى الملفات!");
-  } else {
-    print("الإذن مرفوض، يرجى تفعيله يدويًا.");
+     var excel = Excel.createExcel();
+  var sheet = excel['Sheet1'];
+
+  // إضافة رأس الجدول
+  // sheet.appendRow([
+  //   'الاسم العربي', 
+  //   'الوصف العربي', 
+  //   'English Name', 
+  //   'English Description', 
+  //   'السعر', 
+  //   'سعر التخفيض', 
+  //   'الفئة', 
+  //   'الصور'
+  // ]);
+
+  // إعداد قائمة الفئات المتاحة
+  var categories = ['إلكترونيات', 'ملابس', 'أثاث', 'أغذية'];
+
+  // تحديد نطاق البيانات المستخدمة في القائمة المنسدلة
+  // sheet.cell(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: 1)).value = 'اختر فئة';
+  // sheet.dataValidation(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: 1),
+  //     DataValidation(
+  //       allowList: categories,
+  //       showDropDown: true,
+  //       inputMessage: 'اختر الفئة المناسبة للمنتج',
+  //       errorMessage: 'القيمة غير صحيحة، الرجاء اختيار فئة من القائمة',
+  //     ));
+
+  // مثال لإضافة بيانات منتج
+  // sheet.appendRow([
+  //   'هاتف ذكي', 
+  //   'هاتف ذكي متطور بكاميرا عالية الدقة', 
+  //   'Smartphone', 
+  //   'Advanced smartphone with high-resolution camera', 
+  //   '1000', 
+  //   '900', 
+  //   'إلكترونيات', 
+  //   'image1.jpg,image2.jpg,image3.jpg'
+  // ]);
+
+  // حفظ الملف
+  var fileBytes = excel.save();
+  if (fileBytes != null) {
+    File('products.xlsx')
+      ..createSync(recursive: true)
+      ..writeAsBytesSync(fileBytes);
+    print('تم إنشاء ملف Excel بنجاح!');
   }
-      // ✅ 1. قراءة ملف Excel من `assets`
-      ByteData data = await rootBundle.load('assets/template.xlsx');
-      List<int> bytes = data.buffer.asUint8List();
-//assets\template.xlsx
-      // ✅ 2. حفظ الملف محليًا في مجلد المستندات
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/template.xlsx');
-      await file.writeAsBytes(bytes);
+//     try {
 
-      // ✅ 3. تحديث المسار حتى يمكن عرضه للمستخدم
-      filePath.value = file.path;
 
-      Get.snackbar("نجاح", "تم تحميل نموذج Excel بنجاح!");
-    } catch (e) {
-      Get.snackbar("خطأ", "حدث خطأ أثناء تحميل الملف!");
-    }
+//        var status = await Permission.storage.request();
+//   if (status.isGranted) {
+//     print("تم منح الإذن للوصول إلى الملفات!");
+//   } else {
+//     print("الإذن مرفوض، يرجى تفعيله يدويًا.");
+//   }
+//       // ✅ 1. قراءة ملف Excel من `assets`
+//       ByteData data = await rootBundle.load('assets/template.xlsx');
+//       List<int> bytes = data.buffer.asUint8List();
+// //assets\template.xlsx
+//       // ✅ 2. حفظ الملف محليًا في مجلد المستندات
+//       final directory = await getApplicationDocumentsDirectory();
+//       final file = File('${directory.path}/template.xlsx');
+//       await file.writeAsBytes(bytes);
+
+//       // ✅ 3. تحديث المسار حتى يمكن عرضه للمستخدم
+//       filePath.value = file.path;
+
+//       Get.snackbar("نجاح", "تم تحميل نموذج Excel بنجاح!");
+//     } catch (e) {
+//       Get.snackbar("خطأ", "حدث خطأ أثناء تحميل الملف!");
+//     }
   }
 
 final RxList<ProductModel> products = <ProductModel>[].obs;
@@ -66,7 +119,7 @@ final RxList<ProductModel> products = <ProductModel>[].obs;
     }
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['xlsx'],
+     allowedExtensions: ['xlsx', 'xls'],
     );
 
     if (result != null) {
@@ -92,45 +145,86 @@ final RxList<ProductModel> products = <ProductModel>[].obs;
       var salePrice = row[5]?.value.toString();
       var item=ProductModel(id: '', title: title!, arabicTitle: arabicTitle!,
         price: double.parse(price.toString()),
-        salePrice: double.parse(salePrice.toString()),
-        
+        oldPrice: double.parse(salePrice.toString()),
+      isFeature: true,
+      category: CategoryModel(name: 'Excel', arabicName: 'Excel'),
+images: [],
+productType: 'all',
+thumbnail: '',
         description: description!, arabicDescription: arabicDescription!, vendorId: vendorId);
        products.add(item);
       
       }
-     storeTempProducts(vendorId);
+     storeTemporaryData(products, vendorId);
+      print('temp data 9999999999999 length${products.length}');
+     fetchTemporaryData(vendorId);
+
     }
   }
 
-
-void readExcel(File file) {
-  var bytes = file.readAsBytesSync();
-  var excel = Excel.decodeBytes(bytes);
-
-  for (var table in excel.tables.keys) {
-    for (var row in excel.tables[table]!.rows) {
-      print(row.map((cell) => cell?.value.toString()).toList());
-    }
+ void refreshData(String vendorId) {
+    fetchTemporaryData(vendorId);
   }
-}
 
-
-void storeTempProducts  ( String vendorId) async{
-  var updatedList = products.map((p) => p.toJson()).toList();
-
-   await FirebaseFirestore.instance.collection('users')
-          .doc(vendorId).set({
-     
-      'temp_products_$vendorId': updatedList,
-    });
-  var collectionRef = FirebaseFirestore.instance.collection('users')
-          .doc(vendorId).collection('temp_products_$vendorId');
-
+Future<void> storeTemporaryData(List<ProductModel> data, String vendorId) async {
  
-  
-  
+
+  for (var item in data) {
+    await ProductRepository.instance.addProductToTemps(item, vendorId);
+  }
 }
 
+var sortColumn = ''.obs; 
+var sortAscending = true.obs;
+
+
+  void sortData(String column) {
+    //  var items = <ProductModel>[].obs;
+    //  items.value=products;
+    if (sortColumn.value == column) {
+      sortAscending.value = !sortAscending.value; // تبديل الترتيب
+    } else {
+      sortColumn.value = column;
+      sortAscending.value = true; // عند تحديد عمود جديد، يبدأ بتصاعدي
+    }
+
+    products.sort((a, b) {
+      var aValue = a.toJson()[column];
+      var bValue = b.toJson()[column];
+      return sortAscending.value
+          ? aValue.compareTo(bValue)
+          : bValue.compareTo(aValue);
+    });
+
+    products.refresh();
+  }
+ 
+
+
+  void fetchTemporaryData(String vendorId) async {
+    var snapshot  = await ProductRepository.instance.getAllTempProducts( vendorId);
+    products.value=snapshot;
+  }
+
+  void updateItem(int index, String field, String value) {
+    var product = products[index];
+    if (field == "title") product.title = value;
+    if (field == "arabicTitle") product.arabicTitle = value;
+    if (field == "price") product.price = double.parse(value);
+    if (field == "salePrice") product.oldPrice = double.parse(value);
+    if (field == "description") product.description = value;
+    if (field == "arabicDescription") product.arabicDescription = value;
+    products.refresh();
+  }
+
+  Future<void> saveChanges() async {
+    for (var product in products) {
+      await FirebaseFirestore.instance.collection('temporary_data').doc(product.id).update(product.toJson());
+    }
+  }
+
+
 
 
 }
+

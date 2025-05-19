@@ -10,6 +10,7 @@ import 'package:winto/features/organization/e_commerce/features/product/views/ad
 import 'package:winto/features/organization/e_commerce/features/product/views/shemmer/product_horizental_list_shimmer.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_widget_medium.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_widget_small.dart';
+import 'package:winto/features/organization/e_commerce/features/sector/model/sector_model.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/appbar/custom_app_bar.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/shimmers/shimmer.dart';
@@ -41,127 +42,133 @@ class AllProducts extends StatelessWidget {
           appBar: CustomAppBar(
             title: title,
           ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(TSizes.defaultSpace),
-              child: FutureBuilder(
-                  //Text(" category id $categoryId")
-                  future: CategoryController.instance.getCategoryProduct(
-                      categoryId: categoryId, userId: vendorId),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const TProductHorizentalShimmer();
-                    }
-                    if (!snapshot.hasData ||
-                        snapshot.data == null ||
-                        snapshot.data!.isEmpty) {
-                      return Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          const TShimmerEffectdark(
-                            width: 120,
-                            height: 180,
-                          ),
-                          if (editMode)
-                            Column(
-                              children: [
-                                InkWell(
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => CreateProduct(
-                                                vendorId: vendorId,
-                                                type: '',
-                                                sectionId: 'all',
-                                              ))),
-                                  child: const Icon(
-                                    Icons.add,
-                                    size: 30,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(TSizes.defaultSpace),
+                child: FutureBuilder(
+                    //Text(" category id $categoryId")
+                    future: CategoryController.instance.getCategoryProduct(
+                        categoryId: categoryId, userId: vendorId),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const TProductHorizentalShimmer();
+                      }
+                      if (!snapshot.hasData ||
+                          snapshot.data == null ||
+                          snapshot.data!.isEmpty) {
+                        return Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            const TShimmerEffectdark(
+                              width: 120,
+                              height: 180,
+                            ),
+                            if (editMode)
+                              Column(
+                                children: [
+                                  InkWell(
+                                    onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => CreateProduct(
+                                              initialList: [],
+                                               sectorTitle: SectorModel( arabicName: '',id: '',englishName: '', name: ''),
+                                                  vendorId: vendorId,
+                                                  type: '',
+                                                  sectionId: 'all',
+                                                ))),
+                                    child: const Icon(
+                                      Icons.add,
+                                      size: 30,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 4,
-                                ),
-                                Text(
-                                  isArabicLocale() ? "اضافة عنصر" : "Add Item",
-                                  style: titilliumBold,
-                                )
-                              ],
-                            )
+                                  const SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text(
+                                    isArabicLocale() ? "اضافة عنصر" : "Add Item",
+                                    style: titilliumBold,
+                                  )
+                                ],
+                              )
+                          ],
+                        );
+                      }
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text(
+                            AppLocalizations.of(context)
+                                .translate('session.someThinggowrong'),
+                            style: robotoMedium,
+                          ),
+                        );
+                      }
+                      final products = snapshot.data!;
+            
+                      // .where((p) =>
+                      //     int.parse(ProductController.instance
+                      //         .calculateSalePresentage(
+                      //             p.price, p.salePrice)!) >
+                      //     0)
+                      // .take(8);
+                      // .toList();
+            
+                      if (products.isEmpty) {
+                        return editMode
+                            ? Column(
+                                children: [
+                                  InkWell(
+                                    onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => CreateProduct(
+                                              initialList: [],
+                                               sectorTitle: SectorModel( arabicName: '',id: '',englishName: '', name: ''),
+                                                  vendorId: vendorId,
+                                                  type: '',
+                                                  sectionId: 'all',
+                                                ))),
+                                    child: const Icon(
+                                      Icons.add,
+                                      size: 30,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text(
+                                    isArabicLocale() ? "اضافة عنصر" : "Add Item",
+                                    style: titilliumBold,
+                                  )
+                                ],
+                              )
+                            : const SizedBox.shrink();
+                      }
+            
+                      return Column(
+                        children: [
+                          SizedBox(
+                            height: 250,
+                            child: ListView.separated(
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(width: 10),
+                                scrollDirection: Axis.horizontal,
+                                itemCount: products.length,
+                                itemBuilder: (_, index) => SizedBox(
+                                      width: 120,
+                                      child: ProductWidgetSmall(
+                                        product: products[index],
+                                        vendorId: vendorId,
+                                      ),
+                                    )),
+                          ),
                         ],
                       );
-                    }
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text(
-                          AppLocalizations.of(context)
-                              .translate('session.someThinggowrong'),
-                          style: robotoMedium,
-                        ),
-                      );
-                    }
-                    final products = snapshot.data!;
-
-                    // .where((p) =>
-                    //     int.parse(ProductController.instance
-                    //         .calculateSalePresentage(
-                    //             p.price, p.salePrice)!) >
-                    //     0)
-                    // .take(8);
-                    // .toList();
-
-                    if (products.isEmpty) {
-                      return editMode
-                          ? Column(
-                              children: [
-                                InkWell(
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => CreateProduct(
-                                                vendorId: vendorId,
-                                                type: '',
-                                                sectionId: 'all',
-                                              ))),
-                                  child: const Icon(
-                                    Icons.add,
-                                    size: 30,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 4,
-                                ),
-                                Text(
-                                  isArabicLocale() ? "اضافة عنصر" : "Add Item",
-                                  style: titilliumBold,
-                                )
-                              ],
-                            )
-                          : const SizedBox.shrink();
-                    }
-
-                    return Column(
-                      children: [
-                        SizedBox(
-                          height: 250,
-                          child: ListView.separated(
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(width: 10),
-                              scrollDirection: Axis.horizontal,
-                              itemCount: products.length,
-                              itemBuilder: (_, index) => SizedBox(
-                                    width: 120,
-                                    child: ProductWidgetSmall(
-                                      product: products[index],
-                                      vendorId: vendorId,
-                                    ),
-                                  )),
-                        ),
-                      ],
-                    );
-
-                    //return TSortableProducts(products: products);
-                  }),
+            
+                      //return TSortableProducts(products: products);
+                    }),
+              ),
             ),
           ),
         ));

@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:winto/app/app_localization.dart';
@@ -16,6 +17,7 @@ import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/admin/data/utils/user_images.dart';
 import 'package:winto/features/admin/presentation/widgets/profile/profile_image.dart';
 import 'package:winto/features/nav/static_bottom_navigator.dart';
+import 'package:winto/features/organization/e_commerce/features/shop/controller/profile_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/edit_field.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/market_place_managment.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/market_place_view.dart';
@@ -25,8 +27,10 @@ import 'package:winto/features/organization/e_commerce/features/shop/view/widget
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/shimmers/shimmer.dart';
+import 'package:winto/features/organization/e_commerce/utils/organization_images.dart';
 import 'package:winto/features/social/data/firebase/user/fetch_user_map.dart';
 import 'package:winto/features/social/presentation/pages/feed/wall.dart';
+import 'package:winto/features/social/presentation/pages/user/view_profile.dart';
 import 'package:winto/features/social/presentation/widgets/posts/network/display/display_image_full.dart';
 
 Widget marketHeaderSection(String userId, bool editMode, bool isVendor) {
@@ -34,8 +38,11 @@ Widget marketHeaderSection(String userId, bool editMode, bool isVendor) {
 
   return Consumer(
     builder: (context, ref, child) {
+      var user = ProfileController.instance.vendorData.value;
+      print("Profile is is ${user.bio}");
       final localizations = AppLocalizations.of(context);
-      return FutureBuilder<Map<String, dynamic>?>(
+      return 
+      FutureBuilder<Map<String, dynamic>?>(
         future: fetchUserMap(userId, ref),
         builder: (context, snapshot) {
           // Define the userMap! variable
@@ -54,7 +61,9 @@ Widget marketHeaderSection(String userId, bool editMode, bool isVendor) {
               'likes': 0,
               'supports': 0,
               'uid': '',
-              'organizationName': ''
+              'organizationName': '',
+               'organizationCover':'',
+               'organizationLogo':''
             }; // Default to loading state
           } else if (snapshot.hasError) {
             // Handle error state
@@ -68,7 +77,8 @@ Widget marketHeaderSection(String userId, bool editMode, bool isVendor) {
                     .translate('user_profile_top_section.user_not_found')));
           }
 
-          return Column(
+          return
+           Column(
             children: [
               Stack(alignment: Alignment.topCenter, children: [
                 Container(
@@ -76,6 +86,8 @@ Widget marketHeaderSection(String userId, bool editMode, bool isVendor) {
                   height: 66.h + 10,
                   color: Colors.transparent,
                 ),
+
+
                 if (userMap['bannerImage'] != 'loading')
                   userMap['bannerImage'] == ''
                       ? Container(
@@ -87,13 +99,13 @@ Widget marketHeaderSection(String userId, bool editMode, bool isVendor) {
                           children: [
                             Container(
                               color: Colors.transparent,
-                              height: 65.h,
+                              height: 67.h,
                               child: Align(
                                 alignment: Alignment.topCenter,
                                 child: GestureDetector(
 onTap: ()  { if( editMode) {
 
-      uploadBannerImageAndSaveToFirestore(
+      uploadorganizationBannerImageAndSaveToFirestore(
                               context, ref); 
                                Navigator.push(
                                 context,
@@ -110,7 +122,7 @@ onTap: ()  { if( editMode) {
                           MaterialPageRoute(
                               builder: (context) =>
                                   NetworkImageContainerFullSize(
-                                      userMap!['bannerImage'] ?? '')));
+                                     userMap!['organizationCover'] ??  userMap['bannerImage'] ?? '')));
                     }
                      
                     },
@@ -121,66 +133,83 @@ onTap: ()  { if( editMode) {
                                     width: 100.w,
                                     height: 63.h,
                                    
-                                    child: ClipRRect(
+                                    child: 
+                                    userMap['organizationCover']=='loading'?
+                                    TShimmerEffect(width: 100.w, height: 63.h):
+                                    
+                                     ClipRRect(
                                       borderRadius: const BorderRadius.only(
                                           bottomLeft: Radius.circular(0),
                                           bottomRight: Radius.circular(0)),
-                                      child: CachedNetworkImage(
-                                        imageUrl: userMap['bannerImage'],
-                                        imageBuilder: (context, imageProvider) =>
-                                            Container(
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: imageProvider,
-                                              fit: BoxFit.cover,
+                                      child: 
+                                       CachedNetworkImage(
+                                          imageUrl: userMap['organizationCover']??userMap['bannerImage'],
+                                          imageBuilder: (context, imageProvider) =>
+                                              Container(
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
                                           ),
+                                          placeholder: (context, url) =>
+                                              TShimmerEffect(
+                                            width: 100.w,
+                                            height: 55.h,
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              Container(
+                                            width: 100.w,
+                                            height: 55.h,
+                                            color: Colors.grey,
+                                          ),
                                         ),
-                                        placeholder: (context, url) =>
-                                            TShimmerEffect(
-                                          width: 100.w,
-                                          height: 55.h,
-                                        ),
-                                        errorWidget: (context, url, error) =>
-                                            Container(
-                                          width: 100.w,
-                                          height: 55.h,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
+                                      
                                     ),
                                   ),
                                 ),
                               ),
                             ),
                             Positioned(
-                              right: 17,
-                              bottom: 0,
+                              right: 15,
+                              bottom: 21,
                               child: GestureDetector(
                                 onTap: () {
                                   HapticFeedback.lightImpact;
-                                  Navigator.pop(context);
-                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const StaticBottomNavigator())); 
+Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ViewSocialProfile(
+                                userId)));
+                                  //ViewSocialProfile
+                                 // Navigator.pop(context);
+                                   
                                 },
                                 child: TRoundedContainer(
                                     radius: BorderRadius.circular(50),
-                                    width: 40,
-                                    height: 40,
-                                    enableShadow: true,
-                                    backgroundColor: Colors.white,
-                                    child: const Icon(
-                                      CupertinoIcons.home,
-                                      size: 26,
-                                    )),
-                              ),
+                                    width: 37,
+                                    height: 37,
+                                   enableShadow: true,
+                                   // backgroundColor: Colors.transparent,
+                                    child:
+                                    
+                                    
+                                    
+                                     Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: const Image(image: AssetImage('assets/images/logo.png'),width: 20,height: 20,),
+                                    )
+                                    
+                                    // Icon(
+                                    //   CupertinoIcons.moon_stars
+                                    //  , size: 20,
+                                    // )),
+                               ) ),
                             ),
                             Positioned(
-                              left: 17,
-                              bottom: 0,
+                              left: 15,
+                              bottom: 21,
                               child: FollowHeart(
                                 myId: userId_,
                                 userId: userMap['uid'],
@@ -189,6 +218,11 @@ onTap: ()  { if( editMode) {
                             ),
                           ],
                         ),
+
+
+
+
+
                 if (userMap['bannerImage'] == 'loading')
                   TShimmerEffect(
                     width: 100.w,
@@ -204,7 +238,7 @@ onTap: ()  { if( editMode) {
                   bottom: -10,
                   child: GestureDetector(
                     onTap: ()  { if( editMode) {
-      uploadProfileImageAndSaveToFirestore(
+      uploadLogoAndSaveToFirestore(
                               context, ref);   
                                Navigator.push(
                                 context,
@@ -218,239 +252,249 @@ onTap: ()  { if( editMode) {
                           MaterialPageRoute(
                               builder: (context) =>
                                   NetworkImageContainerFullSize(
-                                      userMap!['profileImage'] ?? '')));
+                                      userMap!['organizationLogo'] ?? userMap!['profileImage'] ?? '')));
                     }
                      
                     },
-                    child: Stack(
-                      children: [
-                        Container(
-                          color: Colors.transparent,
-                          height: 200,
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 4,
-                                  strokeAlign: BorderSide.strokeAlignOutside,
-                                ),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.grey,
-
-                                    blurRadius: 6,
-                                    offset: Offset(0, 3), // موقع الظل
+                    child:   Container(
+                            color: Colors.transparent,
+                      child: Stack(
+                        children: [
+                          Container(
+                            color: Colors.transparent,
+                            height: 200,
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 3,
+                                    strokeAlign: BorderSide.strokeAlignOutside,
                                   ),
-                                ],
-                              ),
-                              child: UserProfileImageWidget(
-                                imgUrl: userMap['profileImage'] ?? '',
-                                size: 175,
-                                withShadow: true,
-                                allowChange: true,
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                      
+                                      blurRadius: 6,
+                                      offset: Offset(0, 3), // موقع الظل
+                                    ),
+                                  ],
+                                ),
+                                child:  userMap['organizationLogo']=='loading'?
+                                    TShimmerEffect(width: 175, height: 175,raduis: BorderRadius.circular(300),):
+                                     UserProfileImageWidget(
+                                  imgUrl:       userMap['organizationLogo']?? userMap['profileImage'] ?? '',//
+                                  size: 175,
+                                  withShadow: false,
+                                  allowChange: true,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        if ((userMap['isVerified'] ?? false) == true)
-                          Positioned(
-                            bottom: 0,
-                            left: 10,
-                            right: 10,
-                            child: Container(
-                              width: 10,
-                              decoration: const BoxDecoration(),
-                              child: SvgPicture.asset(
-                                  'assets/images/ecommerce/icons/verified.svg'),
+                          if ((userMap['isVerified'] ?? false) == true)
+                            Positioned(
+                              bottom: 0,
+                              left: 10,
+                              right: 10,
+                              child: Container(
+                                width: 10,
+                                decoration: const BoxDecoration(),
+                                child: SvgPicture.asset(
+                                    'assets/images/ecommerce/icons/verified.svg'),
+                              ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
           
                 
               ]),
-
-              Stack(
-                children: [
-                  if (isVendor)
-                    Visibility(
-                      visible: !editMode,
-                      child: Positioned(
-                        left: 0,
-                        bottom: 10,
-                        child: GestureDetector(
-                          onTap: () {
-                            HapticFeedback.lightImpact;
-
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MarketPlaceManagment(
-                                        vendorId: userId, editMode: true)));
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 18.0,
-                            ),
+if(!editMode) Container(
+  color: Colors.transparent,
+  height: 10,),
+              Container(
+                color: Colors.transparent,
+                child: Stack(
+                  children: [
+                    if (isVendor)
+                      Visibility(
+                        visible: !editMode,
+                        child: Positioned(
+                          left: 13,
+                          bottom: 10,
+                          child: GestureDetector(
+                            onTap: () {
+                              HapticFeedback.lightImpact;
+                
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MarketPlaceManagment(
+                                          vendorId: userId, editMode: true)));
+                            },
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child:Icon(Icons.settings_rounded)
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child:Icon(Icons.settings_rounded)
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  if (isVendor)
+                    if (isVendor)
+                      Visibility(
+                        visible: editMode,
+                        child: Positioned(
+                          left: 13,
+                          bottom: 13,
+                          child: GestureDetector(
+                            onTap: () {
+                             // HapticFeedback.lightImpact;
+                
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MarketPlaceView(
+                                          vendorId: userId, editMode: false)));
+                            },
+                            child: const Padding(
+                                padding: const EdgeInsets.symmetric(
+                                vertical: 10,
+                              ),
+                              child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child:
+                                      const Icon(Icons.remove_red_eye_outlined)),
+                            ),
+                          ),
+                        ),
+                      ),
                     Visibility(
                       visible: editMode,
                       child: Positioned(
-                        left: 0,
-                        bottom: 10,
-                        child: GestureDetector(
-                          onTap: () {
-                           // HapticFeedback.lightImpact;
-
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MarketPlaceView(
-                                        vendorId: userId, editMode: false)));
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 18.0,
+                       right: 13,
+                          bottom: 13,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                                vertical: 10,   ),
+                            child: ControlPanelMenu(
+                              vendorId: userId,
+                            )
+                            // TRoundedContainer(
+                            //   backgroundColor: Colors.white,
+                            //   enableShadow: true,
+                            //   width: 40,
+                            //   height: 38,
+                            //   radius: BorderRadius.circular(300),
+                            //   child: Padding(
+                            //     padding: const EdgeInsets.all(6.0),
+                            //     child: Icon(Icons.settings, size: 28),
+                            //   ),
+                            // ),
                             ),
-                            child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child:
-                                    const Icon(Icons.remove_red_eye_outlined)),
-                          ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: !editMode,
+                      child: Positioned(
+                        right: 12,
+                          bottom: 10,
+                        child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10,   ),
+                            child: ControlPanelMenuVisitor(
+                              vendorId: userId,
+                              editMode: isVendor,
+                            )
+                           
+                            ),
+                      ),
+                    ),
+                    Center(
+                      child: Container(
+                        color: Colors.transparent,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 0,bottom: 5),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            //crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                             
+                            
+                             Column(
+                              mainAxisSize: MainAxisSize.min,
+                               children: [
+                                
+                                 Visibility(
+                  visible: editMode,
+                  child: GestureDetector(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditFieldPage(
+                  userMap!,
+                  isArabicLocale()? "اسم مشروعك" :"Organization Name",
+                  'organizationName',
+                  1,
+                  60,
+                  isArabicLocale()? "ادخل اسم مشروعك" :"Enter Your Organization Name"))),
+                    child: TRoundedContainer(
+                     width: 28,
+                     height: 28,
+                     //showBorder: true,
+                      enableShadow: true,
+                      radius: BorderRadius.circular(300),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: const Icon(
+                          Icons.edit,
+                          size: 18,
                         ),
                       ),
                     ),
-                  Visibility(
-                    visible: editMode,
-                    child: Positioned(
-                      right: 0,
-                      bottom: 10,
-                      child: Padding(
-                          padding: const EdgeInsets.only(
-                            right: 18.0,
-                          ),
-                          child: ControlPanelMenu(
-                            vendorId: userId,
-                          )
-                          // TRoundedContainer(
-                          //   backgroundColor: Colors.white,
-                          //   enableShadow: true,
-                          //   width: 40,
-                          //   height: 38,
-                          //   radius: BorderRadius.circular(300),
-                          //   child: Padding(
-                          //     padding: const EdgeInsets.all(6.0),
-                          //     child: Icon(Icons.settings, size: 28),
-                          //   ),
-                          // ),
-                          ),
-                    ),
                   ),
-                  Visibility(
-                    visible: !editMode,
-                    child: Positioned(
-                      right: 0,
-                      bottom: 10,
-                      child: Padding(
-                          padding: const EdgeInsets.only(
-                            right: 18.0,
-                          ),
-                          child: ControlPanelMenuVisitor(
-                            vendorId: userId,
-                            editMode: isVendor,
-                          )
-                         
-                          ),
-                    ),
-                  ),
-                  Center(
-                    child: Container(
-                      color: Colors.transparent,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 16.0,bottom: 16),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          //crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                           
-                          
-                           Stack(
-                             children: [
-                               Container(
-                                color: Colors.transparent,
-                                           width: 60.w,
-                                           height: 45,
-                               
-                                  child:  Align(
-                                             alignment: Alignment.center,
-                                    child: Text(
-                                      userMap['organizationName'] ??
-                                          userMap['name'] ??
-                                          '',
-                                          maxLines: 2,
-                                                    textAlign: TextAlign.center,
-                                    
-                                      style: titilliumSemiBold.copyWith(fontSize: 18,fontWeight: FontWeight.w800),
-                                    ),
-                                  ),
-                                ),
-                            
-                             Positioned(
-                             bottom: 15,
-                             right: 15,
-                               child: Visibility(
-                                visible: editMode,
-                                child: GestureDetector(
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => EditFieldPage(
-                                              userMap!,
-                                              isArabicLocale()? "اسم مشروعك" :"Organization Name",
-                                              'organizationName',
-                                              1,
-                                              60,
-                                              isArabicLocale()? "ادخل اسم مشروعك" :"Enter Your Organization Name"))),
-                                  child: TRoundedContainer(
-                                   
-                                    enableShadow: true,
-                                    radius: BorderRadius.circular(300),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: const Icon(
-                                        Icons.edit,
-                                        size: 18,
+                               ),
+                
+                                 Container(
+                                  color: Colors.transparent,
+                                             width: 60.w,
+                                             height: 45,
+                                 
+                                    child:  Align(
+                                               alignment: Alignment.topCenter,
+                                      child: Text(
+                                        userMap['organizationName'] ??
+                                            userMap['name'] ??
+                                            '',
+                                            maxLines: 2,
+                                                      textAlign: TextAlign.center,
+                                      
+                                        style: titilliumSemiBold.copyWith(fontSize: 18,fontWeight: FontWeight.w800),
                                       ),
                                     ),
                                   ),
-                                ),
-                                                           ),
+                              
+                              
+                              
+                               ],
                              ),
-                            
-                             ],
-                           ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
 
               // if (userMap['profession'] != null &&
@@ -462,7 +506,7 @@ onTap: ()  { if( editMode) {
               //         color: Colors.black,
               //         fontFamily: 'Nunito Sans'),
               //   ),
-              if (userMap['profession'] != '')
+if (userMap['profession'] != '')
                 Container(
                   color: Colors.transparent,
                   margin: const EdgeInsets.symmetric(horizontal: 0),
@@ -475,7 +519,8 @@ onTap: ()  { if( editMode) {
                 ),
               Column(
                 children: [
-                  const SizedBox(
+                   Container(
+                    color: Colors.transparent,
                     height: 13,
                   ),
                   // Visibility(visible: true, child: SocialMediaIcons()),
@@ -584,8 +629,8 @@ onTap: ()  { if( editMode) {
                                       const EdgeInsets.symmetric(horizontal: 8),
                                   child: SvgPicture.asset(
                                     'assets/images/ecommerce/icons/phon.svg',
-                                    width: 23,
-                                    height: 23,
+                                    width: 16,
+                                    height: 16,
                                   ),
                                 ),
                               ),
@@ -704,7 +749,8 @@ onTap: ()  { if( editMode) {
                     ),
                   ),
 
-                  const SizedBox(
+               Container(
+                    color: Colors.transparent,
                     height: 16,
                   ),
 

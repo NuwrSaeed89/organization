@@ -4,7 +4,7 @@ enum OrderStatus { processing, pinding, shipping, delivered }
 
 enum ImageType { asset, network, memory, file }
 
-enum CardType { justImage, smallCard, mediumCard, largeCard }
+enum CardType { justImage, smallCard, mediumCard, largeCard,imageTitle }
 
 enum TextSizes { small, meduim, larg }
 

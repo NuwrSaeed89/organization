@@ -3,6 +3,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:winto/app/app_localization.dart';
 import 'package:winto/core/functions/lang_f.dart';
+import 'package:winto/features/organization/e_commerce/features/product/controllers/edit_product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/edit/edit_product.dart';
@@ -150,13 +151,16 @@ class TProductItem extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Image.asset(TImages.editIcon, color: Colors.black),
                   ),
-                  onTap: () => Navigator.push(
+                  onTap: () {
+                    
+                     EditProductController.instance.init(product);
+                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => EditProduct(
                                 product: product,
                                 vendorId: product.vendorId,
-                              ))), //EditProduct
+                              )));},//EditProduct
                 ),
                 // SpeedDialChild(
                 //     elevation: 0,

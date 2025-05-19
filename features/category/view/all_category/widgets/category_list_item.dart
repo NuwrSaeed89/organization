@@ -126,57 +126,11 @@ class TCategoryListItem extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(children: [
-                                  category.parentId.isEmpty
-                                      ? Text(
-                                          AppLocalizations.of(context)
-                                              .translate('category.main'),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall!
-                                              .copyWith(
-                                                  fontFamily: 'Tajawal-Medium'),
-                                        )
-                                      : Text(
-                                          AppLocalizations.of(context)
-                                              .translate('category.branch'),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall!
-                                              .copyWith(
-                                                  fontFamily: 'Tajawal-Medium'),
-                                        ),
-                                  // const SizedBox(width: TSizes.spaceBtWItems * 5),
-                                ]),
+                              
                                 SizedBox(
                                   width: 120,
                                 ),
-                                // Row(
-                                //   children: [
-                                //     Text(
-                                //       category.statusDecrypt,
-                                //       style: Theme.of(context)
-                                //           .textTheme
-                                //           .labelMedium!
-                                //           .copyWith(
-                                //               fontFamily: 'Tajawal-Medium'),
-                                //     ),
-                                //     const SizedBox(width: TSizes.xs),
-                                // SizedBox(
-                                //     child: category.status == 1
-                                //         ? const Icon(
-                                //             Icons.pause_circle_filled,
-                                //             color: Colors.yellow)
-                                //         : category.status == 2
-                                //             ? const Icon(Icons.verified,
-                                //                 color: Colors.green)
-                                //             : const Icon(
-                                //                 CupertinoIcons
-                                //                     .xmark_circle_fill,
-                                //     //                 color: Colors.red)),
-                                //   ],
-                                // ),
-                              ],
+                               ],
                             ),
                           ],
                         ),

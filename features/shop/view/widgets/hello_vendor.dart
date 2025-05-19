@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:winto/core/functions/lang_f.dart';
@@ -20,6 +21,7 @@ class HellowVendor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     var userId = FirebaseAuth.instance.currentUser!.uid;
     var editingController = Get.put(EditingController());
     return SingleChildScrollView(
       child: Column(
@@ -69,7 +71,7 @@ class HellowVendor extends StatelessWidget {
                           MaterialPageRoute(
                               builder: (context) => MarketPlaceManagment(
                                     vendorId: vendorId,
-                                    editMode: editMode,
+                                    editMode: vendorId==userId,
                                   )));
                     }
                   },

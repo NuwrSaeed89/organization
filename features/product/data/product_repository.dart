@@ -71,8 +71,7 @@ class ProductRepository extends GetxController {
       final snapshot = await _db
           .collection('users')
           .doc(vendorId)
-          .collection('organization')
-          .doc('1')
+          
           .collection('Products')
           .where(FieldPath.documentId, whereIn: productIds)
           .get();
@@ -178,6 +177,34 @@ class ProductRepository extends GetxController {
     }
   }
 
+
+
+   Future<List<ProductModel>> getAllTempProducts(String vendorId) async {
+    try {
+      final userCategoryCollection = await _db
+          .collection('users')
+          .doc(vendorId)
+          .collection('organization')
+          .doc('1')
+          .collection('temporary_data')
+          .get();
+
+// STORE
+
+      final resultList = userCategoryCollection.docs
+          .map((document) => ProductModel.fromSnapshot(document))
+          .toList();
+      if (kDebugMode) {
+        print(
+            "=======data== product============${resultList.length}============");
+        print(resultList);
+      }
+      return resultList;
+    } on FirebaseException catch (e) {
+      throw e.code;
+    }
+  }
+
   Future<void> deleteProduct(ProductModel product, String vendorId) async {
     await FirebaseFirestore.instance
         .collection('users')
@@ -192,6 +219,46 @@ class ProductRepository extends GetxController {
         .doc(product.id)
         .delete();
   }
+
+ Future<bool> addProductToTemps(ProductModel product, String vendorId) async {
+    try {
+      final currentproduct = await _db
+          .collection('users')
+          .doc(vendorId)
+          .collection('organization')
+          .doc('1')
+          .collection('temporary_data')
+          .add(product.toJson());
+      if (kDebugMode) {
+        print('currentproduct $currentproduct.id');
+      }
+      product.id = currentproduct.id;
+      _db
+          .collection('users')
+          .doc(vendorId)
+          .collection('organization')
+          .doc('1')
+          .collection("temporary_data")
+          .doc(currentproduct.id)
+          .update(product.toJson());
+
+      await _db
+          .collection('temporary_data')
+          .doc(currentproduct.id)
+          .set(product.toJson());
+      if (kDebugMode) {
+        print('================product added on root===========');
+      }
+
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print('=======================insert product faild=============');
+      }
+      throw 'Some thing wrong while saving product';
+    }
+  }
+
 
   Future<bool> addProducts(ProductModel product, String vendorId) async {
     try {

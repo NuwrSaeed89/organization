@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:winto/core/constants/text_styles.dart';
+import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 
 class CustomButtonBlack extends StatelessWidget {
   CustomButtonBlack({
@@ -27,7 +28,7 @@ class CustomButtonBlack extends StatelessWidget {
             child: Center(
               child: Text(
                 text,
-                style: bodyText1.copyWith(color: Colors.white),
+                style: titilliumSemiBold.copyWith(color: Colors.white,fontWeight: FontWeight.bold),
               ),
             ),
           ),

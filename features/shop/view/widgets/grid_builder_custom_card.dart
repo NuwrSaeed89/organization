@@ -5,10 +5,14 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/features/product/cashed_network_image.dart';
+import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_client_controller.dart';
+import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_vendor_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
+import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/add/add_product.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_widget_medium.dart';
+import 'package:winto/features/organization/e_commerce/features/sector/model/sector_model.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/buttons/customFloatingButton.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
@@ -31,11 +35,14 @@ class GridBuilderCustomCard extends StatelessWidget {
   var showMore = true.obs;
   @override
   Widget build(BuildContext context) {
-    var spotList = [].obs;
+    RxList<ProductModel> spotList = <ProductModel>[].obs;
     var controller = ProductController.instance;
     controller.fetchOffersData(vendorId, 'mixlin1');
     spotList = controller.mixline1Dynamic;
-
+var floatControllerClient =
+      Get.put(FloatingButtonsClientController());
+      var floatControllerVendor =
+      Get.put(FloatingButtonsVendorController());
     // SectorBuilder(
     //   cardWidth: 174,
     //   cardHeight: 226,
@@ -82,7 +89,7 @@ class GridBuilderCustomCard extends StatelessWidget {
           if (spotList.isEmpty) {
             return editMode
                 ? Padding(
-                padding: const EdgeInsets.only(top: 30.0),
+                padding: const EdgeInsets.only(top: 30.0, bottom: 20),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,7 +99,7 @@ class GridBuilderCustomCard extends StatelessWidget {
                               TCustomWidgets.buildDivider(),
                         
                         Padding(
-                              padding: const EdgeInsets.only(left:14, right: 14),
+                              padding: const EdgeInsets.only(left:14, right: 14, top:10),
                           child: MasonryGridView.count(
                             itemCount: 8,
                              crossAxisCount: 2,
@@ -115,14 +122,19 @@ class GridBuilderCustomCard extends StatelessWidget {
                                         radius: BorderRadius.circular(15),
                                       ),
                                       InkWell(
-                                        onTap: () => Navigator.push(
+                                        onTap: () {
+                                           var controller =Get.put(ProductController());
+    controller.deleteTempItems();
+                                        Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) => CreateProduct(
+                                                  initialList: spotList,
                                                         vendorId: vendorId,
+                                                         sectorTitle: SectorModel( arabicName: 'جرب هذا',id: '',englishName: 'try this', name: 'mixlin1'),
                                                   type: 'mixlin1',
                                                   sectionId: 'all',
-                                                    ))),
+                                                    )));},
                                         child: Stack(
                                            alignment: Alignment.center,
                                           children: [
@@ -236,7 +248,7 @@ class GridBuilderCustomCard extends StatelessWidget {
                                 Padding(
                                  padding: const EdgeInsets.only(left:14, right: 14),
                                   child: MasonryGridView.count(
-                                    itemCount: spotList.sublist(0, 12).length,
+                                    itemCount:  editMode? spotList.sublist(0, 12).length+2 :spotList.sublist(0, 12).length,
                                     crossAxisCount: 2,
                                     mainAxisSpacing: 16,
                                     crossAxisSpacing: 16,
@@ -245,7 +257,55 @@ class GridBuilderCustomCard extends StatelessWidget {
                                     shrinkWrap: true,
                                     itemBuilder:
                                         (BuildContext context, int index) {
-                                      return InkWell(
+if(editMode && index == spotList.sublist(0, 12).length+1){
+  return GestureDetector(
+     onTap: () {
+                                 var controller =Get.put(ProductController());
+    controller.deleteTempItems();
+                               Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CreateProduct(
+                                        initialList: [],
+                                            vendorId: vendorId,
+                                             sectorTitle: SectorModel( arabicName: 'جرب هذا',id: '',englishName: 'try this', name: 'mixlin1'),
+                                                
+                                            type: 'mixlin1',
+                                            sectionId: 'all',
+                                          )));},
+    child: emptyMedium( 335, 174));}
+
+if(editMode && index == spotList.sublist(0, 12).length){
+  return GestureDetector(
+     onTap: () {
+                                 var controller =Get.put(ProductController());
+    controller.deleteTempItems();
+                               Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CreateProduct(
+                                         sectorTitle: SectorModel( arabicName: 'جرب هذا',id: '',englishName: 'try this', name: 'mixlin1'),
+                                            initialList: [],
+                                            vendorId: vendorId,
+                                            type: 'mixlin1',
+                                            sectionId: 'all',
+                                          )));},
+    child: emptyMedium( 335, 174));}
+
+
+
+                                      return GestureDetector(
+                                             onLongPressStart: (details) {
+            if(editMode){
+ floatControllerVendor.p=spotList.sublist(0, 12)[index];
+              floatControllerVendor.showFloatingButtons(context, details.globalPosition);
+            }else{
+
+ floatControllerClient.p=spotList.sublist(0, 12)[index];
+              floatControllerClient.showFloatingButtons(context, details.globalPosition);
+            }
+           
+            },
                                         onTap: () {
                                           Navigator.push(
                                               context,
@@ -256,7 +316,7 @@ class GridBuilderCustomCard extends StatelessWidget {
                                                 pageBuilder:
                                                     (context, anim1, anim2) =>
                                                         ProductDetails(
-                                                  product: spotList[index],
+                                                  product: spotList.sublist(0, 12)[index],
                                                   vendorId: vendorId,
                                                 ),
                                               ));
@@ -322,9 +382,9 @@ class GridBuilderCustomCard extends StatelessWidget {
                           : Column(
                               children: [
                                 Padding(
-                                   padding: const EdgeInsets.only(left:14, right: 14),
+                                   padding: const EdgeInsets.only(left:14, right: 14,bottom: 14),
                                   child: MasonryGridView.count(
-                                    itemCount: spotList.length,
+                                    itemCount: editMode? spotList.length+2:spotList.length,
                                     crossAxisCount: 2,
                                     mainAxisSpacing: 16,
                                     crossAxisSpacing: 16,
@@ -333,7 +393,53 @@ class GridBuilderCustomCard extends StatelessWidget {
                                     shrinkWrap: true,
                                     itemBuilder:
                                         (BuildContext context, int index) {
-                                      return InkWell(
+                                          if(editMode && index == spotList.length+1){
+  return GestureDetector(
+     onTap: () {
+                                 var controller =Get.put(ProductController());
+    controller.deleteTempItems();
+                               Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CreateProduct(
+                                         sectorTitle: SectorModel( arabicName: 'جرب هذا',id: '',englishName: 'try this', name: 'mixlin1'),
+                                                initialList: [],
+                                            vendorId: vendorId,
+                                            type: 'mixlin1',
+                                            sectionId: 'all',
+                                          )));},
+    child: emptyMedium( 335, 174));}
+
+if(editMode && index == spotList.length){
+  return GestureDetector(
+     onTap: () {
+                                 var controller =Get.put(ProductController());
+    controller.deleteTempItems();
+                               Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CreateProduct(
+                                         sectorTitle: SectorModel( arabicName: 'جرب هذا',id: '',englishName: 'try this', name: 'mixlin1'),
+                                              initialList: [],  
+                                            vendorId: vendorId,
+                                            type: 'mixlin1',
+                                            sectionId: 'all',
+                                          )));},
+    child: emptyMedium( 335, 174));}
+
+
+                                      return GestureDetector(
+                                             onLongPressStart: (details) {
+            if(editMode){
+ floatControllerVendor.p=spotList[index];
+              floatControllerVendor.showFloatingButtons(context, details.globalPosition);
+            }else{
+
+ floatControllerClient.p=spotList[index];
+              floatControllerClient.showFloatingButtons(context, details.globalPosition);
+            }
+           
+            },
                                         onTap: () {
                                           Navigator.push(
                                               context,
@@ -410,14 +516,19 @@ class GridBuilderCustomCard extends StatelessWidget {
                             right: isArabicLocale() ? null : 8,
                             left: isArabicLocale() ? 08 : null,
                             child: CustomFloatActionButton(
-                              onTap: () => Navigator.push(
+                              onTap: () {
+                                 var controller =Get.put(ProductController());
+    controller.deleteTempItems();
+                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => CreateProduct(
+                                         sectorTitle: SectorModel( arabicName: 'جرب هذا',id: '',englishName: 'try this', name: 'mixlin1'),
+                                                initialList: spotList,
                                             vendorId: vendorId,
                                             type: 'mixlin1',
                                             sectionId: 'all',
-                                          ))),
+                                          )));},
                             )),
                       )
                     ],
@@ -429,5 +540,27 @@ class GridBuilderCustomCard extends StatelessWidget {
         }
       },
     );
+  }
+  
+  Widget emptyMedium( double cardHeight,double cardWidth) {
+return   SizedBox(
+      width: cardWidth,
+      height: cardHeight,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+         TRoundedContainer(
+           borderColor: TColors.grey,
+           showBorder: true,
+           enableShadow: true,
+           height: cardHeight+120  ,
+           width: cardWidth,
+           radius: BorderRadius.circular(15),
+         ),
+         
+        ],
+      ),
+    );
+
   }
 }

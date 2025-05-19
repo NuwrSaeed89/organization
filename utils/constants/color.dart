@@ -4,10 +4,10 @@ class TColors {
   TColors._();
 
   //App basic colors
-  static const Color primary = Color(0xFF0099ff);
+  static const Color primary = Color(0XFF3981F6);//Color primary = const Color(0XFF3981F6);
   static const Color secondary = Color(0xFFFFE24B);
   static const Color accent = Color(0xFFb0c7ff);
-  static const Color shadow = Color(0xFF707070);
+  static const Color shadow = Color.fromARGB(255, 188, 186, 186);
   static const Color red = Color.fromARGB(255, 183, 66, 66);
   //static const Color containerdarkColor = Color.fromARGB(255, 10, 13, 21);
   static const Color containerdarkColor = Color(0xFF202634);
@@ -68,4 +68,15 @@ class TColors {
   static const Color softGrey = Color(0xFFF4F4F4);
   static const Color lightgrey = Color(0xFFF9F9F9);
   static const Color white = Color(0xFFffffff);
+
+
+  static const tboxShadow =
+                     [
+                        BoxShadow(
+                          color: TColors.shadow,
+                          spreadRadius: 0,
+                          blurRadius: 2,
+                          offset: Offset(0, 3),
+                        ),
+                     ];
 }

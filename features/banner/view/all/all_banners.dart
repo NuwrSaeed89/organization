@@ -24,60 +24,61 @@ class BannersMobileScreen extends StatelessWidget {
     controller.fetchBanners(vendorId);
 
     // final banners = controller.fetchBanners();
-    return SafeArea(
-        child: Directionality(
-            textDirection:
-                isArabicLocale() ? TextDirection.rtl : TextDirection.ltr,
-            child: Scaffold(
-                floatingActionButton: CustomFloatActionButton(
-                    onTap: () => controller.addBanner('gallery', vendorId)),
-                appBar: CustomAppBar(
-                  title:
-                      AppLocalizations.of(context).translate('shop.allBanners'),
-                ),
-                body: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Obx(
-                       
-                        () {
-                          if (controller.loading.value) {
-                            return const TLargListTilehummer();
-                          }else
-                          if (controller.banners.isEmpty) {
-                            return Center(
-                              child: SizedBox(
-                                height: 300,
-                                width: 80.w,
-                                child: Center(
-                                  child: Text(
-                                   isArabicLocale()? ' لا يوجد بنرات قم بإضافة البعض ':'there is no Banners add some photos',
-                                    style: titilliumBold.copyWith(fontSize: 20),
-                                  ),
+    return Directionality(
+        textDirection:
+            isArabicLocale() ? TextDirection.rtl : TextDirection.ltr,
+        child: Scaffold(
+            floatingActionButton: CustomFloatActionButton(
+                onTap: () => controller.addBanner('gallery', vendorId)),
+            appBar: CustomAppBar(
+              title:
+                  AppLocalizations.of(context).translate('shop.allBanners'),
+            ),
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Obx(
+                     
+                      () {
+                        if (controller.loading.value) {
+                          return const TLargListTilehummer();
+                        }else
+                        if (controller.banners.isEmpty) {
+                          return Center(
+                            child: SizedBox(
+                              height: 300,
+                              width: 80.w,
+                              child: Center(
+                                child: Text(
+                                 isArabicLocale()? ' لا يوجد بنرات قم بإضافة البعض ':'there is no Banners add some photos',
+                                  style: titilliumBold.copyWith(fontSize: 20),
                                 ),
                               ),
-                            );
-                          }
-                         
-                       else{
-                          return Obx(
-                            () => ListView.separated(
-                                separatorBuilder: (_, __) =>
-                                    TCustomWidgets.buildDivider(),
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: controller.banners.length,
-                                itemBuilder: (_, index) => TBannerItem(
-                                    banner: controller.banners[index],
-                                    vendorId: vendorId)),
+                            ),
                           );
-                          }  },
-                      ),
-                      SizedBox(
-                        height: 40,
-                      )
-                    ],
-                  ),
-                ))));
+                        }
+                       
+                     else{
+                        return Obx(
+                          () => ListView.separated(
+                              separatorBuilder: (_, __) =>
+                                  TCustomWidgets.buildDivider(),
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: controller.banners.length,
+                              itemBuilder: (_, index) => TBannerItem(
+                                  banner: controller.banners[index],
+                                  vendorId: vendorId)),
+                        );
+                        }  },
+                    ),
+                    SizedBox(
+                      height: 40,
+                    )
+                  ],
+                ),
+              ),
+            )));
   }
 }

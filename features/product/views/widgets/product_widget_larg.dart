@@ -5,6 +5,7 @@ import 'package:winto/features/organization/e_commerce/features/product/data/pro
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_image_slider_mini.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
+import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_widgets.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/images/custom_image.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/constant.dart';
@@ -19,7 +20,7 @@ class ProductWidgetLarg extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = ProductController.instance;
     final salePrecentage =
-        controller.calculateSalePresentage(product.price, product.salePrice);
+        controller.calculateSalePresentage(product.price, product.oldPrice);
     // String ratting =
     //     product.rating != null && product.rating!.isNotEmpty
     //         ? product.rating![0].average!
@@ -60,7 +61,8 @@ class ProductWidgetLarg extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(height: 10),
 
-                  Text(isArabicLocale() ? product.arabicTitle : product.title,
+                  Text( isArabicLocale() ? product.arabicTitle==''? product.title : product.arabicTitle : product.title,
+                       
                       textAlign: TextAlign.center,
                       style: titilliumRegular.copyWith(fontSize: 18),
                       maxLines: 1,
@@ -83,30 +85,10 @@ class ProductWidgetLarg extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      if (product.salePrice < product.price)
-                        Text(product.price.toString(),
-                            // PriceConverter.convertPrice(
-                            //     context, product.unitPrice),
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge!
-                                .copyWith(
-                                    color: TColors.darkerGray,
-                                    fontFamily: englishFonts,
-                                    decoration: TextDecoration.lineThrough,
-                                    fontSize: 14)),
+                   if (product.oldPrice !=null)
+                     TCustomWidgets.viewSalePrice(product.oldPrice.toString(),12),
                       SizedBox(width: 10),
-                      Text("${product.salePrice} AED",
-                          // PriceConverter.convertPrice(context, product.unitPrice,
-                          //     discountType: product.discountType,
-                          //     discount: product.discount),
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(
-                                  fontFamily: englishFonts,
-                                  fontSize: 16,
-                                  color: TColors.primary)),
+                       TCustomWidgets.formattedPrice( product.price,'AED',16)
                     ],
                   ),
                   // SizedBox(height: 4),

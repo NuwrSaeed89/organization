@@ -49,8 +49,8 @@ class HelloClient extends StatelessWidget {
                 SizedBox(height: 8),
                 Text(
                   isArabicLocale()
-                      ? "ترقبوا الأفتتاح  قريبًا!"
-                      : "Wait For Openning Soon",
+                      ? "ترقبوا التفعيل  قريبًا!"
+                      : "Wait For Activating Soon",
                   textAlign: TextAlign.center,
                   style:
                       titilliumBold.copyWith(fontSize: 16, color: Colors.black),

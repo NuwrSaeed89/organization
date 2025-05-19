@@ -16,11 +16,11 @@ class TermsScreen extends StatelessWidget {
   final String englishTitle;
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return  Scaffold(
         appBar: CustomAppBar(
             title: isLocaleEn(context) ? englishTitle : arabicTitle),
-        body: SingleChildScrollView(
+        body: SafeArea(
+      child:SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(

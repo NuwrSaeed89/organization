@@ -4,68 +4,74 @@ import 'package:winto/features/organization/e_commerce/utils/common/styles/style
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 
 class TLoader {
-  static successSnackBar({required title, message = '', duration = 3}) {
-    Get.snackbar(title, message,
+  static successSnackBar({required title, message = '', duration = 4}) {
+    Get.snackbar("", message,
         isDismissible: true,
         shouldIconPulse: true,
-        colorText: Colors.white,
-        titleText: Text(
-          title,
-          style: titilliumBold,
-        ),
+        colorText: TColors.primary,
         messageText: Text(
           message,
-          style: titilliumSemiBold,
+          style: titilliumBold.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        maxWidth: 500,
+        // messageText: Text(
+        //   message,
+        //   style: titilliumSemiBold.copyWith(fontWeight: FontWeight.bold),
+        // ),
+        maxWidth: 400,
         
-        backgroundColor: TColors.lightgrey,
-        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: TColors.white,
+        snackPosition: SnackPosition.TOP,
         duration: Duration(seconds: duration),
-        margin: const EdgeInsets.all(10),
-        icon: const Icon(Icons.check, color: Colors.white));
+         margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+     // icon: const Icon(Icons.check, color: TColors.primary,),
+       
+        );
   }
 
   static warningSnackBar({required title, message = ''}) {
-    Get.snackbar(title, message,
+    Get.snackbar("", message,
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
         isDismissible: true,
         shouldIconPulse: true,
-        titleText: Text(
-          title,
-          style: titilliumBold,
-        ),
-        messageText: Text(
+         colorText: TColors.warning,
+      
+       messageText: Text(
           message,
-          style: titilliumSemiBold,
+          style: titilliumBold.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        colorText: Colors.black,
-        maxWidth: 600,
-        backgroundColor: Colors.grey,
-        snackPosition: SnackPosition.BOTTOM,
+        showProgressIndicator: true,
+        
+      
+        maxWidth: 300,
+        
+        backgroundColor:TColors.warning.withValues(alpha: .5),
+        snackPosition: SnackPosition.TOP,
         duration: const Duration(seconds: 3),
-        margin: const EdgeInsets.all(20),
-        icon: const Icon(Icons.warning, color: Colors.white));
+
+      //  icon: const Icon(Icons.warning, color:TColors.warning)
+        );
   }
 
   static erroreSnackBar({required title, message = ''}) {
-    Get.snackbar(title, message,
+    Get.snackbar(message, "",
         isDismissible: true,
         shouldIconPulse: true,
-        colorText: Colors.white,
+         colorText: TColors.red,
         titleText: Text(
-          title,
+          message,
           style: titilliumBold,
         ),
-        messageText: Text(
-          message,
-          style: titilliumSemiBold,
-        ),
+        // messageText: Text(
+        //   message,
+        //   style: titilliumSemiBold,
+        // ),
         maxWidth: 600,
-        backgroundColor: Colors.red,
-        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.white,
+        snackPosition: SnackPosition.TOP,
         duration: const Duration(seconds: 5),
-        margin: const EdgeInsets.all(20),
-        icon: const Icon(Icons.error, color: Colors.white));
+        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      //  icon: const Icon(Icons.error, color: Colors.red)
+      );
   }
 }
 

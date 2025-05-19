@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/controllers/category_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/editing._controller.dart';
+import 'package:winto/features/organization/e_commerce/features/shop/controller/profile_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/controller/section_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/controller/tab_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/data/section_model.dart';
@@ -34,7 +35,9 @@ class NestedScrollViewForHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // final profileController = ProfileController.instance;
-    // var user = ProfileController.instance.fetchVendorData(vendorId);
+ 
+    ProfileController.instance.fetchVendorData(vendorId);
+      
    // CategoryController.instance.getCategoryOfUser(vendorId);
     var categories = CategoryController.instance.allItems;
     // List<ProductModel> featureProduct = [];
@@ -42,74 +45,70 @@ class NestedScrollViewForHome extends StatelessWidget {
     // featureProduct.assignAll(ProductController.instance.allItems
     //     .where((p0) => p0.isFeature == true));
 
-    final TabControllerX tabControllerX = Get.put(TabControllerX(vendorId));
+   // final TabControllerX tabControllerX = Get.put(TabControllerX(vendorId));
     final SectionsController secControllerX =
         Get.put(SectionsController(vendorId));
     var editingController = Get.put(EditingController());
     secControllerX.fetchSections();
-    return SafeArea(
-        child: Scaffold(
-            body: DefaultTabController(
-      length: 1, //getLength(secControllerX.sections, editMode),
-      child: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverToBoxAdapter(
-              child: marketHeaderSection(vendorId, editMode, true),
-            ),
-            SliverPersistentHeader(
-              delegate: _SliverAppBarDelegate(
-                TabBar(
-                    isScrollable: true,
-
-                    // indicatorColor: TColors.red,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    indicatorPadding:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 0),
-                    controller: tabControllerX.tabController,
-                    indicator: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                    labelColor: Colors.white,
-                    unselectedLabelColor: TColors.darkerGray,
-                    tabs: [
-                      Tab(text: isLocaleEn(context) ? 'All' : 'الكل'),
-                      // ...secControllerX.sections
-                      //     .map((section) => Tab(text: section.name)),
-                      // if (editMode)
-                      //   Tab(
-                      //     icon: IconButton(
-                      //       onPressed: () => addSection(
-                      //           context, secControllerX, vendorId),
-                      //       icon: Icon(CupertinoIcons.add_circled),
-                      //     ),
-                      //   )
-                    ]
-                    //   onTap: (index) {
-                    //     // إذا كانت الأقسام فارغة أو الضغط على تاب "الإضافة"
-
-                    //     // عرض نموذج الإضافة
-
-                    //   },
-                    ),
-              ),
-            ),
-          ];
-        },
-        body: TabBarView(
-          controller: tabControllerX.tabController,
-          children: [
-            AllTab(
-              vendorId: vendorId,
-              editMode: editMode,
-            ),
-            // ...secControllerX.sections
-            //     .map((section) => _buildTabContent(section.name)),
-          ],
-        ),
-      ),
-    )));
+    return  Scaffold(
+            body:SafeArea(
+        child: SingleChildScrollView(
+          child: Column(children: 
+       [
+            
+               marketHeaderSection(vendorId, editMode, true),
+              
+              // SliverPersistentHeader(
+              //   delegate: _SliverAppBarDelegate(
+              //     TabBar(
+              //         isScrollable: true,
+        
+              //         // indicatorColor: TColors.red,
+              //         indicatorSize: TabBarIndicatorSize.tab,
+              //         indicatorPadding:
+              //             const EdgeInsets.symmetric(vertical: 5, horizontal: 0),
+              //         controller: tabControllerX.tabController,
+              //         indicator: BoxDecoration(
+              //           color: Colors.black,
+              //           borderRadius: BorderRadius.circular(40),
+              //         ),
+              //         labelColor: Colors.white,
+              //         unselectedLabelColor: TColors.darkerGray,
+              //         tabs: [
+              //          // Tab(text: isLocaleEn(context) ? 'All' : 'الكل'),
+              //           // ...secControllerX.sections
+              //           //     .map((section) => Tab(text: section.name)),
+              //           // if (editMode)
+              //           //   Tab(
+              //           //     icon: IconButton(
+              //           //       onPressed: () => addSection(
+              //           //           context, secControllerX, vendorId),
+              //           //       icon: Icon(CupertinoIcons.add_circled),
+              //           //     ),
+              //           //   )
+              //         ]
+              //         //   onTap: (index) {
+              //         //     // إذا كانت الأقسام فارغة أو الضغط على تاب "الإضافة"
+        
+              //         //     // عرض نموذج الإضافة
+        
+              //         //   },
+              //         ),
+              //   ),
+              // ),
+       
+              Padding(
+                padding: const EdgeInsets.only(top:28.0),
+                child: AllTab(
+                  vendorId: vendorId,
+                  editMode: editMode,
+                ),
+              ),]
+              // ...secControllerX.sections
+              //     .map((section) => _buildTabContent(section.name)),
+            
+          
+        ))));
   }
 }
 

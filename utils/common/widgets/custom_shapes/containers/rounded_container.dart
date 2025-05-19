@@ -40,14 +40,7 @@ class TRoundedContainer extends StatelessWidget {
       padding: padding,
       decoration: BoxDecoration(
           boxShadow: enableShadow
-              ? [
-                  BoxShadow(
-                    color: TColors.shadow.withValues(alpha: .2),
-                    spreadRadius: 0,
-                    blurRadius: 6,
-                    offset: Offset(0, 3),
-                  ),
-                ]
+              ? TColors.tboxShadow
               : null,
           borderRadius: radius,
           border: showBorder

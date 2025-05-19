@@ -15,51 +15,82 @@ import 'package:winto/features/organization/e_commerce/controllers/category_cont
 import 'package:winto/features/organization/e_commerce/data/models/category_model.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_repository.dart';
+import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
+import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/loader/loaders.dart';
 
 class ProductController extends GetxController {
   static ProductController get instance => Get.find();
+
+
+
+
+ 
 
   //Variables
   final isLoading = false.obs;
   final productRepository = Get.put(ProductRepository());
   List<ProductModel> saleProduct = [];
   final RxList<ProductModel> allItems = <ProductModel>[].obs;
+    RxList<ProductModel> tempProducts = <ProductModel>[].obs;
+        RxList<ProductModel> spotList= <ProductModel>[].obs;
   final RxList<ProductModel> productCategory = <ProductModel>[].obs;
   final title = TextEditingController();
   final arabicTitle = TextEditingController();
   final description = TextEditingController();
   final arabicDescription = TextEditingController();
   final price = TextEditingController();
-  final salePrice = TextEditingController();
+  var oldPrice = TextEditingController();
+var salePrice = 00.0.obs;
+  final saleprecentage = TextEditingController();
   final formKey = GlobalKey<FormState>();
   CategoryModel category = CategoryModel.empty();
   RxList<String> images = <String>[].obs;
   RxString message = ''.obs;
   final searchTextController = TextEditingController();
+void deleteTempItems()=> tempProducts = <ProductModel>[].obs;
+
+String t="";
+String a="";
+  var discountPercentage = 10.0.obs;
+
+
   Future<void> createProduct(String type, String vendorId) async {
+
+if(t.isEmpty && a.isEmpty){
+   TLoader.warningSnackBar(
+          title:'',
+          message: isArabicLocale()
+              ?"الرجاء إدخال اسم العنصر بإحدى اللغتين "
+              : "Please add at least one title");
+  
+  // Navigator.pop(Get.context!);
+      
+   return;
+}
+
     if (!formKey.currentState!.validate()) {
       isLoading.value = false;
-      Navigator.pop(Get.context!);
+     // Navigator.pop(Get.context!);
       return;
     }
     if (selectedImage.isEmpty) {
       isLoading.value = false;
       TLoader.warningSnackBar(
-          title: isArabicLocale() ? 'تحذير' : 'Warning',
+          title:'',
           message: isArabicLocale()
               ? "يرجى ادخال صورة على الأقل"
               : "Please add at least one photo");
-      Navigator.pop(Get.context!);
+     // Navigator.pop(Get.context!);
       return;
     } else if (category == CategoryModel.empty()) {
       isLoading.value = false;
       TLoader.warningSnackBar(
-          title: isArabicLocale() ? 'تحذير' : 'Warning',
+          title:'',
           message: isArabicLocale()
               ? "يرجى اختيار تصنيف "
               : "Please select a category");
-      Navigator.pop(Get.context!);
+     Get.closeCurrentSnackbar();
       return;
     } else {
       message.value =
@@ -72,7 +103,7 @@ class ProductController extends GetxController {
         title: title.text.trim(),
         arabicTitle: arabicTitle.text.trim(),
         price: double.parse(price.text.toString()),
-        salePrice: double.parse(salePrice.text.toString()),
+        oldPrice:  double.tryParse(oldPrice.text.toString()),
         description: description.text.trim(),
         arabicDescription: arabicDescription.text.trim(),
         images: images,
@@ -82,36 +113,63 @@ class ProductController extends GetxController {
       );
       try {
         if (vendorId.isEmpty) {
+           Get.closeCurrentSnackbar();
           throw 'Unable to find user information. try again later';
         }
         message.value = isArabicLocale() ? "ارسال البيانات" : "send data..";
-        await productRepository.addProducts(product, vendorId);
+        await productRepository.addProducts(product, vendorId)
+        
+          
+        
+        
+        ;
         message.value = "evry thing done";
-        allItems.add(product);
-        if (type == 'offers') offerDynamic.add(product);
-        if (type == 'all') allDynamic.add(product);
-        if (type == 'all1') allLine1Dynamic.add(product);
-        if (type == 'all2') allLine2Dynamic.add(product);
-        if (type == 'sales') salesDynamic.add(product);
-        if (type == 'foryou') foryouDynamic.add(product);
-        if (type == 'mixone') mixoneDynamic.add(product);
-        if (type == 'mixline1') mixline1Dynamic.add(product);
-        if (type == 'mixline2') mixline2Dynamic.add(product);
-        if (type == 'mostdeamand') mostdeamandDynamic.add(product);
-        if (type == 'newArrival') newArrivalDynamic.add(product);
+        allItems.insert(0,product);
+           tempProducts.insert(0,product);
+       
+        //resetFields();
+        if (type == 'offers') offerDynamic.insert(0,product);
+        if (type == 'all') allDynamic.insert(0,product);
+        if (type == 'all1') allLine1Dynamic.insert(0,product);
+        if (type == 'all2') allLine2Dynamic.insert(0,product);
+        if (type == 'all3') allLine3Dynamic.insert(0,product);
+        if (type == 'sales') salesDynamic.insert(0,product);
+        if (type == 'foryou') foryouDynamic.insert(0,product);
+        if (type == 'mixone') mixoneDynamic.insert(0,product);
+        if (type == 'mixline1') mixline1Dynamic.insert(0,product);
+        if (type == 'mixline2') mixline2Dynamic.insert(0,product);
+        if (type == 'mostdeamand') mostdeamandDynamic.insert(0,product);
+        if (type == 'newArrival') newArrivalDynamic.insert(0,product);
+        //spotList.add();
         resetFields();
         message.value = "";
         selectedImage.value = [];
+       //images.value=[];
         TLoader.successSnackBar(
-            title: isArabicLocale() ? 'نجاح' : 'Successfull',
+            title: '',
             message: isArabicLocale()
                 ? "تم الادخال بنجاح"
                 : "data insert successfully");
       } catch (e) {
+         Get.closeCurrentSnackbar();
         throw 'some thing go wrong while add category';
       }
     }
   }
+
+static Text getArabicText( String s,double size,{int lines=2}){return Text(s, style: titilliumSemiBold.copyWith(fontSize: size, fontWeight: FontWeight.bold),maxLines:lines, textAlign: TextAlign.center,);
+}
+static Text getEnglishText( String s,double size,{int lines=2}){return Text(s, style: titilliumSemiBold.copyWith(fontSize: size+2, fontWeight: FontWeight.bold),maxLines:lines, textAlign: TextAlign.center);
+}
+static Text getTitle(ProductModel product, bool isEnglish, double size, {int lines=2}) {
+  if(isEnglish)
+  {
+   return  product.title.isEmpty? getArabicText(product.arabicTitle,size):getEnglishText(product.title, size);
+  }
+  else{
+   return  product.arabicTitle.isEmpty?  getEnglishText(product.title, size):getArabicText(product.arabicTitle,size);
+  }
+}
 
   Future<int> getUserProductCount(String userId) async {
     var productCount = productRepository.getUserProductCount(userId);
@@ -121,11 +179,12 @@ class ProductController extends GetxController {
   void resetFields() {
     isLoading(false);
     title.clear();
+   // images.clear();
     arabicTitle.clear();
     description.clear();
     arabicDescription.clear();
     price.clear();
-    salePrice.clear();
+    oldPrice.clear();
     selectedImage.value = [];
   }
 
@@ -134,7 +193,7 @@ class ProductController extends GetxController {
       var fetchedItem = await productRepository.getAllProducts(vendorId);
 
       allItems.value = fetchedItem;
-      saleProduct = getSaleProduct();
+     // saleProduct = getSaleProduct();
       if (kDebugMode) {
         print("============product length ${allItems.length}");
       }
@@ -149,6 +208,7 @@ class ProductController extends GetxController {
   RxList<ProductModel> allDynamic = <ProductModel>[].obs;
   RxList<ProductModel> allLine1Dynamic = <ProductModel>[].obs;
   RxList<ProductModel> allLine2Dynamic = <ProductModel>[].obs;
+   RxList<ProductModel> allLine3Dynamic = <ProductModel>[].obs;
   RxList<ProductModel> salesDynamic = <ProductModel>[].obs;
   RxList<ProductModel> foryouDynamic = <ProductModel>[].obs;
   RxList<ProductModel> mixoneDynamic = <ProductModel>[].obs;
@@ -172,6 +232,7 @@ class ProductController extends GetxController {
       if (type == 'all') allDynamic.value = fetchedItem;
       if (type == 'all1') allLine1Dynamic.value = fetchedItem;
       if (type == 'all2') allLine2Dynamic.value = fetchedItem;
+       if (type == 'all3') allLine3Dynamic.value = fetchedItem;
       if (type == 'sales') salesDynamic.value = fetchedItem;
       if (type == 'foryou') foryouDynamic.value = fetchedItem;
       if (type == 'mixone') mixoneDynamic.value = fetchedItem;
@@ -295,11 +356,15 @@ class ProductController extends GetxController {
     }
   }
 
+
+
+
   RxList<XFile> selectedImage = <XFile>[].obs;
   RxString localThumbnail = ''.obs;
 
   RxString thumbnailUrl = ''.obs;
-
+  var rotationAngle = 0.0.obs; // زاوية التدوير
+  
   Future<void> pickImage() async {
     var pickedFile =
         (await ImagePicker().pickImage(source: ImageSource.gallery));
@@ -343,7 +408,16 @@ class ProductController extends GetxController {
     return [];
   }
 
+  void updateRotation(double angle) {
+    rotationAngle.value = angle;
+  }
+var scaleFactor = 1.0.obs;  
+  void updateScale(double scale) {
+    scaleFactor.value = scale;
+  }
+
   Future<void> cropImage(String imagePath) async {
+     if (imagePath =="") return;
     var croppedFile = await ImageCropper().cropImage(
         sourcePath: imagePath,
         compressFormat: ImageCompressFormat.jpg,
@@ -365,8 +439,10 @@ class ProductController extends GetxController {
         ]);
 
     if (croppedFile != null) {
+            var i= selectedImage.indexWhere((img) => img.path == imagePath);
       selectedImage.removeWhere((img) => img.path == imagePath);
-      selectedImage.add(XFile(croppedFile.path));
+
+      selectedImage.insert(i,XFile(croppedFile.path));
     }
   }
 
@@ -421,15 +497,13 @@ class ProductController extends GetxController {
     }
   }
 
-  String getProductPrice(ProductModel product) {
-    return " ${product.salePrice > 0 ? product.salePrice : product.price}";
-  }
+ 
 
-  String? calculateSalePresentage(double originalPrice, double? salePrice) {
-    if (salePrice == null || salePrice <= 0.0 || originalPrice <= 0.0) {
+  String? calculateSalePresentage(double price, double? oldPrice) {
+    if (oldPrice == null || oldPrice <= 0.0 || price <= 0.0) {
       return null;
     }
-    double precentage = ((originalPrice - salePrice) / originalPrice) * 100;
+    double precentage = ((oldPrice - price) / oldPrice) * 100;
     return precentage.toStringAsFixed(0);
   }
 
@@ -445,19 +519,7 @@ class ProductController extends GetxController {
     return precentage;
   }
 
-  List<ProductModel> getSaleProduct() {
-    saleProduct = [];
-    if (allItems == []) {
-      return [];
-    }
-
-    for (final product in allItems) {
-      if (getSaleNumber(product.price, product.salePrice)! > 0) {
-        saleProduct.add(product);
-      }
-    }
-    return saleProduct;
-  }
+ 
 
   List<String> getAllProductImage(ProductModel product) {
     Set<String> images = {};
@@ -479,6 +541,7 @@ class ProductController extends GetxController {
         if (type == 'all') allDynamic.remove(product);
         if (type == 'all1') allLine1Dynamic.remove(product);
         if (type == 'all2') allLine2Dynamic.remove(product);
+          if (type == 'all3') allLine3Dynamic.remove(product);
         if (type == 'sales') salesDynamic.remove(product);
         if (type == 'foryou') foryouDynamic.remove(product);
         if (type == 'mixone') mixoneDynamic.remove(product);
@@ -487,13 +550,89 @@ class ProductController extends GetxController {
         if (type == 'mostdeamand') mostdeamandDynamic.remove(product);
         if (type == 'newArrival') newArrivalDynamic.remove(product);
 
-
+//Navigator.pop(Get.context!);
 
     TLoader.successSnackBar(
         title: 'Successfull', message: "data delete successfully");
   }
 
   void updateList(ProductModel item) {
+var type=item.productType;
+
+    if (type == 'offers')
+    {  final index = offerDynamic.indexWhere((i) => i == item);
+    if (index != -1) offerDynamic[index] = item;
+    offerDynamic.refresh();
+    }
+   if (type == 'all')
+   {  final index = allDynamic.indexWhere((i) => i == item);
+    if (index != -1) allDynamic[index] = item;
+    allDynamic.refresh();
+    }
+  if (type == 'all1')
+        {
+    final index = allLine1Dynamic.indexWhere((i) => i == item);
+    if (index != -1) allLine1Dynamic[index] = item;
+    allLine1Dynamic.refresh();
+    }
+
+    if (type == 'all2')
+        {
+    final index = allLine2Dynamic.indexWhere((i) => i == item);
+    if (index != -1) allLine2Dynamic[index] = item;
+    allLine2Dynamic.refresh();
+    }      
+    
+       if (type == 'all3')
+        {
+    final index = allLine3Dynamic.indexWhere((i) => i == item);
+    if (index != -1) allLine3Dynamic[index] = item;
+    allLine3Dynamic.refresh();
+    } 
+        if (type == 'sales')
+        {
+    final index = salesDynamic.indexWhere((i) => i == item);
+    if (index != -1) salesDynamic[index] = item;
+    salesDynamic.refresh();
+    }   
+     if (type == 'foryou')
+        {
+    final index = foryouDynamic.indexWhere((i) => i == item);
+    if (index != -1) foryouDynamic[index] = item;
+    foryouDynamic.refresh();
+    }     
+ if (type == 'mixone')
+        {
+    final index = mixoneDynamic.indexWhere((i) => i == item);
+    if (index != -1) mixoneDynamic[index] = item;
+    mixoneDynamic.refresh();
+        } 
+         if (type == 'mixline1')
+        {
+    final index = mixline1Dynamic.indexWhere((i) => i == item);
+    if (index != -1) mixline1Dynamic[index] = item;
+    mixline1Dynamic.refresh();
+        }  
+          if (type == 'mixline2')
+        {
+   final index = mixline2Dynamic.indexWhere((i) => i == item);
+    if (index != -1) mixline2Dynamic[index] = item;
+    mixline2Dynamic.refresh();
+        }  
+   if (type == 'mostdeamand')
+        {
+    final index = mostdeamandDynamic.indexWhere((i) => i == item);
+    if (index != -1) mostdeamandDynamic[index] = item;
+    mostdeamandDynamic.refresh();
+        }      
+      if (type == 'newArrival')
+        {
+     final index = newArrivalDynamic.indexWhere((i) => i == item);
+    if (index != -1) newArrivalDynamic[index] = item;
+    newArrivalDynamic.refresh();
+        }      
+
+
     final index = allItems.indexWhere((i) => i == item);
     if (index != -1) allItems[index] = item;
 
@@ -543,8 +682,67 @@ RxBool loadProduct =false.obs;
 
     loadProduct.value = false;
   }
+void showProgressBar() {
+  Get.snackbar(
+   
+    isArabicLocale()? "جاري الحفظ..." :"Saving Now ..",
+    "",
+    snackPosition: SnackPosition.TOP,
+    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+    backgroundColor:TColors.primary,
+    colorText: Colors.white,
+    duration: Duration(days: 1),
+    isDismissible: false,
+    showProgressIndicator: true,
+     padding: EdgeInsets.all( 10),
+    
+    
+    progressIndicatorBackgroundColor: Colors.white,
+  );
+}
 
+ var regularPrice = 0.0.obs;
+  var discountPrice = Rxn<double>(); // يسمح بأن يكون فارغًا
+
+
+  void validateDiscountPrice(String oldPrice) {
+  
+      double? enteredPrice = double.tryParse(oldPrice);
+      if (enteredPrice != null) {
+        if (enteredPrice <= regularPrice.value) {
+         
+         TLoader.warningSnackBar(title: '',message:"يجب أن يكون سعر البيع أقل  من السعر القديم" );
+         
+       
+        } else {
+          discountPrice.value = enteredPrice;
+        }
+      } else {
+        Get.snackbar("تنبيه", "الرجاء إدخال رقم صالح", snackPosition: SnackPosition.TOP,colorText: Colors.white,backgroundColor: Colors.black);
+      }
+    }
+
+  void changePrice(String value) {
+    if(oldPrice.text==''){
+    TLoader.warningSnackBar(title: '',message:  isArabicLocale()?"فضلا أدخل السعر ثم ادخل النسبة" :"Please type the price first");
+    return;
+}
+if (double.parse(value) >100){
+    TLoader.warningSnackBar(title: '',message:  isArabicLocale()?"نسبة الادخال الصحيحة اقل من 100" :"Sale precentage should be less than 100");
+     return;
+}
+
+
+var s=double.parse(oldPrice.text.toString());
+var p=    (s-(s*(double.parse(value)/100)));
+price.text=p.toString();
+  }
+
+
+
+  void changeSalePresentage(String value) {}
+  }
  
 
   // Widget updateProductImage(BuildContext context) {}
-}
+

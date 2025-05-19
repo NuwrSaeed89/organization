@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pull_down_button/pull_down_button.dart';
 import 'package:winto/app/app_localization.dart';
+import 'package:winto/app/data.dart';
 import 'package:winto/core/constants/colors.dart' as TColors;
 import 'package:winto/core/constants/text_styles.dart';
 import 'package:winto/core/functions/lang_f.dart';
+import 'package:winto/features/organization/e_commerce/features/product/views/saved_products_list.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/market_place_managment.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/market_place_view.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/seller.info.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
+import 'package:winto/main.dart';
 
 class ControlPanelMenuVisitor extends StatelessWidget {
   const ControlPanelMenuVisitor(
@@ -42,15 +45,33 @@ class ControlPanelMenuVisitor extends StatelessWidget {
                   },
                 ),
               PullDownMenuItem(
-                icon: Icons.share,
+                icon: Icons.bookmarks,
                 title: isArabicLocale()
-                    ? 'مشاركة'
-                    : localizations.translate('Share'),
+                    ? 'قائمة الحفظ'
+                    : "Save List",
                 itemTheme: PullDownMenuItemTheme(
                     textStyle: bodyText1.copyWith(color: Colors.black)),
                 iconColor: Colors.black,
-                onTap: () {},
+                 onTap: () =>  Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SavedProductsPage(
+                             ))),
               ),
+              
+              PullDownMenuItem(
+                      title: isArabicLocale() ? 'English' : 'العربية',
+                      itemTheme: PullDownMenuItemTheme(
+                          textStyle: bodyText1.copyWith(color: Colors.black)),
+                      iconColor: Colors.black,
+                      onTap: () async {
+                        HapticFeedback.lightImpact;
+                        globalRef!
+                            .read(localeProvider.notifier)
+                            .toggleLocale(context, globalRef!);
+                      },
+                    ),
+              //SavedProductsPage
               PullDownMenuItem(
                 icon: Icons.info,
                 title: isArabicLocale() ? 'سياسة المتجر' : 'Our Policies',

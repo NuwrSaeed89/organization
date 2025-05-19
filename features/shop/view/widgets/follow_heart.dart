@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:winto/app/app_localization.dart';
+import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/shimmers/shimmer.dart';
 import 'package:winto/features/social/data/firebase/user/follow-unfollow.dart';
 
@@ -113,35 +114,34 @@ class _FollowButtonState extends ConsumerState<FollowHeart> {
               raduis: BorderRadius.circular(40),
             )
           : Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(50),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Theme.of(context).hintColor.withOpacity(.125),
-                        spreadRadius: 1,
-                        blurRadius: 10,
-                        offset: const Offset(0, 0))
-                  ]),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(0),
-                  child: !displayFollowing
-                      ? const Icon(CupertinoIcons.heart,
-                          // : CupertinoIcons.heart,
-                          // color: const Color(0xFFFF5050),
-                          color: Colors.black,
-                          size: 23)
-                      : const Icon(CupertinoIcons.heart_fill,
-                          // : CupertinoIcons.heart,
-                          // color: const Color(0xFFFF5050),
-                          color: Colors.red,
-                          size: 23),
+            color: Colors.transparent,
+            child: Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: TRoundedContainer(
+                  width: 34,
+                  height: 34,
+                  radius: BorderRadius.circular(300),
+                 enableShadow: true,
+                 
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(0),
+                      child: !displayFollowing
+                          ? const Icon(CupertinoIcons.heart,
+                              // : CupertinoIcons.heart,
+                              // color: const Color(0xFFFF5050),
+                              color: Colors.black,
+                              size: 23)
+                          : const Icon(CupertinoIcons.heart_fill,
+                              // : CupertinoIcons.heart,
+                              // color: const Color(0xFFFF5050),
+                              color: Colors.red,
+                              size: 23),
+                    ),
+                  ),
                 ),
-              ),
             ),
+          ),
     );
   }
 }

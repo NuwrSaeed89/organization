@@ -16,6 +16,12 @@ var titilliumSemiBold = TextStyle(
   fontWeight: FontWeight.w500,
 );
 
+var titilliumNormal = TextStyle(
+  fontFamily: isArabicLocale() ? arabicFonts : englishFonts,
+  fontSize: TSizes.fontSizeDefault,
+  fontWeight: FontWeight.normal,
+);
+
 var titilliumBold = TextStyle(
   fontFamily: isArabicLocale() ? arabicFonts : englishFonts,
   fontSize: TSizes.fontSizeDefault,

@@ -10,9 +10,10 @@ class SavedButton extends StatelessWidget {
   final Color backgroundColor;
 
   final ProductModel product;
-
+final double size;
   const SavedButton({
     super.key,
+    this.size=18,
     this.backgroundColor = Colors.black,
     required this.product,
   });
@@ -38,13 +39,14 @@ class SavedButton extends StatelessWidget {
           () =>
          // Transform.rotate(angle: 45,
           TRoundedContainer(
-       
-            radius: BorderRadius.circular(100),
-            showBorder: true,
-enableShadow: true,
+       width: size+7,
+       height: size+7,
+            radius: BorderRadius.circular(300),
+          backgroundColor: Colors.transparent,
+
             child: Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: Icon( !like.value ?Icons.bookmark_add_outlined :Icons.download_done_outlined, size:23),
+              padding: const EdgeInsets.all(3.0),
+              child: Icon( !like.value ?Icons.bookmark_border :Icons.bookmark_outlined, size:size, color: Colors.black,),
             )),
           
           

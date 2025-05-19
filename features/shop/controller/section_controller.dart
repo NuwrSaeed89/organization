@@ -27,6 +27,17 @@ class SectionsController extends GetxController {
         .map((doc) => SectionModel.fromMap(doc.data(), doc.id))
         .toList();
     loadingSection.value = false;
+    //  var data = snapshot.data as Map<String, dynamic>;
+
+    //         termsAr.value=data['terms_ar']??'';
+    //         termsEn.value=data['terms_en']??'';
+    //         aboutusAr.value=data['about_us_ar']??'';
+    //         aboutusEn.value=data['about_us_en']??'';
+    //         privacyAr.value=data['privacy_ar']??'';
+    //         privacyEn.value=data['privacy_en']??'';
+    //         returnPolicyAr.value=data['return_policy_ar']??'';
+    //          returnPolicyEn.value=data['return_policy_en']??'';
+    //          loadPolicies(false);
   }
 
   void addSection(SectionModel section, String vendorId) async {

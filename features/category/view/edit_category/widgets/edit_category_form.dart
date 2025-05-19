@@ -12,6 +12,7 @@ import 'package:winto/features/organization/e_commerce/features/category/view/cr
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/buttons/custom_button.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
+import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_widgets.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/custom_styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/enums.dart';
@@ -45,6 +46,7 @@ class EditCategoryForm extends StatelessWidget {
               ),
 
               DefaultTabController(
+                  initialIndex: isArabicLocale()?0:1,
                 length: 2,
                 child: Column(
                   children: <Widget>[
@@ -90,7 +92,7 @@ class EditCategoryForm extends StatelessWidget {
                       ],
                     ),
                     SizedBox(
-                      height: 110,
+                      height: 130,
                       child: TabBarView(
                         children: <Widget>[
                           Column(
@@ -99,15 +101,25 @@ class EditCategoryForm extends StatelessWidget {
                               const SizedBox(
                                 height: TSizes.sm,
                               ),
-                              TextFormField(
-                               focusNode: tabController.arabicFocusNode,
-                                style: titilliumBold.copyWith(fontSize: 18),
-                                controller: editController.arabicName,
-                                validator: (value) =>
-                                    TValidator.validateEmptyText(
-                                        "التصنيف", value),
-                                decoration: inputTextField.copyWith(
-                                  labelText: 'التصنيف *',
+                               Directionality(
+                                
+                                textDirection: TextDirection.rtl,
+                                child: TCustomWidgets.buildLabel('التصنيف *')),
+
+                               Directionality(
+                                
+                                textDirection: TextDirection.rtl,
+                                child: TextFormField(
+                                 focusNode: tabController.arabicFocusNode,
+                                  style: titilliumNormal.copyWith(fontSize: 18),
+                                  controller: editController.arabicName,
+                                  validator: (value) =>
+                                      TValidator.validateEmptyText(
+                                          "التصنيف", value),
+                                  decoration: inputTextField.copyWith(
+                                     contentPadding: isArabicLocale()? EdgeInsets.only(right:5):EdgeInsets.only(left:5),
+                                  
+                                  ),
                                 ),
                               ),
                             ],
@@ -118,15 +130,17 @@ class EditCategoryForm extends StatelessWidget {
                               const SizedBox(
                                 height: TSizes.sm,
                               ),
+                                      TCustomWidgets.buildLabel('Category *'),
                               TextFormField(
                                 focusNode: tabController.englishFocusNode,
-                                 style: titilliumBold.copyWith(fontSize: 18),
+                                 style: titilliumNormal.copyWith(fontSize: 18),
                                 controller: editController.name,
                                 validator: (value) =>
                                     TValidator.validateEmptyText(
                                         "Category Name", value),
                                 decoration: inputTextField.copyWith(
-                                  labelText: "Category Name *",
+                                   contentPadding: isArabicLocale()? EdgeInsets.only(right:5):EdgeInsets.only(left:5),
+                                
                                 ),
                               ),
                             ],
@@ -137,15 +151,8 @@ class EditCategoryForm extends StatelessWidget {
                   ],
                 ),
               ),
-              Text(
-                isArabicLocale() ? 'الصورة' : 'Image',
-                style: titilliumSemiBold.copyWith(
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(
-                height: TSizes.spaceBtwInputFields / 2,
-              ),
+              TCustomWidgets.buildLabel( isArabicLocale() ? 'الصورة' : 'Image'),
+              
               Center(
                 child: Obx(
                   () => TImageUploader(

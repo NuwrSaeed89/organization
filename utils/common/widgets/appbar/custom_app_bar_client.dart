@@ -41,7 +41,9 @@ class CustomAppBarClient extends StatelessWidget
   Widget build(BuildContext context) {
     return PreferredSize(
         preferredSize: const Size.fromHeight(50.0),
-        child: AppBar(
+        child: 
+        
+        AppBar(
           
                 
             backgroundColor: Theme.of(context).cardColor,
@@ -53,7 +55,7 @@ class CustomAppBarClient extends StatelessWidget
               padding: const EdgeInsets.only(top: 10.0),
               child: Text(title ?? '',
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      fontSize: 17,
+                      fontSize:fontSize?? 17,
                       fontFamily: isArabicLocale() ? arabicFonts : englishFonts,
                       color: Theme.of(context).textTheme.bodyLarge?.color),
                   maxLines: 2,

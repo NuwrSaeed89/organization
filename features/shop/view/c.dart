@@ -29,26 +29,28 @@ class NestedScrollViewExample extends StatelessWidget {
             ],
           ),
         ),
-        body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                expandedHeight: 300.0,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Image.network(
-                    'https://via.placeholder.com/400',
-                    fit: BoxFit.cover,
+        body: SafeArea(
+          child: NestedScrollView(
+            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverAppBar(
+                  expandedHeight: 300.0,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Image.network(
+                      'https://via.placeholder.com/400',
+                      fit: BoxFit.cover,
+                    ),
                   ),
+                  pinned: true,
                 ),
-                pinned: true,
-              ),
-            ];
-          },
-          body: TabBarView(
-            children: [
-              Center(child: Text('محتوى لعلامة 1')),
-              Center(child: Text('محتوى لعلامة 2')),
-            ],
+              ];
+            },
+            body: TabBarView(
+              children: [
+                Center(child: Text('محتوى لعلامة 1')),
+                Center(child: Text('محتوى لعلامة 2')),
+              ],
+            ),
           ),
         ),
       ),

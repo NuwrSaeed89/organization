@@ -36,10 +36,10 @@ final RxList<ProductModel> products = <ProductModel>[].obs;
         var arabicTitle = row[2]?.value.toString();
          var arabicDescription = row[3]?.value.toString();
       var price = row[4]?.value.toString();
-      var salePrice = row[5]?.value.toString();
+      var oldPrice = row[5]?.value.toString();
        products.add(ProductModel(id: '', title: title!, arabicTitle: arabicTitle!,
         price: double.parse(price.toString()),
-        salePrice: double.parse(salePrice.toString()),
+        oldPrice: double.parse(oldPrice.toString()),
         
         description: description!, arabicDescription: arabicDescription!, vendorId: vendorId));
       }
@@ -68,6 +68,29 @@ void storeTempProducts( String userId) {
   
 }
 
+  void refreshData() {
+    fetchTemporaryData();
+  }
 
+  void fetchTemporaryData() async {
+    var snapshot = await FirebaseFirestore.instance.collection('temporary_data').get();
+    products.value = snapshot.docs
+       .map((doc) => ProductModel.fromSnapshot(doc))
+        .toList();
+  }
+
+  void updateItem(int index, String field, String value) {
+    var product = products[index];
+    if (field == "name") product.title = value;
+    if (field == "price") product.price = double.parse(value);
+    if (field == "description") product.description = value;
+    products.refresh();
+  }
+
+  Future<void> saveChanges() async {
+    for (var product in products) {
+      await FirebaseFirestore.instance.collection('temporary_data').doc(product.id).update(product.toJson());
+    }
+  }
 
 }

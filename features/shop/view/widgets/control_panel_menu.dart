@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pull_down_button/pull_down_button.dart';
 import 'package:winto/app/app_localization.dart';
+import 'package:winto/app/data.dart';
 import 'package:winto/core/constants/colors.dart' as TColors;
 import 'package:winto/core/constants/text_styles.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/admin/presentation/pages/edit/edit_profile.dart';
 import 'package:winto/features/controls/presentation/control_center.dart';
+import 'package:winto/features/nav/static_bottom_navigator.dart';
+import 'package:winto/features/organization/e_commerce/features/album/screens/album.dart';
 import 'package:winto/features/organization/e_commerce/features/banner/view/all/all_banners.dart';
 import 'package:winto/features/organization/e_commerce/features/category/view/all_category/all_categories.dart';
 import 'package:winto/features/organization/e_commerce/features/excel/view/excel_terms.dart';
@@ -16,6 +19,7 @@ import 'package:winto/features/organization/e_commerce/features/product/views/al
 import 'package:winto/features/organization/e_commerce/features/shop/view/market_place_view.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/policy_page.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
+import 'package:winto/main.dart';
 
 class ControlPanelMenu extends StatelessWidget {
   const ControlPanelMenu({super.key, required this.vendorId});
@@ -44,25 +48,24 @@ class ControlPanelMenu extends StatelessWidget {
                               vendorId: vendorId, editMode: false)));
                 },
               ),
-              PullDownMenuItem(
-                icon: CupertinoIcons.add_circled,
-                title: localizations.translate('shop.addProduct'),
-                itemTheme: PullDownMenuItemTheme(
-                    textStyle: bodyText1.copyWith(color: Colors.black)),
-                iconColor: Colors.black,
-                onTap: () async {
-                  HapticFeedback.lightImpact;
+              // PullDownMenuItem(
+              //   icon: CupertinoIcons.add_circled,
+              //   title:isArabicLocale()? 'الاستديو':'Studio',
+              //   itemTheme: PullDownMenuItemTheme(
+              //       textStyle: bodyText1.copyWith(color: Colors.black)),
+              //   iconColor: Colors.black,
+              //   onTap: () async {
+              //     HapticFeedback.lightImpact;
 
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CreateProduct(
-                                vendorId: vendorId,
-                                type: '',
-                                sectionId: 'all',
-                              )));
-                },
-              ),//PolicyPage
+              //     Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => AlbumPage(
+              //                   userId: vendorId,
+                              
+              //                 )));
+              //   },
+              // ),//PolicyPage
               PullDownMenuItem(
                 icon: Icons.terminal,
                   title: isLocaleEn(context) ? 'manage Terms' : 'ادارة البنود',
@@ -79,21 +82,21 @@ class ControlPanelMenu extends StatelessWidget {
                           builder: (context) => PolicyPage(vendorId: vendorId,)));
                 },
               ),
-               PullDownMenuItem(
-                icon: Icons.save,
-               title: isLocaleEn(context) ? 'Excel import' : 'استيرات اكسل',
-                itemTheme: PullDownMenuItemTheme(
-                    textStyle: bodyText1.copyWith(color: Colors.black)),
-                iconColor: Colors.black,
-                onTap: () async {
-                  HapticFeedback.lightImpact;
+              //  PullDownMenuItem(
+              //   icon: Icons.save,
+              //  title: isLocaleEn(context) ? 'Excel import' : 'استيرات اكسل',
+              //   itemTheme: PullDownMenuItemTheme(
+              //       textStyle: bodyText1.copyWith(color: Colors.black)),
+              //   iconColor: Colors.black,
+              //   onTap: () async {
+              //     HapticFeedback.lightImpact;
 
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ImportExcelPage(vendorId:vendorId)));
-                },
-              ),
+              //     Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => ImportExcelPage(vendorId:vendorId)));
+              //   },
+              // ),
               PullDownMenuItem(
                 icon: Icons.category,
                 title: localizations.translate('shop.categories'),
@@ -145,6 +148,19 @@ class ControlPanelMenu extends StatelessWidget {
                               )));
                 },
               ),
+               PullDownMenuItem(
+                icon: Icons.language,
+                      title: isArabicLocale() ? 'English' : 'العربية',
+                      itemTheme: PullDownMenuItemTheme(
+                          textStyle: bodyText1.copyWith(color: Colors.black)),
+                      iconColor: Colors.black,
+                      onTap: () async {
+                        HapticFeedback.lightImpact;
+                        globalRef!
+                            .read(localeProvider.notifier)
+                            .toggleLocale(context, globalRef!);
+                      },
+                    ),
               PullDownMenuItem(
                 icon: Icons.edit,
                 title: isArabicLocale()
@@ -177,6 +193,23 @@ class ControlPanelMenu extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) => const ControlCenter()));
+                },
+              ),
+               PullDownMenuItem(
+                icon: CupertinoIcons.reply,
+                title: isArabicLocale()
+                    ? 'خروج'
+                    : "Exit",
+                itemTheme: PullDownMenuItemTheme(
+                    textStyle: bodyText1.copyWith(color: Colors.black)),
+                iconColor: Colors.black,
+                onTap: () async {
+                  HapticFeedback.lightImpact;
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const StaticBottomNavigator()));
                 },
               ),
               // PullDownMenuItem(
