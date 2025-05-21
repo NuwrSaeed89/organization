@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/features/product/cashed_network_image.dart';
-import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_client_controller.dart';
+
 import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_vendor_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
@@ -32,136 +32,136 @@ class GridBuilder extends StatelessWidget {
   var showMore = true.obs;
   @override
   Widget build(BuildContext context) {
-    var floatControllerClient =
-      Get.put(FloatingButtonsClientController());
+
       var floatControllerVendor =
-      Get.put(FloatingButtonsVendorController());
+      Get.put(FloatingButtonsController());
+      floatControllerVendor.isEditabel=editMode;
    RxList<ProductModel> spotList = <ProductModel>[].obs;
     var controller = ProductController.instance;
     controller.fetchOffersData(vendorId, 'newArrival');
     spotList.value= controller.newArrivalDynamic;
-
-    return Obx(
-      () {
-        if (controller.isLoading.value) {
-         
+//   if (controller.isLoading.value)
+   
           return Padding(
-            padding: const EdgeInsets.only(top: 18.0),
-            child: MasonryGridView.count(
-              itemCount: 9,
-              crossAxisCount: 3,
-              mainAxisSpacing: 0,
-              crossAxisSpacing: 0,
-              padding: const EdgeInsets.all(0),
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) {
-                return TRoundedContainer(
-                  width: 33.3.w,
-                  height: 33.3.w*(4/3),
-                  showBorder: true,
-                  borderWidth: 1,
-                  borderColor: TColors.white,
-                  child: TShimmerEffect(
+            padding: const EdgeInsets.only(top: 30.0),
+            child:   
+            
+            
+             Obx(()=>
+
+             controller.isLoading.value?
+                MasonryGridView.count(
+                itemCount: 9,
+                crossAxisCount: 3,
+                mainAxisSpacing: 0,
+                crossAxisSpacing: 0,
+                padding: const EdgeInsets.all(0),
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (BuildContext context, int index) {
+                  return TRoundedContainer(
                     width: 33.3.w,
-                   
-                  height: 33.3.w*(4/3),
-                    raduis: BorderRadius.circular(0),
-                  ),
-                );
-              },
-            ),
-          );
-        } else {
+                    height: 33.3.w*(4/3),
+                    showBorder: true,
+                    borderWidth: 1,
+                    borderColor: TColors.white,
+                    child: TShimmerEffect(
+                      width: 33.3.w,
+                     
+                    height: 33.3.w*(4/3),
+                      raduis: BorderRadius.circular(0),
+                    ),
+                  );
+                },
+                           ):
+             
+          
+     //loading finish
         
-          if (spotList.isEmpty) {
-            return editMode
-                ? Padding(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TCustomWidgets.buildTitle(
-                            isArabicLocale() ? 'وصلنا حديثا' : 'New Arrival'),
-                        const SizedBox(
-                          height: TSizes.spaceBtWItems,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 30.0),
-                          child: MasonryGridView.count(
-                            itemCount: 12,
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 0,
-                            crossAxisSpacing: 0,
-                            padding: const EdgeInsets.all(0),
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                    
-                                     var controller =Get.put(ProductController());
-    controller.deleteTempItems();
-                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => CreateProduct(
-                                                  vendorId: vendorId,
-                                                  type: 'newArrival',
-                                                  initialList: [],
-                                                  sectionId: 'all',
-                                                  sectorTitle: SectorModel(name: 'newArrival', englishName: 'New Arrival', arabicName: 'وصلنا حديثا'),
-                                                )));},
-                                    child: TRoundedContainer(
-                                      width: 33.3.w,
-                  height: 33.3.w*(4/3),
-                                      borderColor: TColors.grey,
-                                      showBorder: true,
-                                      borderWidth: 1,
-                                      child: Visibility(
-                                        visible: index == 0,
-                                        child: Center(
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 20.0),
-                                            child: TRoundedContainer(
-                                              enableShadow: true,
-                                              width: 50,
-                                              height: 50,
-                                              radius: BorderRadius.circular(300),
-                                              child: const Icon(
-                                                CupertinoIcons.add,
-                                                color: TColors.primary,
-                                              ),
+             controller.newArrivalDynamic.isEmpty 
+                
+                
+                
+                ? editMode?
+                Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TCustomWidgets.buildTitle(
+                          isArabicLocale() ? 'وصلنا حديثا' : 'New Arrival'),
+                      const SizedBox(
+                        height: TSizes.spaceBtWItems,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 30.0),
+                        child: MasonryGridView.count(
+                          itemCount: 12,
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 0,
+                          crossAxisSpacing: 0,
+                          padding: const EdgeInsets.all(0),
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                  
+                                   var controller =Get.put(ProductController());
+                    controller.deleteTempItems();
+                                   Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CreateProduct(
+                                                vendorId: vendorId,
+                                                type: 'newArrival',
+                                                initialList: [],
+                                                sectionId: 'all',
+                                                sectorTitle: SectorModel(name: 'newArrival', englishName: 'New Arrival', arabicName: 'وصلنا حديثا'),
+                                              )));},
+                                  child: TRoundedContainer(
+                                    width: 33.3.w,
+                height: 33.3.w*(4/3),
+                                    borderColor: TColors.grey,
+                                    showBorder: true,
+                                    borderWidth: 1,
+                                    child: Visibility(
+                                      visible: index == 0,
+                                      child: Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20.0),
+                                          child: TRoundedContainer(
+                                            enableShadow: true,
+                                            width: 50,
+                                            height: 50,
+                                            radius: BorderRadius.circular(300),
+                                            child: const Icon(
+                                              CupertinoIcons.add,
+                                              color: TColors.primary,
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ],
-                              );
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                )
-                : const SizedBox.shrink();
-          } else {
-           
-            return   
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  )
+                : const SizedBox.shrink()
+         : 
 
 
             
              (spotList.length < 3 &&!editMode)? SizedBox.shrink():
-              Padding(
-              padding: const EdgeInsets.only(top: 30.0),
-              child: Column(
+              Column(
                 // mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -172,7 +172,7 @@ class GridBuilder extends StatelessWidget {
                   ),
                   Stack(
                     children: [
-
+              
                         (spotList.length < 3  &&!editMode)?
                         SizedBox.shrink():
                       (spotList.length > 12 && showMore.value)
@@ -190,10 +190,10 @@ class GridBuilder extends StatelessWidget {
                                     shrinkWrap: true,
                                     itemBuilder: (BuildContext context, int index) {
                                       if(editMode && index == spotList.sublist(0, 12).length+1){
-  return GestureDetector(
-     onTap: () {
+                return GestureDetector(
+                   onTap: () {
                                  var controller =Get.put(ProductController());
-    controller.deleteTempItems();
+                  controller.deleteTempItems();
                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -204,13 +204,13 @@ class GridBuilder extends StatelessWidget {
                                               initialList: [],
                                             sectionId: 'all',
                                           )));},
-    child: emptyMedium(33.3.w*(4/3), 33.3.w));}
-
-if(editMode && index == spotList.sublist(0, 12).length){
-  return GestureDetector(
-     onTap: () {
+                  child: emptyMedium(33.3.w*(4/3), 33.3.w));}
+              
+              if(editMode && index == spotList.sublist(0, 12).length){
+                return GestureDetector(
+                   onTap: () {
                                  var controller =Get.put(ProductController());
-    controller.deleteTempItems();
+                  controller.deleteTempItems();
                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -221,20 +221,19 @@ if(editMode && index == spotList.sublist(0, 12).length){
                                             type: 'mixlin1',
                                             sectionId: 'all',
                                           )));},
-    child: emptyMedium(33.3.w*(4/3), 33.3.w));}
-
+                  child: emptyMedium(33.3.w*(4/3), 33.3.w));}
+              
                                       return GestureDetector(
                                              onLongPressStart: (details) {
-            if(editMode){
- floatControllerVendor.p=spotList.sublist( 0, 12)[index];
+                          if(editMode){
+               floatControllerVendor.product=spotList.sublist( 0, 12)[index];
               floatControllerVendor.showFloatingButtons(context, details.globalPosition);
-            }else{
-
- floatControllerClient.p=spotList.sublist( 0, 12)[index];
-              floatControllerClient.showFloatingButtons(context, details.globalPosition);
-            }
-           
-            },
+                          }else{
+              
+               
+                          }
+                         
+                          },
                                         onTap: () {
                                           Navigator.push(
                                               context,
@@ -258,7 +257,7 @@ if(editMode && index == spotList.sublist(0, 12).length){
                                           borderColor: TColors.white,
                                           child: CustomCaChedNetworkImage(
                                               width: 141,
-
+              
                                               enableShadow: false,
                                               height: 191,
                                               raduis: BorderRadius.circular(0),
@@ -323,10 +322,10 @@ if(editMode && index == spotList.sublist(0, 12).length){
                                     shrinkWrap: true,
                                     itemBuilder: (BuildContext context, int index) {
                                       if(editMode && index >= spotList.length){
-  return InkWell(
-     onTap: () {
+                return InkWell(
+                   onTap: () {
                                  var controller =Get.put(ProductController());
-    controller.deleteTempItems();
+                  controller.deleteTempItems();
                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -337,36 +336,33 @@ if(editMode && index == spotList.sublist(0, 12).length){
                                             type: 'newArrival',
                                             sectionId: 'all',
                                           )));},
-    child: emptyMedium( 33.3.w*(4/3), 33.3.w));}
-
-// if(editMode && index == spotList.length){
-//   return GestureDetector(
-//      onTap: () {
-//                                  var controller =Get.put(ProductController());
-//     controller.deleteTempItems();
-//                                Navigator.push(
-//                                   context,
-//                                   MaterialPageRoute(
-//                                       builder: (context) => CreateProduct(
-//                                             vendorId: vendorId,
-//                                        type: 'newArrival',
-//                                             sectionId: 'all',
-//                                           )));},
-//     child: emptyMedium(   44.7.w, 33.3.w
-//                                            ));}
-
+                  child: emptyMedium( 33.3.w*(4/3), 33.3.w));}
+              
+              // if(editMode && index == spotList.length){
+              //   return GestureDetector(
+              //      onTap: () {
+              //                                  var controller =Get.put(ProductController());
+              //     controller.deleteTempItems();
+              //                                Navigator.push(
+              //                                   context,
+              //                                   MaterialPageRoute(
+              //                                       builder: (context) => CreateProduct(
+              //                                             vendorId: vendorId,
+              //                                        type: 'newArrival',
+              //                                             sectionId: 'all',
+              //                                           )));},
+              //     child: emptyMedium(   44.7.w, 33.3.w
+              //                                            ));}
+              
                                       return GestureDetector(
                                              onLongPressStart: (details) {
-            if(editMode){
- floatControllerVendor.p=spotList[index];
+                          if(editMode){
+               floatControllerVendor.product=spotList[index];
               floatControllerVendor.showFloatingButtons(context, details.globalPosition);
-            }else{
-
- floatControllerClient.p=spotList[index];
-              floatControllerClient.showFloatingButtons(context, details.globalPosition);
-            }
-           
-            },
+                          
+                          }
+                         
+                          },
                                         onTap: () {
                                           Navigator.push(
                                               context,
@@ -449,7 +445,7 @@ if(editMode && index == spotList.sublist(0, 12).length){
                               onTap: () {
                                 
                                  var controller =Get.put(ProductController());
-    controller.deleteTempItems();
+                  controller.deleteTempItems();
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -465,14 +461,10 @@ if(editMode && index == spotList.sublist(0, 12).length){
                     ],
                   ),
                 ],
-              ),
-            );
+              )));
           }
         }
-      },
-    );
-  }
-}
+  
 
   Widget emptyMedium( double cardHeight,double cardWidth) {
 return   SizedBox(

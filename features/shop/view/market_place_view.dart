@@ -5,6 +5,7 @@ import 'package:sizer/sizer.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/controllers/category_controller.dart';
 import 'package:winto/features/organization/e_commerce/data/models/category_model.dart';
+import 'package:winto/features/organization/e_commerce/features/shop/controller/profile_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/controller/section_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/controller/tab_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/data/section_model.dart';
@@ -22,7 +23,7 @@ class MarketPlaceView extends StatelessWidget {
   final String vendorId;
   @override
   Widget build(BuildContext context) {
-
+ProfileController.instance.fetchVendorData(vendorId);
 return Scaffold(body: SafeArea(
   child:
   

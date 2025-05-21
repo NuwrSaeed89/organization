@@ -41,6 +41,10 @@ class TPromoSlider extends StatelessWidget {
   final childrenButtonSize = const Size(45.0, 45.0);
 
   Widget build(BuildContext context) {
+     double width=85.w;
+  
+     double aspectRatio=0.5882;
+        double height=width*aspectRatio;
    final controller = BannerController.instance;
   BannerController.instance.fetchUserBanners(vendorId);
     return Obx(() {
@@ -56,15 +60,17 @@ class TPromoSlider extends StatelessWidget {
        if (controller.activeBanners.isEmpty) {
         return editMode
             ?
-             Padding(
-               padding: const EdgeInsets.only(bottom: 10.0),
+             Container(
+              color: Colors.transparent,
+               padding: const EdgeInsets.only(bottom:10.0),
+       
                child: CarouselSlider(
                 carouselController: CarouselSliderController(),
                   options: CarouselOptions(
-                                aspectRatio:364/214,
-               height: 48.w,
-        viewportFraction: 0.8,
-        enlargeCenterPage: true,
+                              aspectRatio:aspectRatio,
+                       height:height+20,
+                     viewportFraction: 0.85,
+                     enlargeCenterPage: true,
                     //autoPlay: true,
                    // height: 200,
                  //   enlargeCenterPage: true,
@@ -77,8 +83,8 @@ class TPromoSlider extends StatelessWidget {
                       children: [
                         Center(
                           child: TRoundedContainer(
-                          width: 214,
-              height: 364,
+                           width: width,
+              height:height,
                             enableShadow: true,
                             showBorder: true,
                             backgroundColor: TColors.white,
@@ -130,8 +136,8 @@ class TPromoSlider extends StatelessWidget {
                                   NetworkImageContainerFullSize(
                                      item))),
                             child: CustomCaChedNetworkImage(
-                               width: 80.w,
-                                          height: 40.w,
+                               width: width,
+                                          height: height,
                               url: item,
                               raduis: BorderRadius.circular(15),
                             ),
@@ -143,8 +149,8 @@ class TPromoSlider extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 10),
                 child:  TRoundedContainer(
                   showBorder: true,
-                height: 214,
-              width: 364,
+                  height: height,
+                  width:width,
                   enableShadow: true,
                   radius: BorderRadius.circular(15),
                   child: Center(
@@ -166,7 +172,7 @@ class TPromoSlider extends StatelessWidget {
                   ),
                 ),
               ));
-
+    
               items.add(Padding(
                 padding: EdgeInsets.only(bottom: 10),
                 child: TRoundedContainer(
@@ -224,24 +230,16 @@ class TPromoSlider extends StatelessWidget {
                 ),
               ));
             }
-
+    
             return Stack(
               children: [
                 CarouselSlider(
                     options: CarouselOptions(
-                      //    aspectRatio: 4 / 2,
-                      //  viewportFraction: 0.85,
-      aspectRatio:364/214,
-               height: 48.w,
-             
-                        //autoPlay: true,
-                       // height: 230,
-                       
-                       // enlargeCenterPage: true,
-                       
-
-                     //  aspectRatio: 1/0.588,
-        viewportFraction: 0.8,
+                
+      aspectRatio:aspectRatio,
+    
+              height :height+20,
+        viewportFraction: 0.85,
         enlargeCenterPage: true,
                        // enableInfiniteScroll: true,
                      
@@ -263,8 +261,8 @@ class TPromoSlider extends StatelessWidget {
                                   vendorId: vendorId,
                         )),icon: Icons.settings,)),
                      ),
-
-
+    
+    
                 Visibility(
                   visible: false,
                   child: Container(

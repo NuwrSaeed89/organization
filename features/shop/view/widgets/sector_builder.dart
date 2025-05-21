@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/features/product/cashed_network_image.dart';
-import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_client_controller.dart';
+
 import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_vendor_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
@@ -54,10 +54,10 @@ class SectorBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
      List<IconData> icons = [Icons.favorite, Icons.share, Icons.shopping_cart, Icons.delete];
 const  double padding=10;
-var floatControllerClient =
-      Get.put(FloatingButtonsClientController());
+
       var floatControllerVendor =
-      Get.put(FloatingButtonsVendorController());
+      Get.put(FloatingButtonsController());
+      floatControllerVendor.isEditabel=editMode;
     RxList<ProductModel> spotList = <ProductModel>[].obs;
   // final FloatingButtonsController controllerf =
 // Get.put(FloatingButtonsController());
@@ -244,21 +244,11 @@ var floatControllerClient =
                                   child: Stack(
                                     alignment: Alignment.center,
                                     children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: TColors.shadow
-                                                  .withValues(alpha: .2),
-                                              spreadRadius: 0,
-                                              blurRadius: 3,
-                                              offset: Offset(0, 3),
-                                            ),
-                                          ],
-                                          borderRadius: BorderRadius.circular(15),
-                                          border: Border.all(color: TColors.grey),
-                                        ),
+                                      TRoundedContainer(
+                                       
+                                          radius: BorderRadius.circular(15),
+                                         showBorder: true,
+                                        enableShadow: true,
                                         //showBorder: true,
                                         height: cardHeight,
                                         width: cardWidth,
@@ -322,7 +312,7 @@ var floatControllerClient =
                       Container(
                         color: Colors.transparent,
                         height: cardType == CardType.justImage
-                            ? cardHeight + 70
+                            ? cardHeight + 90
                             : cardType == CardType.smallCard
                                 ? cardHeight + 120
                                 : cardHeight + 130,
@@ -384,18 +374,26 @@ if(editMode && index == spotList.length){
                                   height: cardHeight,
                                   width: cardWidth,
                                   child: GestureDetector(
-                                     key: itemKey,
-          onLongPressStart: (details) {
-            if(editMode){
- floatControllerVendor.p=spotList[index];
-              floatControllerVendor.showFloatingButtons(context, details.globalPosition);
-            }else{
-
- floatControllerClient.p=spotList[index];
-              floatControllerClient.showFloatingButtons(context, details.globalPosition);
-            }
-           
+                                      onLongPressStart: (details) {
+                                        var controller= floatControllerVendor;
+                                        controller.product= spotList[index];
+                                        //controller.product=spotList[index]; // : floatControllerClient;
+              controller.showFloatingButtons(
+                context,
+                details.globalPosition,
+                productIsFavorite: false,
+              );
             },
+            onLongPressMoveUpdate: (details) {
+               var controller= floatControllerVendor; // : floatControllerClient;
+              controller.updatePosition(details.globalPosition);
+            },
+            onLongPressEnd: (details) {
+               var controller= floatControllerVendor; // : floatControllerClient;
+              controller.processSelection();
+              controller.removeFloatingButtons();
+            },
+                                   
                                     onTap: () => Navigator.push(
                                         context,
                                         PageRouteBuilder(
@@ -408,57 +406,54 @@ if(editMode && index == spotList.length){
                                           ),
                                         )),
                                     child: cardType == CardType.justImage
-                                        ? TRoundedContainer(
+                                        ? SizedBox(
                                             width: cardWidth,
-                                            height: cardHeight+50,
-                                           // radius: BorderRadius.circular(15),
+                                            //backgroundColor: Colors.transparent,
+                                            height: cardHeight+60,
+                                            // borderColor: Colors.black,
+                                            // borderWidth: 6,
+                                            // radius: BorderRadius.circular(15),
                                           //  enableShadow: true,
                                             child: Column(
                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                             mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                TRoundedContainer(
-                                                      width: cardWidth,
-                                                    height: cardHeight,
-                                                    radius: BorderRadius.circular(15),
-                                                    enableShadow: true,
-                                                    showBorder: true,
-                                                  child:
-                                                  Stack(
-                                                    children: [
-                                                      TProductImageSliderMini(
-                                                                    product: spotList[index],
-                                                                    prefferHeight:cardWidth*(4/3),
-                                                                    prefferWidth:cardWidth,
-                                                                    radius: BorderRadius.circular(15),
-                                                                  ),
-                                                                  Visibility(
-                                                                    visible: editMode,
-                                                                    child: Positioned(
-                                                                      bottom:0,
-                                                                      right: padding/2,
-                                                                      child:  GestureDetector(
-                                                                        onTapDown: (details) {
-                                                                              if(editMode){
-                                                                     floatControllerVendor.p=spotList[index];
-                                                                                  floatControllerVendor.showFloatingButtons(context, details.globalPosition);
-                                                                                }
-                                                                                
-                                                                        },
-                                                                        child:  Icon(Icons.more_horiz, color: Colors.white),
-                                                                                          
+                                                Stack(
+                                                  children: [
+                                                    TProductImageSliderMini(
+                                                                  product: spotList[index],
+                                                                  prefferHeight:cardWidth*(4/3),
+                                                                  prefferWidth:cardWidth,
+                                                                  radius: BorderRadius.circular(15),
+                                                                ),
+                                                                Visibility(
+                                                                  visible: editMode,
+                                                                  child: Positioned(
+                                                                    bottom:padding,
+                                                                    right: padding,
+                                                                    child:  GestureDetector(
+                                                                      onTapDown: (details) {
+                                                                            if(editMode){
+                                                                   floatControllerVendor.product=spotList[index];
+                                                                                floatControllerVendor.showFloatingButtons(context, details.globalPosition);
+                                                                              }
+                                                                              
+                                                                      },
+                                                                      child:  Icon(Icons.more_horiz, color: Colors.white),
                                                                                         
-                                                                      ),
-                                                                      
+                                                                                      
                                                                     ),
+                                                                    
                                                                   ),
-                                                    ],
-                                                  ),
-                                                  
-                                             
+                                                                ),
+                                                  ],
                                                 ),
                                                 SizedBox(height: 12,),
-                                                  ProductController.getTitle(spotList[index] ,isLocaleEn(context), cardWidth> 50.w ? 15:13 ),
+                                                  Padding(
+                                                    padding: isArabicLocale()?  EdgeInsets.only(left:16,right: 6):EdgeInsets.only(left:6.0,right: 16),
+                                                    child: ProductController.getTitle(spotList[index] ,isLocaleEn(context), cardWidth> 50.w ? 15:13, cardWidth> 50.w ? 2:1 ),
+                                                  ),
                                                // Text("jjjjjjjjj")
                                               ],
                                             ),

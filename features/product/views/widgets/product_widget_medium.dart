@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:winto/core/functions/lang_f.dart';
-import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_client_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_vendor_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
@@ -30,10 +29,10 @@ class ProductWidgetMedium extends StatelessWidget {
   final String vendorId;
   @override
   Widget build(BuildContext context) {
-    var floatControllerClient =
-      Get.put(FloatingButtonsClientController());
+ 
       var floatControllerVendor =
-      Get.put(FloatingButtonsVendorController());
+      Get.put(FloatingButtonsController());
+      floatControllerVendor.isEditabel=editMode;
     final controller = ProductController.instance;
     final salePrecentage =
         controller.calculateSalePresentage(product.price, product.oldPrice);
@@ -106,7 +105,7 @@ class ProductWidgetMedium extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       const SizedBox(height: 10),
-                      ProductController.getTitle(product ,isLocaleEn(context), 15 ),
+                      ProductController.getTitle(product ,isLocaleEn(context), 15,2 ),
                                              
                       const SizedBox(
                         height: 4,
@@ -148,12 +147,12 @@ class ProductWidgetMedium extends StatelessWidget {
           // Off
                                     Visibility(  visible: editMode,
                                                                     child: Positioned(
-                                                                      right:5,
-                                                                      top:205,
+                                                                      right:10,
+                                                                      top:195,
                                                                       child:  GestureDetector(
                                                                         onTapDown: (details) {
                                                                               if(editMode){
-                                                                     floatControllerVendor.p=product;
+                                                                     floatControllerVendor.product=product;
                                                                                   floatControllerVendor.showFloatingButtons(context, details.globalPosition);
                                                                                 }
                                                                                 

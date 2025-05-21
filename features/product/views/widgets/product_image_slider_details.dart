@@ -39,7 +39,7 @@ class TProductImageSliderDetails extends StatelessWidget {
       return Stack(
         children: [
           TRoundedContainer(
-            radius: BorderRadius.circular(15),
+            radius:radius?? BorderRadius.circular(15),
               showBorder: true,
               enableShadow: true,
             child: CarouselSlider(
@@ -76,7 +76,7 @@ class TProductImageSliderDetails extends StatelessWidget {
                             (context, url, downloadProgress) => ClipRRect(
                                 //  borderRadius: BorderRadius.circular(0),
                                 child: TShimmerEffect(
-                                    raduis: BorderRadius.circular(15),
+                                    raduis: radius ??BorderRadius.circular(15),
                                     width: prefferWidth ?? 120,
                                   
                                     height: prefferHeight ?? 220)),

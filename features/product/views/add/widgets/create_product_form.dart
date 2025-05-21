@@ -508,7 +508,7 @@ class CreateProductForm extends StatelessWidget {
                                                 .selectedImage[index]
                                                 .path),
           child: Stack(
-            alignment: Alignment.bottomLeft,
+           // alignment: Alignment.bottomLeft,
             children: [
           Padding(
             padding: isArabicLocale()
@@ -567,32 +567,36 @@ class CreateProductForm extends StatelessWidget {
           ),
           
           
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: IconButton(
-            onPressed: () => controller  .cropImage(controller
-                                                              .selectedImage[index]
-                                                              .path),
-              icon: TRoundedContainer(
-                width: 30,
-                height: 30,
-                radius: BorderRadius
-                    .circular(40),
-                backgroundColor:
-                    TColors.black
-                        .withValues(
-                            alpha:
-                                .5),
-                child: const Icon(
-                  Icons.edit,
-                  color: Colors.white,
+          Positioned(
+              bottom: padding,
+            right:padding,
+            child: Padding(
+              padding: const EdgeInsets.all(0),
+              child: IconButton(
+              onPressed: () => controller  .cropImage(controller
+                                                                .selectedImage[index]
+                                                                .path),
+                icon: TRoundedContainer(
+                  width: 30,
+                  height: 30,
+                  radius: BorderRadius
+                      .circular(40),
+                  backgroundColor:
+                      TColors.black
+                          .withValues(
+                              alpha:
+                                  .5),
+                  child: const Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
           ),
           Positioned(
             top: padding,
-            right: padding,
+            right:padding,
             child: IconButton(
               onPressed: () =>
                   controller
@@ -742,99 +746,42 @@ class CreateProductForm extends StatelessWidget {
     );
   }
 
-  FloatingActionButton showFloatingButton(ProductController controller, BuildContext context, ScrolleEditController scrolleController) {
-    return FloatingActionButton(
-    backgroundColor: Colors.transparent,
-
-    elevation: 0,
-    foregroundColor: Colors.transparent,
-    //focusColor: TColors.primary,
-        onPressed: () async {
-
-
-                      if (controller.formKey.currentState!.validate()) {
-                        // await showSimpleLoadingDialog<String>(
-                        //   context: context,
-                        //   future: () async {
-                         controller.showProgressBar();
-                            await controller.createProduct(type, vendorId);
-                            Get.closeCurrentSnackbar();
-                              scrolleController.scrollToTop();}},
-                          //   return "done2";
-                          // },
-                          // Custom dialog
-                          // dialogBuilder: (context, _) {
-                          //   return AlertDialog(
-                          //     content: Obx(
-                          //       () => Column(
-                          //         mainAxisSize: MainAxisSize.min,
-                          //         children: [
-                          //           const SizedBox(height: 20),
-                          //           const TLoaderWidget(),
-                          //           const SizedBox(height: 16),
-                          //           Text(
-                          //             controller.message.value,
-                          //             style: titilliumBold,
-                          //           ),
-                          //           const SizedBox(height: 16),
-                          //         ],
-                          //       ),
-                          //     ),
-                          //   );
-                         // },
-                        
-                     
-                    
-                     
-
-
-                      // if (controller.formKey.currentState!.validate()) {
-                      //   await showSimpleLoadingDialog<String>(
-                      //     context: context,
-                      //     future: () async {
-                      //       await controller.createProduct(type, vendorId);
-                      //       return "done2";
-                      //     },
-                      //     // Custom dialog
-                      //     dialogBuilder: (context, _) {
-                      //       return AlertDialog(
-                      //         content: Obx(
-                      //           () => Column(
-                      //             mainAxisSize: MainAxisSize.min,
-                      //             children: [
-                      //               const SizedBox(height: 20),
-                      //               const TLoaderWidget(),
-                      //               const SizedBox(height: 16),
-                      //               Text(
-                      //                 controller.message.value,
-                      //                 style: titilliumBold,
-                      //               ),
-                      //               const SizedBox(height: 16),
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       );
-                      //     },
-                      //   );
-                     
-                      // scrolleController.scrollToTop();
-                     
-                      
-                    
+  Widget showFloatingButton(ProductController controller, BuildContext context, ScrolleEditController scrolleController) {
+    return SizedBox(
+      width: 100,
+      height: 40,
+      child: FloatingActionButton(
+      backgroundColor: Colors.transparent,
+      
+      elevation: 0,
+      foregroundColor: Colors.transparent,
+      //focusColor: TColors.primary,
+          onPressed: () async {
+      
+      
+                        if (controller.formKey.currentState!.validate()) {
+                          // await showSimpleLoadingDialog<String>(
+                          //   context: context,
+                          //   future: () async {
+                           controller.showProgressBar();
+                              await controller.createProduct(type, vendorId);
+                              Get.closeCurrentSnackbar();
+                                scrolleController.scrollToTop();}},
+          
+      child: Center(
+          child: TRoundedContainer(
+        enableShadow: true,
+        width: 90,
+        height: 40,
+      backgroundColor: Colors.black,
+        radius: BorderRadius.circular(300),
+        child: Center(
                 
-
-    child: Center(
-        child: TRoundedContainer(
-      enableShadow: true,
-      width: 50,
-      height: 50,
-      radius: BorderRadius.circular(300),
-      child: SizedBox(
-                width: 40,
-                child: CustomButtonBlack(
-                  text: isArabicLocale() ? 'نشر' : 'Post',))
-    )),
-  );
+                  child: Text(
+                     isArabicLocale() ? 'نشر' : 'Post',style: titilliumBold.copyWith(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),))
+      )),
+        ),
+    );
   }
 }
   

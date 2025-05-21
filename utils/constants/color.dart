@@ -7,7 +7,7 @@ class TColors {
   static const Color primary = Color(0XFF3981F6);//Color primary = const Color(0XFF3981F6);
   static const Color secondary = Color(0xFFFFE24B);
   static const Color accent = Color(0xFFb0c7ff);
-  static const Color shadow = Color.fromARGB(255, 188, 186, 186);
+  static  Color shadow = Color.fromARGB(255, 157, 153, 153).withValues(alpha: .5);
   static const Color red = Color.fromARGB(255, 183, 66, 66);
   //static const Color containerdarkColor = Color.fromARGB(255, 10, 13, 21);
   static const Color containerdarkColor = Color(0xFF202634);
@@ -70,7 +70,7 @@ class TColors {
   static const Color white = Color(0xFFffffff);
 
 
-  static const tboxShadow =
+  static   List<BoxShadow> tboxShadow =
                      [
                         BoxShadow(
                           color: TColors.shadow,

@@ -1,23 +1,29 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:readmore/readmore.dart';
 import 'package:sizer/sizer.dart';
 import 'package:winto/core/functions/lang_f.dart';
+import 'package:winto/features/admin/presentation/widgets/profile/profile_image.dart';
 import 'package:winto/features/organization/e_commerce/features/product/cashed_network_image.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/favorite_widget.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_image_slider_details.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/saved_widget.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/slider_controller.dart';
+import 'package:winto/features/organization/e_commerce/features/shop/controller/profile_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/category_product_grid.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/control_panel_menu_product.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/appbar/custom_app_bar.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_widgets.dart';
+import 'package:winto/features/organization/e_commerce/utils/common/widgets/shimmers/shimmer.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
+import 'package:winto/features/organization/e_commerce/utils/constants/constant.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/sizes.dart';
+import 'package:winto/features/social/presentation/pages/user/view_profile.dart';
 import 'package:winto/features/social/presentation/widgets/posts/network/display/display_image_full.dart';
 
 class ProductDetails extends StatelessWidget {
@@ -55,25 +61,54 @@ class ProductDetails extends StatelessWidget {
               
              
               Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
+                padding: const EdgeInsets.only(bottom: 2.0, top:16),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                    IconButton(onPressed: ()=> Navigator.pop(context), icon: Icon( Icons.arrow_back_ios_new_rounded,
                        size: 18,)),
-                      if (product.images!.length > 1)  Expanded(
-                      child: TRoundedContainer(
-                       
-                                        backgroundColor: Colors.transparent,
-                        width: 40,
-                        height: 30,
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Obx(()=> Text('${controller.selectdindex.value+1}/${product.images!.length}')),
-                          ),
-                        ),),
+
+                      if (product.images!.length > 1)  Padding(
+                        padding: const EdgeInsets.only(top:10.0),
+                        child: Obx(()=> Text('${controller.selectdindex.value+1}/${product.images!.length}', style: titilliumBold.copyWith(fontFamily: numberFonts),)),
+                      ),
+                     // SizedBox(width: 18,),
+                    Container(
+                       width: 37,
+                                      height: 37,
                     ),
-                    SizedBox(width: 30,)
+                     Visibility(
+                      visible: false,
+                       child: Padding(
+                         padding: const EdgeInsets.only(left:10, right: 10),
+                         child: GestureDetector(
+                                  onTap: () {
+                                    HapticFeedback.lightImpact;
+                         Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ViewSocialProfile(
+                                  vendorId)));
+                                  },
+                                  child: TRoundedContainer(
+                                      radius: BorderRadius.circular(50),
+                                      width: 37,
+                                      height: 37,
+                                     enableShadow: true,
+                                     // backgroundColor: Colors.transparent,
+                                      child:
+                                       UserProfileImageWidget(
+                                  imgUrl: ProfileController.instance.vendorData.value.organizationLogo?? ProfileController.instance.vendorData.value.profileImage,//
+                                  size: 37,
+                                  withShadow: false,
+                                  allowChange: true,
+                                ),
+                                     
+                                 ) ),
+                       ),
+                     ),
+                    //SizedBox(width: 50,)
                   ],
                 ),
               ),
@@ -258,7 +293,7 @@ class ProductDetails extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                     if (product.oldPrice !=null)
+                     if (product.oldPrice! > product.price)
 
                  
                       Align(

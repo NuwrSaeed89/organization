@@ -4,8 +4,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:winto/core/functions/lang_f.dart';
-import 'package:winto/features/organization/e_commerce/features/product/cashed_network_image.dart';
-import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_client_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_vendor_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
@@ -39,10 +37,10 @@ class GridBuilderCustomCard extends StatelessWidget {
     var controller = ProductController.instance;
     controller.fetchOffersData(vendorId, 'mixlin1');
     spotList = controller.mixline1Dynamic;
-var floatControllerClient =
-      Get.put(FloatingButtonsClientController());
+
       var floatControllerVendor =
-      Get.put(FloatingButtonsVendorController());
+      Get.put(FloatingButtonsController());
+      floatControllerVendor.isEditabel=editMode;
     // SectorBuilder(
     //   cardWidth: 174,
     //   cardHeight: 226,
@@ -297,12 +295,8 @@ if(editMode && index == spotList.sublist(0, 12).length){
                                       return GestureDetector(
                                              onLongPressStart: (details) {
             if(editMode){
- floatControllerVendor.p=spotList.sublist(0, 12)[index];
+ floatControllerVendor.product=spotList.sublist(0, 12)[index];
               floatControllerVendor.showFloatingButtons(context, details.globalPosition);
-            }else{
-
- floatControllerClient.p=spotList.sublist(0, 12)[index];
-              floatControllerClient.showFloatingButtons(context, details.globalPosition);
             }
            
             },
@@ -431,14 +425,9 @@ if(editMode && index == spotList.length){
                                       return GestureDetector(
                                              onLongPressStart: (details) {
             if(editMode){
- floatControllerVendor.p=spotList[index];
+ floatControllerVendor.product=spotList[index];
               floatControllerVendor.showFloatingButtons(context, details.globalPosition);
-            }else{
-
- floatControllerClient.p=spotList[index];
-              floatControllerClient.showFloatingButtons(context, details.globalPosition);
             }
-           
             },
                                         onTap: () {
                                           Navigator.push(

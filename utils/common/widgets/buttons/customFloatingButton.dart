@@ -25,6 +25,9 @@ class CustomFloatActionButton extends StatelessWidget {
         enableShadow: true,
         width: 50,
         height: 50,
+        showBorder: true,
+        borderWidth: .5,
+        borderColor: TColors.borderPrimary.withValues(alpha: .5),
         radius: BorderRadius.circular(300),
         child:   isIcon? Icon(icon
   ,

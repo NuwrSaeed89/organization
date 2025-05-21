@@ -1,26 +1,11 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // لاستخدام ردود الفعل اللمسية
+import 'package:flutter/services.dart'; // لاستخدام HapticFeedback
 import 'package:get/get.dart';
-import 'package:winto/app/app_localization.dart';
-import 'package:winto/features/organization/e_commerce/features/product/controllers/edit_product_controller.dart';
-import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
-import 'package:winto/features/organization/e_commerce/features/product/controllers/saved_product_controller.dart';
-import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
-import 'package:winto/features/organization/e_commerce/features/product/views/edit/edit_product.dart';
-import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
-import 'package:winto/features/organization/e_commerce/utils/constants/image_strings.dart';
-import 'package:winto/features/organization/e_commerce/utils/dialog/confirmation_dialog.dart';
+import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 
 class FloatingButtonsController extends GetxController {
-ProductModel product = ProductModel.empty();
-   var savedController = SavedProductsController.instance;
-    //  bool isGuestMode = false;
-    //RxBool like = false.obs;
-   
   OverlayEntry? overlayEntry;
-  bool isEditabel=false;
   // متغير لمتابعة موقع الإصبع (سيُحدث أثناء السحب)
   Rxn<Offset> currentDragPosition = Rxn<Offset>();
 
@@ -30,39 +15,31 @@ ProductModel product = ProductModel.empty();
   final List<Offset> iconCenters = [];
 
   // بيانات الأيقونات؛ هنا "حفظ" تُستخدم لأيقونة الإعجاب (like)
-  final List<Map<String, dynamic>> iconsDataVendor = [
-    // {"icon": Icons.favorite, "label": "like"},
-    // {"icon": Icons.bookmark, "label": "save"},
-    {"icon": Icons.close, "label": "close"},
-    {"icon": Icons.edit, "label": "edit"},
-    {"icon": Icons.delete, "label": "delete"},
-  ];
-    final List<Map<String, dynamic>> iconsDataClient = [
-    {"icon": Icons.favorite, "label": "like"},
-    {"icon": Icons.bookmark, "label": "save"},
-    {"icon": Icons.close, "label": "close"},
-
+  final List<Map<String, dynamic>> iconsData = [
+    {"icon": Icons.favorite, "label": "حفظ"},
+    {"icon": Icons.share, "label": "مشاركة"},
+    {"icon": Icons.close, "label": "إغلاق"},
+    {"icon": Icons.edit, "label": "تعديل"},
+    {"icon": Icons.delete, "label": "حذف"},
   ];
 
   bool _actionTriggered = false;
-var isLike=false.obs;
+  bool isFavorite = false;
   int _lastHoveredIndex = -1;
 
   // نقوم بتخزين موقع الضغط الأولي لاستخدامه في رسم دائرة شفافة
   Offset? pressPosition;
- //var iconsDate= isEditabel ? iconsDataVendor:iconsDataClient;
+
   /// تعرض هذه الدالة القائمة العائمة (Overlay)
   /// مع طبقة تعتيم ودائرة شفافة في موقع الضغط.
   /// يتم حساب زاوية بدء عرض الأيقونات ديناميكيًا بناءً على مكان الإصبع.
   /// [productIsFavorite] هي حالة المنتج (مفضلة أم لا).
   void showFloatingButtons(BuildContext context, Offset position,
       {bool productIsFavorite = false}) {
-         var saved = savedController.isSaved(product.id).obs;
-         var iconsData=isEditabel ? iconsDataVendor:iconsDataClient;
     removeFloatingButtons();
     iconCenters.clear();
     _actionTriggered = false;
-    var isFavorite = false.obs;
+    isFavorite = productIsFavorite;
     _lastHoveredIndex = -1;
     pressPosition = position;
     currentDragPosition.value = position; // تحديث أولي لموضع الإصبع
@@ -79,11 +56,10 @@ var isLike=false.obs;
     final double startAngle = baseAngle - spread / 2;
     final double endAngle = baseAngle + spread / 2;
 
-    double radius = 120.0;
+    double radius = 110.0;
 
     overlayEntry = OverlayEntry(
       builder: (context) {
-        
         // نستخدم IgnorePointer لكي لا تُعترض طبقة الـ Overlay أحداث اللمس،
         // وهذا يسمح للـ GestureDetector في شاشة المنتجات التقاطها.
         return IgnorePointer(
@@ -97,28 +73,27 @@ var isLike=false.obs;
             return Stack(
               children: [
                 // طبقة تعتيم تغطي الشاشة.
-                Container(color: Colors.black.withValues(alpha:0.2)),
+                Container(color: Colors.black.withOpacity(0.2)),
                 // رسم الدائرة الشفافة في موقع الضغط.
                 if (pressPosition != null)
                   Positioned(
                     left: pressPosition!.dx - 50,
                     top: pressPosition!.dy - 50,
-                    child: TRoundedContainer(
-                      width: 50,
-                      height: 50,
-                      radius: BorderRadius.circular(300),
-                      showBorder: true,
-                     borderColor: Colors.transparent,
-                      borderWidth: 4,
-                      backgroundColor: Colors.transparent,
+                    child: Container(
+                      width: 60,
+                      height: 60,
+                       decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                             color: TColors.grey,
+                          ),
                    
                       child: Center(
                         child: Container(
-                          width: 40,
-                          height: 40,
+                          width: 50,
+                          height: 50,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.transparent,
+                            color: Colors.white,
                           ),
                         ),
                       ),
@@ -142,24 +117,23 @@ var isLike=false.obs;
                   Color defaultColor;
                   Color hoverColor;
                   switch (iconsData[index]["label"]) {
-                    case "like":
-                      defaultColor = isFavorite.value ? Colors.red : Colors.black;
+                    case "حفظ":
+                      defaultColor = isFavorite ? Colors.red : Colors.black;
                       hoverColor = Colors.redAccent;
-                    
                       break;
-                    case "save":
-                      defaultColor = saved.value ? Colors.blue : Colors.black;
+                    case "مشاركة":
+                      defaultColor = Colors.black;
                       hoverColor = Colors.blueAccent;
                       break;
-                    case "close":
+                    case "إغلاق":
                       defaultColor = Colors.black;
                       hoverColor = Colors.grey;
                       break;
-                    case "edit":
+                    case "تعديل":
                       defaultColor = Colors.black;
-                      hoverColor = Colors.green;
+                      hoverColor = Colors.orangeAccent;
                       break;
-                    case "delete":
+                    case "حذف":
                       defaultColor = Colors.black;
                       hoverColor = Colors.red;
                       break;
@@ -178,8 +152,8 @@ var isLike=false.obs;
                     }
                   }
                   // إذا كانت الأيقونة "حفظ" تقوم بتبديل الرمز بحسب حالة المفضلة.
-                  IconData iconData = iconsData[index]["label"] == "save"
-                      ? (isFavorite.value ? Icons.favorite : Icons.favorite_border)
+                  IconData iconData = iconsData[index]["label"] == "حفظ"
+                      ? (isFavorite ? Icons.favorite : Icons.favorite_border)
                       : iconsData[index]["icon"];
 
                   return Positioned(
@@ -226,70 +200,83 @@ var isLike=false.obs;
 
   /// عند تحرير الإصبع تُعالج عملية الاختيار (إذا وُجدت أيقونة تحت الإصبع)
   void processSelection() {
-      var iconsData=isEditabel ? iconsDataVendor:iconsDataClient;
     if (!_actionTriggered) {
       int selectedIndex = _getSelectedIconIndex();
       if (selectedIndex != -1) {
         _actionTriggered = true;
-        if (iconsData[selectedIndex]["label"] == "like") {
-       isLike.value=!isLike.value;
+        if (iconsData[selectedIndex]["label"] == "حفظ") {
+          isFavorite = !isFavorite;
         }
         performAction(iconsData[selectedIndex]["label"]);
       }
     }
   }
 
- void performAction(String label) {
-
- switch (label) {
-   case 'like':
-   isLike.value=!isLike.value;
-      case 'delete':
-      showDialog(
-                      context: Get.context!,
-                      builder: (BuildContext context) {
-                        return ConfirmationDialog(
-                            icon: TImages.delete,
-                            refund: false,
-                            description: AppLocalizations.of(context).translate(
-                                'dialog.are_you_sure_want_to_delete_this_product'),
-                            onYesPressed: () => ProductController.instance
-                                .deleteProduct(product, product.vendorId));
-                      });
-      case 'edit':
-       case 'save':
-      var like= SavedProductsController.instance.isSaved(product.id);
-     if (like) {
-          SavedProductsController.instance.removeProduct(product.id);
-        
-        } else {
-          SavedProductsController.instance.saveProduct(product);
-        }
-         EditProductController.instance.init(product);
-                  Navigator.push(
-                      Get.context!,
-                      MaterialPageRoute(
-                          builder: (context) => EditProduct(
-                                product: product,
-                                vendorId: product.vendorId,
-                              )));
-      case 'close':
-      removeFloatingButtons();
-     
-      default:
-      removeFloatingButtons();
-        return ;// القيمة الافتراضية إذا لم يكن المدخل صحيحاً
-    }
-
-
-   // Get.snackbar("إجراء", "تم تنفيذ: $label", snackPosition: SnackPosition.BOTTOM);
+  void performAction(String label) {
+    Get.snackbar("إجراء", "تم تنفيذ: $label",
+        snackPosition: SnackPosition.BOTTOM);
   }
-
-
 
   void removeFloatingButtons() {
     overlayEntry?.remove();
     overlayEntry = null;
+  }
+}
+
+class ProductListScreen extends StatelessWidget {
+  final FloatingButtonsController controller = Get.put(FloatingButtonsController());
+
+  @override
+  Widget build(BuildContext context) {
+    List<String> products = [
+      "منتج 1",
+      "منتج 2",
+      "منتج 3",
+      "منتج 4",
+         "منتج 1",
+      "منتج 2",
+      "منتج 3",
+      "منتج 4",
+         "منتج 1",
+      "منتج 2",
+      "منتج 3",
+      "منتج 4",
+         "منتج 1",
+      "منتج 2",
+      "منتج 3",
+      "منتج 4",
+      
+    ];
+    return Scaffold(
+      appBar: AppBar(title: Text("قائمة المنتجات")),
+      body: ListView.builder(
+        itemCount: products.length,
+        itemBuilder: (context, index) {
+          // هنا يتم دمج الضغط المطول والسحب في سلسلة واحدة
+          return GestureDetector(
+            onLongPressStart: (details) {
+              controller.showFloatingButtons(
+                context,
+                details.globalPosition,
+                productIsFavorite: false,
+              );
+            },
+            onLongPressMoveUpdate: (details) {
+              controller.updatePosition(details.globalPosition);
+            },
+            onLongPressEnd: (details) {
+              controller.processSelection();
+              controller.removeFloatingButtons();
+            },
+            child: Card(
+              elevation: 5,
+              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+              child: ListTile(title: Text(products[index])),
+            ),
+          );
+        },
+      ),
+    );
   }
 }
 

@@ -14,6 +14,8 @@ import 'package:winto/features/organization/e_commerce/features/album/screens/al
 import 'package:winto/features/organization/e_commerce/features/banner/view/all/all_banners.dart';
 import 'package:winto/features/organization/e_commerce/features/category/view/all_category/all_categories.dart';
 import 'package:winto/features/organization/e_commerce/features/excel/view/excel_terms.dart';
+import 'package:winto/features/organization/e_commerce/features/product/controllers/drag_test.dart';
+import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_vendor_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/add/add_product.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/all_products_list.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/market_place_view.dart';
@@ -48,24 +50,24 @@ class ControlPanelMenu extends StatelessWidget {
                               vendorId: vendorId, editMode: false)));
                 },
               ),
-              // PullDownMenuItem(
-              //   icon: CupertinoIcons.add_circled,
-              //   title:isArabicLocale()? 'الاستديو':'Studio',
-              //   itemTheme: PullDownMenuItemTheme(
-              //       textStyle: bodyText1.copyWith(color: Colors.black)),
-              //   iconColor: Colors.black,
-              //   onTap: () async {
-              //     HapticFeedback.lightImpact;
+              PullDownMenuItem(
+                icon: CupertinoIcons.add_circled,
+                title:isArabicLocale()? 'الاستديو':'Studio',
+                itemTheme: PullDownMenuItemTheme(
+                    textStyle: bodyText1.copyWith(color: Colors.black)),
+                iconColor: Colors.black,
+                onTap: () async {
+                  HapticFeedback.lightImpact;
 
-              //     Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //             builder: (context) => AlbumPage(
-              //                   userId: vendorId,
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AlbumPage(
+                                userId: vendorId,
                               
-              //                 )));
-              //   },
-              // ),//PolicyPage
+                              )));
+                },
+              ),//PolicyPage
               PullDownMenuItem(
                 icon: Icons.terminal,
                   title: isLocaleEn(context) ? 'manage Terms' : 'ادارة البنود',
@@ -82,21 +84,21 @@ class ControlPanelMenu extends StatelessWidget {
                           builder: (context) => PolicyPage(vendorId: vendorId,)));
                 },
               ),
-              //  PullDownMenuItem(
-              //   icon: Icons.save,
-              //  title: isLocaleEn(context) ? 'Excel import' : 'استيرات اكسل',
-              //   itemTheme: PullDownMenuItemTheme(
-              //       textStyle: bodyText1.copyWith(color: Colors.black)),
-              //   iconColor: Colors.black,
-              //   onTap: () async {
-              //     HapticFeedback.lightImpact;
+               PullDownMenuItem(
+                icon: Icons.save,
+               title: isLocaleEn(context) ? 'Excel import' : 'استيرات اكسل',
+                itemTheme: PullDownMenuItemTheme(
+                    textStyle: bodyText1.copyWith(color: Colors.black)),
+                iconColor: Colors.black,
+                onTap: () async {
+                  HapticFeedback.lightImpact;
 
-              //     Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //             builder: (context) => ImportExcelPage(vendorId:vendorId)));
-              //   },
-              // ),
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ImportExcelPage(vendorId:vendorId)));
+                },
+              ),
               PullDownMenuItem(
                 icon: Icons.category,
                 title: localizations.translate('shop.categories'),
@@ -126,9 +128,13 @@ class ControlPanelMenu extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ProductsList(
+                          builder: (context) =>
+                       
+                           ProductsList(
                                 vendorId: vendorId,
-                              )));
+                              )
+                              
+                              ));
                 },
               ),
               PullDownMenuItem(
@@ -212,23 +218,23 @@ class ControlPanelMenu extends StatelessWidget {
                           builder: (context) => const StaticBottomNavigator()));
                 },
               ),
-              // PullDownMenuItem(
-              //   icon: Icons.category,
-              //   title: localizations.translate('shop.categories'),
-              //   itemTheme: PullDownMenuItemTheme(
-              //       onPressedBackgroundColor:
-              //           TColors.primary.withValues(alpha: .5),
-              //       textStyle: bodyText1.copyWith(color: Colors.black)),
-              //   iconColor: Colors.black,
-              //   onTap: () async {
-              //     HapticFeedback.ligphtImpact;
+              PullDownMenuItem(
+                icon: Icons.textsms_sharp,
+                title: localizations.translate('test'),
+                itemTheme: PullDownMenuItemTheme(
+                    onPressedBackgroundColor:
+                        TColors.primary.withValues(alpha: .5),
+                    textStyle: bodyText1.copyWith(color: Colors.black)),
+                iconColor: Colors.black,
+                onTap: () async {
+                
 
-              //     Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //             builder: (context) => CategoryListTile()));
-              //   },
-              // ),
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProductListScreen()));
+                },
+              ),
             ],
         buttonBuilder: (context, showMenu) => CupertinoButton(
               onPressed: showMenu,

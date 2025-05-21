@@ -7,4 +7,5 @@ const backgroundColor = Color(0xFF15131C);
 const seleccionColor = Color.fromARGB(255, 137, 165, 221);
 const arabicFonts = 'Tajawal-Medium';
 const englishFonts = 'Tajawal-Medium';
+const numberFonts='Poppins';
 const defaultPadding = 20.0;

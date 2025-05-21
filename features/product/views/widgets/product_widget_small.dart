@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:winto/core/functions/lang_f.dart';
-import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_client_controller.dart';
+
 import 'package:winto/features/organization/e_commerce/features/product/controllers/floating_button_vendor_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
@@ -29,11 +29,11 @@ class ProductWidgetSmall extends StatelessWidget {
     if (vendorId == FirebaseAuth.instance.currentUser!.uid) {
       edit = true;
     }
-      var floatControllerClient =
-      Get.put(FloatingButtonsClientController());
+
       var floatControllerVendor =
-      Get.put(FloatingButtonsVendorController());
+      Get.put(FloatingButtonsController());
     final controller = ProductController.instance;
+  floatControllerVendor.isEditabel=edit;
     var oldPrice=product.oldPrice??0;
     final salePrecentage =
         controller.calculateSalePresentage(product.price, product.oldPrice) ??
@@ -81,7 +81,7 @@ class ProductWidgetSmall extends StatelessWidget {
                     color: Colors.transparent,
                     height: 10),
 
-                  ProductController.getTitle(product ,isLocaleEn(context),12.5 ),
+                  ProductController.getTitle(product ,isLocaleEn(context),13,1 ),
                        
                       // textAlign: TextAlign.center,
                       // style: titilliumBold.copyWith(
@@ -98,18 +98,10 @@ class ProductWidgetSmall extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
             if (product.oldPrice !=null)
-                     TCustomWidgets.viewSalePrice(oldPrice.toString(),12),
-                     //, SizedBox(height: 2),
-                     TCustomWidgets.formattedPrice( product.price,'AED',14)
-                      // Text("${ TFormatter.formateNumber(product.price)} AED",
-                      //     // PriceConverter.convertPrice(context, product.unitPrice,
-                      //     //     discountType: product.discountType,
-                      //     //     discount: product.discount),
-                      //     style: titilliumBold
-                      //         .copyWith(
-                      //             fontFamily: englishFonts,
-                      //             fontSize: 16,
-                      //             color: TColors.primary)),
+                  //   TCustomWidgets.viewSalePrice(oldPrice.toString(),12),
+                   
+                     TCustomWidgets.formattedPrice( product.price,'AED',15)
+                   
                     ],
                   ),
                
@@ -119,12 +111,12 @@ class ProductWidgetSmall extends StatelessWidget {
           ]),
               Visibility(  visible: edit,
                                                                     child: Positioned(
-                                                                      right:5,
-                                                                      top:146,
+                                                                      right:8,
+                                                                      top:140,
                                                                       child:  GestureDetector(
                                                                         onTapDown: (details) {
                                                                               if(edit){
-                                                                     floatControllerVendor.p=product;
+                                                                     floatControllerVendor.product=product;
                                                                                   floatControllerVendor.showFloatingButtons(context, details.globalPosition);
                                                                                 }
                                                                                 
@@ -136,12 +128,15 @@ class ProductWidgetSmall extends StatelessWidget {
                                                                       
                                                                     ),
                                                                   ),
-          Positioned(
-            top: 5,
-            right: 5,
-            child: FavouriteButton(
-              editMode: false,
-              productId: product.id,
+          Visibility(
+            visible: false,
+            child: Positioned(
+              top: 5,
+              right: 5,
+              child: FavouriteButton(
+                editMode: false,
+                productId: product.id,
+              ),
             ),
           ),
           Visibility(

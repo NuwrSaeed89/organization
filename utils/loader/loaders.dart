@@ -22,7 +22,7 @@ class TLoader {
         backgroundColor: TColors.white,
         snackPosition: SnackPosition.TOP,
         duration: Duration(seconds: duration),
-         margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
      // icon: const Icon(Icons.check, color: TColors.primary,),
        
         );
@@ -30,7 +30,7 @@ class TLoader {
 
   static warningSnackBar({required title, message = ''}) {
     Get.snackbar("", message,
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+     
         isDismissible: true,
         shouldIconPulse: true,
          colorText: TColors.warning,
@@ -43,7 +43,7 @@ class TLoader {
         
       
         maxWidth: 300,
-        
+         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
         backgroundColor:TColors.warning.withValues(alpha: .5),
         snackPosition: SnackPosition.TOP,
         duration: const Duration(seconds: 3),
@@ -69,7 +69,7 @@ class TLoader {
         backgroundColor: Colors.white,
         snackPosition: SnackPosition.TOP,
         duration: const Duration(seconds: 5),
-        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
       //  icon: const Icon(Icons.error, color: Colors.red)
       );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:winto/features/organization/e_commerce/utils/constants/constant.dart';
 
 class TTextFormFieldTheme {
   TTextFormFieldTheme._();
@@ -6,18 +7,18 @@ class TTextFormFieldTheme {
     errorMaxLines: 3,
     prefixIconColor: Colors.grey,
     suffixIconColor: Colors.grey,
-    labelStyle: const TextStyle().copyWith(fontSize: 14, color: Colors.black),
-    hintStyle: const TextStyle().copyWith(fontSize: 14, color: Colors.black),
-    errorStyle: const TextStyle().copyWith(fontStyle: FontStyle.normal),
+    labelStyle: const TextStyle().copyWith(fontSize: 14, color: Colors.black,fontFamily: arabicFonts),
+    hintStyle: const TextStyle().copyWith(fontSize: 14, color: Colors.black,fontFamily: arabicFonts),
+    errorStyle: const TextStyle().copyWith(fontStyle: FontStyle.normal,fontFamily: arabicFonts,fontSize: 12),
     floatingLabelStyle: const TextStyle().copyWith(
-      color: Colors.black.withOpacity(0.8),
+      color: Colors.black.withValues(alpha:0.8),
     ),
     border: const OutlineInputBorder().copyWith(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(width: 1, color: Colors.grey)),
+        borderSide: const BorderSide(width: 1, color: Color.fromARGB(255, 218, 216, 216))),
     enabledBorder: const OutlineInputBorder().copyWith(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(width: 1, color: Colors.grey)),
+        borderSide: const BorderSide(width: 1, color:Colors.blue)),
     focusedBorder: const OutlineInputBorder().copyWith(
         borderRadius: BorderRadius.circular(14),
         borderSide: const BorderSide(width: 1, color: Colors.black12)),

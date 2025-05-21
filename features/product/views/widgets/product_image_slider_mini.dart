@@ -38,15 +38,16 @@ class TProductImageSliderMini extends StatelessWidget {
         children: [
           TRoundedContainer(
               radius: BorderRadius.circular(15),
-              showBorder: true,
-                    enableShadow: true,
+              //showBorder: true,
+              backgroundColor: Colors.transparent,
+               //     enableShadow: true,
             child: CarouselSlider(
               options: CarouselOptions(
                 onPageChanged: (index, _) => selectdindex.value = index,
                 height: prefferHeight ?? 220,
             
                 viewportFraction: 1,
-                enlargeStrategy: CenterPageEnlargeStrategy.height,
+               // enlargeStrategy: CenterPageEnlargeStrategy.height,
                 // enlargeCenterPage: true,
               ),
                 items: images

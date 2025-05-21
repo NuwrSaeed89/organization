@@ -157,17 +157,17 @@ if(t.isEmpty && a.isEmpty){
     }
   }
 
-static Text getArabicText( String s,double size,{int lines=2}){return Text(s, style: titilliumSemiBold.copyWith(fontSize: size, fontWeight: FontWeight.bold),maxLines:lines, textAlign: TextAlign.center,);
+static Text getArabicText( String s,double size,int maxLines){return Text(s, style: titilliumSemiBold.copyWith(fontSize: size, fontWeight: FontWeight.bold),maxLines:maxLines, textAlign: TextAlign.start,);
 }
-static Text getEnglishText( String s,double size,{int lines=2}){return Text(s, style: titilliumSemiBold.copyWith(fontSize: size+2, fontWeight: FontWeight.bold),maxLines:lines, textAlign: TextAlign.center);
+static Text getEnglishText( String s,double size,int maxLines){return Text(s, style: titilliumSemiBold.copyWith(fontSize: size+2, fontWeight: FontWeight.bold),maxLines:maxLines, textAlign: TextAlign.start);
 }
-static Text getTitle(ProductModel product, bool isEnglish, double size, {int lines=2}) {
+static Text getTitle(ProductModel product, bool isEnglish, double size,int maxLines){
   if(isEnglish)
   {
-   return  product.title.isEmpty? getArabicText(product.arabicTitle,size):getEnglishText(product.title, size);
+   return  product.title.isEmpty? getArabicText(product.arabicTitle,size, maxLines):getEnglishText(product.title, size, maxLines);
   }
   else{
-   return  product.arabicTitle.isEmpty?  getEnglishText(product.title, size):getArabicText(product.arabicTitle,size);
+   return  product.arabicTitle.isEmpty?  getEnglishText(product.title, size,maxLines):getArabicText(product.arabicTitle,size,maxLines);
   }
 }
 

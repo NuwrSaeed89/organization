@@ -182,9 +182,6 @@ Navigator.push(
                                 MaterialPageRoute(
                                     builder: (context) => ViewSocialProfile(
                                 userId)));
-                                  //ViewSocialProfile
-                                 // Navigator.pop(context);
-                                   
                                 },
                                 child: TRoundedContainer(
                                     radius: BorderRadius.circular(50),
@@ -193,18 +190,11 @@ Navigator.push(
                                    enableShadow: true,
                                    // backgroundColor: Colors.transparent,
                                     child:
-                                    
-                                    
-                                    
                                      Padding(
                                       padding: const EdgeInsets.all(2.0),
                                       child: const Image(image: AssetImage('assets/images/logo.png'),width: 20,height: 20,),
                                     )
-                                    
-                                    // Icon(
-                                    //   CupertinoIcons.moon_stars
-                                    //  , size: 20,
-                                    // )),
+                                   
                                ) ),
                             ),
                             Positioned(

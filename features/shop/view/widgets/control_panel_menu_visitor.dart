@@ -7,6 +7,7 @@ import 'package:winto/app/data.dart';
 import 'package:winto/core/constants/colors.dart' as TColors;
 import 'package:winto/core/constants/text_styles.dart';
 import 'package:winto/core/functions/lang_f.dart';
+import 'package:winto/features/nav/static_bottom_navigator.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/saved_products_list.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/market_place_managment.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/market_place_view.dart';
@@ -60,6 +61,7 @@ class ControlPanelMenuVisitor extends StatelessWidget {
               ),
               
               PullDownMenuItem(
+                icon:Icons.language,
                       title: isArabicLocale() ? 'English' : 'العربية',
                       itemTheme: PullDownMenuItemTheme(
                           textStyle: bodyText1.copyWith(color: Colors.black)),
@@ -84,7 +86,26 @@ class ControlPanelMenuVisitor extends StatelessWidget {
                             builder: (context) => PolicyDisplayPage(
                                 vendorId: vendorId))),
 
-              ),//
+              ),
+               PullDownMenuItem(
+                icon: CupertinoIcons.reply,
+                title: isArabicLocale()
+                    ? 'خروج'
+                    : "Exit",
+                itemTheme: PullDownMenuItemTheme(
+                    textStyle: bodyText1.copyWith(color: Colors.black)),
+                iconColor: Colors.black,
+                onTap: () async {
+                  HapticFeedback.lightImpact;
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const StaticBottomNavigator()));
+                },
+              ),
+              
+              //
               // PullDownMenuItem(
               //     icon: Icons.people,
               //     title: isArabicLocale() ? 'فريقنا' : 'Team',
