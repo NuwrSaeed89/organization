@@ -1,12 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'package:get/get.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/controllers/category_controller.dart';
 import 'package:winto/features/organization/e_commerce/data/models/category_model.dart';
-import 'package:winto/features/organization/e_commerce/features/product/views/dynamic_all_product.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/shimmers/shimmer.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
@@ -115,7 +111,7 @@ class TCategoryGridItem extends StatelessWidget {
        )))
            :null,
                 child: Text(
-                  isArabicLocale() ? category.arabicName : category.name,
+                  CategoryController.instance.getAvilableCategoryTitle(category),
                   maxLines: 2,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
@@ -125,29 +121,7 @@ class TCategoryGridItem extends StatelessWidget {
             ),
           ),
         ])
-        //   TCircularImage(
-        //     // border: Border.all(color: TColors.red),
-        //     image: category.image!,
-        //     width: 100,
-        //     height: 100,
-        //     imageType: ImageType.network,
-        //     fit: BoxFit.fill,
-        //   ),
-        //   const SizedBox(width: TSizes.sm),
-        //   Center(
-        //     child: SizedBox(
-        //       width: 120,
-        //       child: Text(
-        //         (isArabicLocale()) ? category.arabicName : category.name,
-        //         maxLines: 2,
-        //         overflow: TextOverflow.ellipsis,
-        //         style: Theme.of(context)
-        //             .textTheme
-        //             .titleSmall!
-        //             .copyWith(fontSize: 11, fontFamily: 'Tajawal-Medium'),
-        //       ),
-        //     ),
-        //   ),
+       
       ],
     );
   }

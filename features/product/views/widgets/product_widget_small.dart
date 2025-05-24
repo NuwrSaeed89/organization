@@ -10,7 +10,10 @@ import 'package:winto/features/organization/e_commerce/features/product/views/wi
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_image_slider_mini.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/saved_widget.dart';
+import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/control_panel_menu_black_product.dart';
+import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/control_panel_menu_black_type2.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
+import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_widgets.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/images/custom_image.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
@@ -30,10 +33,9 @@ class ProductWidgetSmall extends StatelessWidget {
       edit = true;
     }
 
-      var floatControllerVendor =
-      Get.put(FloatingButtonsController());
+     
     final controller = ProductController.instance;
-  floatControllerVendor.isEditabel=edit;
+
     var oldPrice=product.oldPrice??0;
     final salePrecentage =
         controller.calculateSalePresentage(product.price, product.oldPrice) ??
@@ -45,15 +47,15 @@ class ProductWidgetSmall extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context,
-            PageRouteBuilder(
-              transitionDuration: const Duration(milliseconds: 1000),
-              pageBuilder: (context, anim1, anim2) => ProductDetails(
+         Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>ProductDetails(
                 product: product,
                 vendorId: product.vendorId,
-              ),
-            ));
+              ),));
+     
+          
       },
       child: Container(
         padding: const EdgeInsets.only(bottom: TSizes.paddingSizeSmall),
@@ -109,25 +111,15 @@ class ProductWidgetSmall extends StatelessWidget {
               ),
             ),
           ]),
-              Visibility(  visible: edit,
-                                                                    child: Positioned(
-                                                                      right:8,
-                                                                      top:140,
-                                                                      child:  GestureDetector(
-                                                                        onTapDown: (details) {
-                                                                              if(edit){
-                                                                     floatControllerVendor.product=product;
-                                                                                  floatControllerVendor.showFloatingButtons(context, details.globalPosition);
-                                                                                }
-                                                                                
-                                                                        },
-                                                                        child:  Icon(Icons.more_horiz, color: Colors.white),
-                                                                                          
-                                                                                        
-                                                                      ),
-                                                                      
-                                                                    ),
-                                                                  ),
+              Visibility(
+                visible: false,
+                child: Positioned(
+                top: 0,
+              right: 0,
+                  child: ControlPanelBlackProducttype2(editMode: edit,
+                  product: product,vendorId: vendorId,withCircle: true,)
+                ),
+              ),
           Visibility(
             visible: false,
             child: Positioned(
@@ -135,7 +127,7 @@ class ProductWidgetSmall extends StatelessWidget {
               right: 5,
               child: FavouriteButton(
                 editMode: false,
-                productId: product.id,
+                product: product,
               ),
             ),
           ),

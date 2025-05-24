@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,26 +11,20 @@ import 'package:winto/features/organization/e_commerce/controllers/category_cont
 import 'package:winto/features/organization/e_commerce/controllers/product_tab_controller.dart';
 import 'package:winto/features/organization/e_commerce/data/models/category_model.dart';
 import 'package:winto/features/organization/e_commerce/features/category/view/create_category/create_category.dart';
-import 'package:winto/features/organization/e_commerce/features/category/view/create_category/widget/create_category_form.dart';
-import 'package:winto/features/organization/e_commerce/features/product/cashed_network_image.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/scrolle_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_widget_small.dart';
 import 'package:winto/features/organization/e_commerce/features/sector/model/sector_model.dart';
-import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/sector_builder.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
-import 'package:winto/features/organization/e_commerce/utils/common/widgets/buttons/customFloatingButton.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/buttons/custom_button.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_widgets.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/shimmers/shimmer.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/custom_styles.dart';
-import 'package:winto/features/organization/e_commerce/utils/constants/enums.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/sizes.dart';
-import 'package:winto/features/organization/e_commerce/utils/helpers/helper_functions.dart';
 import 'package:winto/features/organization/e_commerce/utils/loader/circle_loader.dart';
 import 'package:winto/features/organization/e_commerce/utils/validators/validator.dart';
 
@@ -58,7 +51,7 @@ class CreateProductForm extends StatelessWidget {
     const double padding=8;
     // RxList<ProductModel> spotList = <ProductModel>[].obs;
     // spotList.value=initialList;
-    RxDouble rotationAngle = 0.0.obs;
+   // RxDouble rotationAngle = 0.0.obs;
      final ScrolleEditController scrolleController = Get.put(ScrolleEditController());
     var addCat=CategoryModel(name: 'Add New Category', arabicName: 'اضف تصنيف جديد');
       final ProductTabControllerX tabController = Get.put(ProductTabControllerX());
@@ -80,39 +73,17 @@ class CreateProductForm extends StatelessWidget {
                 const SizedBox(
                   height: 16,
                 ),
-                // Center(
-                //   child: Text(
-                //     isArabicLocale() ? 'اضافة عنصر' : "Add Item",
-                //     style: titilliumSemiBold.copyWith(
-                //       fontSize: 20,
-                //     ),
-                //   ),
-                // ),
-             //  viewTempProducts(vendorId),
-              //if(sectorTitle != SectorModel.empty()) TCustomWidgets.buildTitle(isArabicLocale()?sectorTitle.arabicName: sectorTitle.englishName),
-        
-        //  if(sectorTitle != SectorModel.empty()) SectorBuilder(
-        //            cardWidth: 127,
-        //             cardHeight: 170,
-        //             withTitle:true,
-        //             sectorTitle: sectorTitle,
-        //             sctionTitle: 'all',
-        //             vendorId: vendorId,
-        //             editMode: false,
-        //             cardType:CardType.smallCard,
-               
-        //             withPadding: true,
-              
           
-        //           ),
-          Obx(()=>
-           controller.spotList.isNotEmpty ?
-           Padding(
-        padding: EdgeInsets.only(top:20,bottom: 20),
-         child: TCustomWidgets.buildTitle(isArabicLocale()
-                              ? sectorTitle.arabicName
-                              : sectorTitle.englishName),
-           ):SizedBox.shrink()
+          
+             Obx(()=>
+             controller.spotList.isNotEmpty ?
+             Padding(
+                    padding: EdgeInsets.only(top:20,bottom: 20),
+                     child: TCustomWidgets.buildTitle(isArabicLocale()
+                                ? sectorTitle.arabicName
+                                : sectorTitle.englishName),
+             ):SizedBox.shrink()
+            
           ),
          Obx(()=>
            controller.spotList.isNotEmpty ?
@@ -149,6 +120,7 @@ class CreateProductForm extends StatelessWidget {
                                                     const Duration(milliseconds: 1000),
                                                 pageBuilder: (context, anim1, anim2) =>
                                                     ProductDetails(
+                                                       key: UniqueKey(),
                                                   product: controller.spotList[index],
                                                   vendorId: vendorId,
                                                 ),
@@ -170,17 +142,7 @@ class CreateProductForm extends StatelessWidget {
              )
             :const SizedBox.shrink()
            ),
-         
-        
-         
-        
-        
-        
-                // const SizedBox(
-                //   height: 20,
-                // ),
-               
-                Padding(
+       Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: DefaultTabController(
                       initialIndex: isArabicLocale()?0:1,
@@ -189,12 +151,7 @@ class CreateProductForm extends StatelessWidget {
                       children: <Widget>[
                         TabBar(
                                 onTap: tabController.changeTab,
-                          //  indicator: BoxDecoration(),
-        
-                          // indicatorColor: TColors.red,
                           isScrollable: true,
-        
-                          // indicatorColor: TColors.red,
                           indicatorSize: TabBarIndicatorSize.tab,
                           indicatorPadding: const EdgeInsets.symmetric(
                               vertical: 8, horizontal: 0),
@@ -316,16 +273,17 @@ class CreateProductForm extends StatelessWidget {
                       ? const TShimmerEffect(width: double.infinity, height: 55)
                       : Center(
                        
-                        child: Obx(() {
+                        child:  SizedBox(
+                            height: 80,
+                            child:Obx(() {
                          
                               
                       
-                          return SizedBox(
-                            height: 80,
-                            child: DropdownButtonFormField(
+                          return DropdownButtonFormField(
         
                               borderRadius: BorderRadius.circular(15),
                               iconSize: 40,
+                            
                                decoration: inputTextField,
                               itemHeight: 60, // 
                             
@@ -342,7 +300,7 @@ class CreateProductForm extends StatelessWidget {
                                               child: SizedBox(
                                               height: 40,child: Image.network(cat.image!, width: 40, height: 40, fit: BoxFit.cover))),
                                               const SizedBox(width: 10),
-                                              Text(isArabicLocale()? cat.arabicName: cat.name,style: titilliumRegular.copyWith(fontSize: 16), ),
+                                              Text(CategoryController.instance.getAvilableCategoryTitle(cat),style: titilliumRegular.copyWith(fontSize: 16), ),
                                               ],
                                             ),
                                   
@@ -369,10 +327,10 @@ class CreateProductForm extends StatelessWidget {
                                           }else{
                                   controller.category =
                                       newValue!;}
-                                                }),
-                          );
+                                                });
+                                        } )
                           
-                        }),
+                        ),
                       ),
                 ),
         
@@ -391,11 +349,12 @@ class CreateProductForm extends StatelessWidget {
                             TextFormField(
                               style: titilliumNormal.copyWith(fontSize: 20, color: TColors.primary,fontFamily: 'Poppins'),
                                              
-                                            
+                              onChanged: controller.formatInput,         
                               controller: controller.price,
                               validator: (value) =>
                                   TValidator.validateEmptyText('price', value),
                               keyboardType: TextInputType.number,
+                             // keyboardType: TextInputType.numberWithOptions(decimal: true),
                               inputFormatters: <TextInputFormatter>[
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
@@ -417,7 +376,7 @@ class CreateProductForm extends StatelessWidget {
                           children: [
                              Padding(
                                padding: const EdgeInsets.only(bottom: 8.0),
-                               child: Text(isLocaleEn(context) ? 'Discount %' : '%نسبة الخصم', style:   titilliumBold.copyWith(fontSize: 10)),
+                               child: Text(isLocaleEn(context) ? 'Discount %' : '%نسبة الخصم', style:   titilliumBold.copyWith(fontSize: 9)),
                              ),
                              
                             TextFormField(
@@ -443,6 +402,7 @@ class CreateProductForm extends StatelessWidget {
                           children: [
                               TCustomWidgets.buildLabel(  isLocaleEn(context) ? 'Price' : 'السعر'),
                             TextFormField(
+                            
                                  onChanged: (value) =>  controller.changeSalePresentage(value),
                                                //  onChanged: (value) => controller.validateDiscountPrice(value),
                               style: titilliumBold.copyWith(
@@ -452,7 +412,7 @@ class CreateProductForm extends StatelessWidget {
                                               decorationThickness: 1.5,
                                               fontSize: 18),
                               
-                              controller: controller.oldPrice,
+                            controller: controller.oldPrice,
                              autovalidateMode: AutovalidateMode.onUnfocus,
                               // validator: (value) => TValidator.validateSaleprice(
                               //     value, controller.price.text),
@@ -531,8 +491,8 @@ class CreateProductForm extends StatelessWidget {
                         : 0,
                     left: 16),
             child: TRoundedContainer(
-              width: 50.w,
-              height: 50.w*(4/3),
+              width: 200,
+              height: 200*(4/3),
               showBorder: true,
               radius: BorderRadius
                   .circular(15),
@@ -549,9 +509,7 @@ class CreateProductForm extends StatelessWidget {
                                                       //     .cropImage(controller
                                                       //         .selectedImage[index]
                                                       //         .path),
-                  child: Obx(()=>
-                     Transform.rotate(
-                            angle: rotationAngle.value,
+                  
                       child: Image.file(
                         File(controller
                             .selectedImage[
@@ -559,12 +517,12 @@ class CreateProductForm extends StatelessWidget {
                             .path),
                         fit: BoxFit.contain,
                       ),
-                    ),
+                    
                   ),
                 ),
               ),
             ),
-          ),
+          
           
           
           Positioned(
@@ -683,53 +641,7 @@ class CreateProductForm extends StatelessWidget {
               //  const SizedBox(height: TSizes.spaceBtwInputFields),
                 // Text(createController.message.value),
                 // Obx(() => Text(createController.message.value)),
-                Visibility(
-                  visible: false,
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: CustomButtonBlack(
-                      text: isArabicLocale() ? 'نشر' : 'Post',
-                      // text: AppLocalizations.of(
-                      //   context,
-                      // ).translate('product.createProduct'),
-                      onTap: () async {
-                        if (controller.formKey.currentState!.validate()) {
-                          await showSimpleLoadingDialog<String>(
-                            context: context,
-                            future: () async {
-                              await controller.createProduct(type, vendorId);
-                              return "done2";
-                            },
-                            // Custom dialog
-                            dialogBuilder: (context, _) {
-                              return AlertDialog(
-                                content: Obx(
-                                  () => Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const SizedBox(height: 20),
-                                      const TLoaderWidget(),
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        controller.message.value,
-                                        style: titilliumBold,
-                                      ),
-                                      const SizedBox(height: 16),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                       
-                        scrolleController.scrollToTop();
-                       
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
+               const SizedBox(height: 20),
                 // const SizedBox(height: 100),
               ],
             ),
@@ -756,17 +668,9 @@ class CreateProductForm extends StatelessWidget {
       elevation: 0,
       foregroundColor: Colors.transparent,
       //focusColor: TColors.primary,
-          onPressed: () async {
-      
-      
-                        if (controller.formKey.currentState!.validate()) {
-                          // await showSimpleLoadingDialog<String>(
-                          //   context: context,
-                          //   future: () async {
-                           controller.showProgressBar();
-                              await controller.createProduct(type, vendorId);
-                              Get.closeCurrentSnackbar();
-                                scrolleController.scrollToTop();}},
+          onPressed: ()  { controller.createProduct(type, vendorId);
+                                scrolleController.scrollToTop();
+                         },
           
       child: Center(
           child: TRoundedContainer(

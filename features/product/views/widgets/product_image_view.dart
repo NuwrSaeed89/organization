@@ -101,7 +101,7 @@ class ProductImageView extends StatelessWidget {
                     child: Column(
                       children: [
                         FavouriteButton(
-                          productId: productModel!.id,
+                          product: productModel,
                         ),
                         const SizedBox(
                           height: TSizes.paddingSizeSmall,

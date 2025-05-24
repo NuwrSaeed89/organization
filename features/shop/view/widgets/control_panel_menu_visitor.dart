@@ -8,6 +8,7 @@ import 'package:winto/core/constants/colors.dart' as TColors;
 import 'package:winto/core/constants/text_styles.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/nav/static_bottom_navigator.dart';
+import 'package:winto/features/organization/e_commerce/features/product/views/favorite_products_list.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/saved_products_list.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/market_place_managment.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/market_place_view.dart';
@@ -45,6 +46,20 @@ class ControlPanelMenuVisitor extends StatelessWidget {
                                 vendorId: vendorId, editMode: true)));
                   },
                 ),
+                   PullDownMenuItem(
+                icon: Icons.favorite,
+                title: isArabicLocale()
+                    ? 'المفضلة'
+                    : "Favorite List",
+                itemTheme: PullDownMenuItemTheme(
+                    textStyle: bodyText1.copyWith(color: Colors.black)),
+                iconColor: Colors.black,
+                 onTap: () =>  Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FavoriteProductsPage(
+                             ))),
+              ),
               PullDownMenuItem(
                 icon: Icons.bookmarks,
                 title: isArabicLocale()

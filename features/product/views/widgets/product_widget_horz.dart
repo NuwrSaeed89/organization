@@ -36,6 +36,7 @@ class ProductWidgetHorzental extends StatelessWidget {
             PageRouteBuilder(
               transitionDuration: const Duration(milliseconds: 1000),
               pageBuilder: (context, anim1, anim2) => ProductDetails(
+                 key: UniqueKey(),
                 product: product,
                 vendorId: product.vendorId,
               ),
@@ -73,19 +74,21 @@ class ProductWidgetHorzental extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                                  
                       children: [
-                      Text(isArabicLocale() ? product.arabicTitle : product.title,
-                            textAlign: TextAlign.start,
-                            style: titilliumBold.copyWith(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis),
-                        SizedBox(height: 8),
-                        Text(isArabicLocale() ? product.arabicDescription! : product.description!,
-                            textAlign: TextAlign.start,
-                            style: titilliumBold.copyWith(
-                                fontSize: 14, fontWeight: FontWeight.w500,color: TColors.darkGrey),
-                            maxLines: 5,
-                            overflow: TextOverflow.ellipsis),
+                        
+            const SizedBox(height: 10),
+                    ProductController.getTitle(product ,isLocaleEn(context), 16,2 ),
+                                           
+                    const SizedBox(
+                      height: 8,
+                    ),
+                     Text(isArabicLocale() ? product.arabicDescription! : product.description!,
+                       
+                        style: robotoRegular.copyWith(
+                            fontSize: 13,
+                            
+                             fontWeight: FontWeight.normal,color: TColors.darkerGray),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis),
                         SizedBox(height: 8),
                            TCustomWidgets.formattedPrice( product.price,'AED',18),
                         SizedBox(height: 8),

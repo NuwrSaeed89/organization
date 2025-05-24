@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:winto/core/functions/lang_f.dart';
@@ -11,8 +10,6 @@ import 'package:winto/features/organization/e_commerce/features/banner/view/fron
 import 'package:winto/features/organization/e_commerce/features/category/view/all_category/widgets/category_grid_item.dart';
 import 'package:winto/features/organization/e_commerce/features/category/view/create_category/create_category.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
-import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
-import 'package:winto/features/organization/e_commerce/features/product/views/add/add_product.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_widget_medium.dart';
 import 'package:winto/features/organization/e_commerce/features/sector/model/sector_model.dart';
@@ -20,7 +17,6 @@ import 'package:winto/features/organization/e_commerce/features/shop/view/widget
 import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/grid_builder_custom_card.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/sector_builder.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
-import 'package:winto/features/organization/e_commerce/utils/common/widgets/shimmers/shimmer.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/enums.dart';
 
@@ -126,8 +122,8 @@ class AllTab extends StatelessWidget {
           //   cardType: CardType.smallCard,
           // ),
           SectorBuilder(
-            cardWidth: 85.w,
-            cardHeight: 85.w*(8/6),
+            cardWidth: 90.w,
+            cardHeight: 90.w*(8/6),
             sectorTitle: SectorModel(
                 name: 'sales', englishName: 'Sales', arabicName: 'تنزيلات'),
             sctionTitle: 'all',
@@ -224,29 +220,7 @@ class AllTab extends StatelessWidget {
             color: Colors.transparent,
             height: 20,
           ),
-          /////////////////////////////
-          ///
-          ///
-          ///
-          ///
-          ///
-          ///
-          ///
-          ///
-          ///
-          ///
-          ///
-          ///
-          ///
-          ///
-          /// here is category
-          /// 
-          /// 
-          /// 
-          /// 
-          /// 
-          /// //////////////////////////////
-          /// 
+          
          
           Visibility(
             visible:  ProductController.instance.allItems.length>3,
@@ -254,13 +228,6 @@ class AllTab extends StatelessWidget {
           ),
       
     
-          // CategoryGrid(
-          //   vendorId: vendorId,
-          //   editMode: editMode,
-          // ),
-          // const SizedBox(
-          //   height: 50,
-          // ),
         
         ]);
   }
@@ -268,7 +235,7 @@ class AllTab extends StatelessWidget {
  viewCategories() {
   
     var controller=ProductController.instance;
-    controller.isExpanded(false);
+     //controller.isExpanded(false);
   
                 if (CategoryController.instance.allItems.isEmpty) {
                   return editMode
@@ -433,6 +400,7 @@ class AllTab extends StatelessWidget {
                                                   pageBuilder:
                                                       (context, anim1, anim2) =>
                                                           ProductDetails(
+                                                             key: UniqueKey(),
                                                     product: spotList[index],
                                                     vendorId: vendorId,
                                                   ),
@@ -580,6 +548,7 @@ class AllTab extends StatelessWidget {
                                                 pageBuilder:
                                                     (context, anim1, anim2) =>
                                                         ProductDetails(
+                                                           key: UniqueKey(),
                                                   product: spotList[index],
                                                   vendorId: vendorId,
                                                 ),

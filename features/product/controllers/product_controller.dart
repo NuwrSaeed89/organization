@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:winto/app/app_localization.dart';
 import 'package:winto/core/constants/app_urls.dart';
 import 'package:winto/core/functions/lang_f.dart';
@@ -92,18 +93,36 @@ if(t.isEmpty && a.isEmpty){
               : "Please select a category");
      Get.closeCurrentSnackbar();
       return;
-    } else {
+    } 
+     var  salePriceNumber = double.parse(price.text.replaceAll(',', ''));
+     var oldPriceNumber=double.tryParse(oldPrice.text.toString())??0.00;
+        if(oldPriceNumber < salePriceNumber && oldPriceNumber>0.00 ) {
+ TLoader.warningSnackBar(
+          title:'',
+          message: isArabicLocale()
+              ? "سعر البيع يجب ان يكون أقل من السعر"
+              : "Sale price should be less than Price");
+    // Get.closeCurrentSnackbar();
+      return;
+        }
+  
+     
+    
+    else {
+      showProgressBar();
       message.value =
           isArabicLocale() ? "جاري رفع الصور" : "uploading product images ..";
       images.value = await uploadImages(selectedImage);
       message.value = isArabicLocale() ? "جاري ارسال البيانات" : "send data ..";
+
       final product = ProductModel(
         id: '',
         vendorId: vendorId,
         title: title.text.trim(),
         arabicTitle: arabicTitle.text.trim(),
-        price: double.parse(price.text.toString()),
-        oldPrice:  double.tryParse(oldPrice.text.toString()),
+        
+        price:salePriceNumber,
+        oldPrice:  oldPriceNumber,
         description: description.text.trim(),
         arabicDescription: arabicDescription.text.trim(),
         images: images,
@@ -117,13 +136,9 @@ if(t.isEmpty && a.isEmpty){
           throw 'Unable to find user information. try again later';
         }
         message.value = isArabicLocale() ? "ارسال البيانات" : "send data..";
-        await productRepository.addProducts(product, vendorId)
-        
-          
-        
-        
-        ;
+        await productRepository.addProducts(product, vendorId) ;
         message.value = "evry thing done";
+     
         allItems.insert(0,product);
            tempProducts.insert(0,product);
        
@@ -136,12 +151,13 @@ if(t.isEmpty && a.isEmpty){
         if (type == 'sales') salesDynamic.insert(0,product);
         if (type == 'foryou') foryouDynamic.insert(0,product);
         if (type == 'mixone') mixoneDynamic.insert(0,product);
-        if (type == 'mixline1') mixline1Dynamic.insert(0,product);
-        if (type == 'mixline2') mixline2Dynamic.insert(0,product);
+        if (type == 'mixlin1') mixline1Dynamic.insert(0,product);
+        if (type == 'mixlin2') mixline2Dynamic.insert(0,product);
         if (type == 'mostdeamand') mostdeamandDynamic.insert(0,product);
         if (type == 'newArrival') newArrivalDynamic.insert(0,product);
         //spotList.add();
         resetFields();
+         Get.closeCurrentSnackbar();
         message.value = "";
         selectedImage.value = [];
        //images.value=[];
@@ -170,6 +186,7 @@ static Text getTitle(ProductModel product, bool isEnglish, double size,int maxLi
    return  product.arabicTitle.isEmpty?  getEnglishText(product.title, size,maxLines):getArabicText(product.arabicTitle,size,maxLines);
   }
 }
+ final NumberFormat formatter = NumberFormat("#,##0", "en_US"); 
 
   Future<int> getUserProductCount(String userId) async {
     var productCount = productRepository.getUserProductCount(userId);
@@ -531,11 +548,10 @@ var scaleFactor = 1.0.obs;
     return images.toList();
   }
 
-  Future<void> deleteProduct(ProductModel product, String vendorId) async {
+  Future<void> deleteProduct(ProductModel product, String vendorId, bool withBackAction) async {
+    showProgressBarDelete();
     await productRepository.deleteProduct(product, vendorId);
-
-    // categoryRepository.deleteCategory(category);
-    allItems.remove(product);
+        allItems.remove(product);
     var type=product.productType!;
      if (type == 'offers') offerDynamic.remove(product);
         if (type == 'all') allDynamic.remove(product);
@@ -545,12 +561,12 @@ var scaleFactor = 1.0.obs;
         if (type == 'sales') salesDynamic.remove(product);
         if (type == 'foryou') foryouDynamic.remove(product);
         if (type == 'mixone') mixoneDynamic.remove(product);
-        if (type == 'mixline1') mixline1Dynamic.remove(product);
-        if (type == 'mixline2') mixline2Dynamic.remove(product);
+        if (type == 'mixlin1') mixline1Dynamic.remove(product);
+        if (type == 'mixlin2') mixline2Dynamic.remove(product);
         if (type == 'mostdeamand') mostdeamandDynamic.remove(product);
         if (type == 'newArrival') newArrivalDynamic.remove(product);
-
-//Navigator.pop(Get.context!);
+  Get.closeCurrentSnackbar();
+if(withBackAction){ Navigator.pop(Get.context!);}
 
     TLoader.successSnackBar(
         title: 'Successfull', message: "data delete successfully");
@@ -694,6 +710,24 @@ void showProgressBar() {
     duration: Duration(days: 1),
     isDismissible: false,
     showProgressIndicator: true,
+     padding: EdgeInsets.symmetric(horizontal:  50),
+    
+    
+    progressIndicatorBackgroundColor: Colors.white,
+  );
+}
+void showProgressBarDelete() {
+  
+  Get.snackbar( 
+    isArabicLocale()? "جاري الحذف..." :"Deleting Now ..",
+    "",
+    snackPosition: SnackPosition.TOP,
+    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+    backgroundColor:TColors.primary,
+    colorText: Colors.white,
+    duration: Duration(days: 1),
+    isDismissible: false,
+    //showProgressIndicator: true,
      padding: EdgeInsets.all( 10),
     
     
@@ -704,7 +738,20 @@ void showProgressBar() {
  var regularPrice = 0.0.obs;
   var discountPrice = Rxn<double>(); // يسمح بأن يكون فارغًا
 
+ double? priceNumber;
 
+  void formatInput(String value) {
+    if (value.isNotEmpty) {
+      double? number = double.tryParse(value.replaceAll(',', ''));
+      if (number != null) {
+      
+       price.value = TextEditingValue(
+          text: formatter.format(number),
+          selection: TextSelection.collapsed(offset: formatter.format(number).length),
+        );
+      }
+    }
+  }
   void validateDiscountPrice(String oldPrice) {
   
       double? enteredPrice = double.tryParse(oldPrice);
@@ -723,26 +770,41 @@ void showProgressBar() {
     }
 
   void changePrice(String value) {
-    if(oldPrice.text==''){
-    TLoader.warningSnackBar(title: '',message:  isArabicLocale()?"فضلا أدخل السعر ثم ادخل النسبة" :"Please type the price first");
-    return;
-}
+
 if (double.parse(value) >100){
     TLoader.warningSnackBar(title: '',message:  isArabicLocale()?"نسبة الادخال الصحيحة اقل من 100" :"Sale precentage should be less than 100");
      return;
 }
-
-
-var s=double.parse(oldPrice.text.toString());
-var p=    (s-(s*(double.parse(value)/100)));
-price.text=p.toString();
-  }
-
-
-
-  void changeSalePresentage(String value) {}
-  }
+    if(oldPrice.text.isNotEmpty){
  
+var s= double.tryParse(oldPrice.text.toString().replaceAll(',', '')) ??0.00;
+var p=    (s-(s*(double.parse(value)/100)));
+//changePrice(p.toString());
+//
+  formatInput(p.toString());
+  }
+  }
 
-  // Widget updateProductImage(BuildContext context) {}
+  void changeSalePresentage(String value) {
+     if (kDebugMode) {
+      print("===========value is ====$value");
+    }
+    if(saleprecentage.text.isNotEmpty){
+      var s=double.parse(saleprecentage.text.toString());
+      var p= double.parse(value)- (s*(double.parse(value)/100));
+     // price.text="";
+     formatInput(p.toString());
+    }
 
+    if (value.isNotEmpty) {
+      double? number = double.tryParse(value.replaceAll(',', ''));
+      if (number != null) {
+      
+       oldPrice.value = TextEditingValue(
+          text: formatter.format(number),
+          selection: TextSelection.collapsed(offset: formatter.format(number).length),
+        );
+      }
+    }
+  }}
+  

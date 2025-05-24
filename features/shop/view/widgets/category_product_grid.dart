@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 import 'package:winto/app/app_localization.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/controllers/category_controller.dart';
@@ -181,7 +182,7 @@ class TCategoryProductGrid extends StatelessWidget {
                    padding: const EdgeInsets.only(left:8.0,right: 8),
                    child: MasonryGridView.count(
                     itemCount: products.length,
-                    crossAxisCount: 3,
+                    crossAxisCount: 100.w> 375? 4:3 ,
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
                     padding: const EdgeInsets.all(0),
@@ -190,9 +191,14 @@ class TCategoryProductGrid extends StatelessWidget {
                     itemBuilder: (BuildContext context, int index) {
                       return Stack(
                         children: [
-                          ProductWidgetSmall(
-                            product: products[index],
-                            vendorId: products[index].vendorId,
+                          SizedBox(
+                            width: 30.w,
+                            height: 30.w*(4/3)+40,
+                            child: ProductWidgetSmall(
+                            
+                              product: products[index],
+                              vendorId: products[index].vendorId,
+                            ),
                           ),
                         ],
                       );

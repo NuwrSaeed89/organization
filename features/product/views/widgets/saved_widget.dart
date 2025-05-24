@@ -35,8 +35,7 @@ final double size;
         }
       },
       child: Center(
-        child: Obx(
-          () =>
+        child:
          // Transform.rotate(angle: 45,
           TRoundedContainer(
        width: size+7,
@@ -46,7 +45,8 @@ final double size;
 
             child: Padding(
               padding: const EdgeInsets.all(3.0),
-              child: Icon( !like.value ?Icons.bookmark_border :Icons.bookmark_outlined, size:size, color: Colors.black,),
+              child: Obx(
+          () => Icon( !like.value ?Icons.bookmark_border :Icons.bookmark_outlined, size:size, color: Colors.black,),
             )),
           
           

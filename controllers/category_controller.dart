@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/organization/e_commerce/data/models/category_model.dart';
 import 'package:winto/features/organization/e_commerce/data/repositories/category_repository.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
@@ -114,18 +115,12 @@ void onInit() {
   bool selectedItem = true;
 
   RxString selectedValue = ''.obs;
-
-  Future<dynamic> addNewCategory(BuildContext context) {
-    return showModalBottomSheet(
-        context: context,
-        builder: (_) => SizedBox(
-              height: 3000,
-              child: SingleChildScrollView(
-                child: CreateCategoryForm(),
-              ),
-            ));
-  }
-
+String getAvilableCategoryTitle(CategoryModel c){
+  var s="";
+ s=  isArabicLocale()?  c.arabicName=="" ? c.name: c.arabicName: c.name=="" ? c.arabicName:c.name;
+ return s;
+}
+ 
   void resetFormField() {
     categoryName.clear();
     categoryImage.clear();

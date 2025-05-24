@@ -4,6 +4,7 @@ import 'package:winto/features/organization/e_commerce/controllers/edit_category
 import 'package:winto/features/organization/e_commerce/data/repositories/auth_init_repository.dart';
 import 'package:winto/features/organization/e_commerce/features/banner/controller/banner_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/edit_product_controller.dart';
+import 'package:winto/features/organization/e_commerce/features/product/controllers/favorite_product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/saved_product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/controller/profile_controller.dart';
@@ -29,5 +30,8 @@ class GeneralBindings extends Bindings {
     Get.put(ProfileController());
     Get.put(EditCategoryController());
     Get.put(SavedProductsController());
+     Get.put(FavoriteProductsController());
+    
+    
   }
 }

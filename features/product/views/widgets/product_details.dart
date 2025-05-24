@@ -14,6 +14,7 @@ import 'package:winto/features/organization/e_commerce/features/product/views/wi
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/slider_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/controller/profile_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/category_product_grid.dart';
+import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/control_panel_menu_black_product.dart';
 import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/control_panel_menu_product.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/appbar/custom_app_bar.dart';
@@ -50,7 +51,7 @@ class ProductDetails extends StatelessWidget {
     
        body:SafeArea(
       child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+      //  physics: const BouncingScrollPhysics(),
         child: AnimatedOpacity(
           duration: Duration(microseconds: 500),
           opacity: 1.0,
@@ -62,22 +63,25 @@ class ProductDetails extends StatelessWidget {
              
               Padding(
                 padding: const EdgeInsets.only(bottom: 2.0, top:16),
-                child: Row(
+                child:    Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                    IconButton(onPressed: ()=> Navigator.pop(context), icon: Icon( Icons.arrow_back_ios_new_rounded,
                        size: 18,)),
-
+                
                       if (product.images!.length > 1)  Padding(
                         padding: const EdgeInsets.only(top:10.0),
-                        child: Obx(()=> Text('${controller.selectdindex.value+1}/${product.images!.length}', style: titilliumBold.copyWith(fontFamily: numberFonts),)),
+                        child: 
+                         Row(
+                          children: [
+                           Obx(()=> Text('${controller.selectdindex.value+1}/${product.images!.length}', style: titilliumBold.copyWith(fontFamily: numberFonts),)),
+                         SizedBox(width:20),
+                          ],
+                                                 )
                       ),
                      // SizedBox(width: 18,),
-                    Container(
-                       width: 37,
-                                      height: 37,
-                    ),
+                    
                      Visibility(
                       visible: false,
                        child: Padding(
@@ -119,7 +123,7 @@ class ProductDetails extends StatelessWidget {
           alignment: Alignment.topCenter,
           children: [
             
-            TProductImageSliderDetails(product:product,prefferHeight:100.w*(8/6) ,prefferWidth: 100.w,radius: BorderRadius.circular(0), ),
+            TProductImageSliderDetails(product:product,prefferHeight:100.w*(4/3) ,prefferWidth: 100.w,radius: BorderRadius.circular(0), ),
                 
                  
           ],
@@ -212,8 +216,10 @@ class ProductDetails extends StatelessWidget {
                           children: [
                             Visibility(
                               visible: edit,
-                              child: ControlPanelProduct(
-                              
+                              child: ControlPanelBlackProduct(
+                                withCircle: false,
+                              editMode: edit,
+                              iconColor:Colors.black,
                                   vendorId: vendorId, product: product),
                             ),
                 Visibility(
@@ -225,6 +231,7 @@ class ProductDetails extends StatelessWidget {
                              FavouriteButton(
                               withBackground:false,
                               editMode: true,
+                              product: product,
                               size: 25,
                             ),
                            
@@ -257,9 +264,9 @@ class ProductDetails extends StatelessWidget {
                           trimExpandedText:
                               isLocaleEn(context) ? 'less' : 'أقل',
                           moreStyle: robotoHintRegular.copyWith(
-                              color: Colors.black),
+                              color: TColors.primary,fontSize: 14),
                           lessStyle: robotoHintRegular.copyWith(
-                              color: Colors.black),
+                              color:  TColors.primary,fontSize: 14),
                         ),
                       ),
                       
@@ -274,13 +281,14 @@ class ProductDetails extends StatelessWidget {
                   trimLines: 2,
                   style: robotoRegular.copyWith(fontSize: 16),
                   trimMode: TrimMode.Line,
+                
                   trimCollapsedText:
                       isLocaleEn(context) ? 'more' : 'المزيد',
                   trimExpandedText: isLocaleEn(context) ? 'less' : ' أقل',
                   moreStyle:
-                      robotoHintRegular.copyWith(color: Colors.black),
+                      robotoHintRegular.copyWith(color: TColors.primary,fontSize: 14),
                   lessStyle:
-                      robotoHintRegular.copyWith(color: Colors.black),
+                      robotoHintRegular.copyWith(color: TColors.primary,fontSize: 14),
                 ),
               ),
             const SizedBox(height: 8),

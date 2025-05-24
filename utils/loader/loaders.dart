@@ -4,31 +4,34 @@ import 'package:winto/features/organization/e_commerce/utils/common/styles/style
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 
 class TLoader {
+
+
   static successSnackBar({required title, message = '', duration = 4}) {
     Get.snackbar("", message,
+     
         isDismissible: true,
         shouldIconPulse: true,
-        colorText: TColors.primary,
+       // colorText: Colors.black,
+    // titleText: title,
         messageText: Text(
           message,
           style: titilliumBold.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        // messageText: Text(
-        //   message,
-        //   style: titilliumSemiBold.copyWith(fontWeight: FontWeight.bold),
-        // ),
-        maxWidth: 400,
+        showProgressIndicator: false,
+        progressIndicatorBackgroundColor:Colors.blue ,
+        maxWidth: 300,
         
-        backgroundColor: TColors.white,
+         margin: EdgeInsets.all(20),
+            padding: EdgeInsets.all(20),
+        backgroundColor:TColors.lightContainer,
         snackPosition: SnackPosition.TOP,
-        duration: Duration(seconds: duration),
-       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-     // icon: const Icon(Icons.check, color: TColors.primary,),
-       
+        duration: const Duration(seconds: 2),
+
+      //  icon: const Icon(Icons.warning, color:TColors.warning)
         );
   }
 
-  static warningSnackBar({required title, message = ''}) {
+  static warningSnackBar({required title, message = '', duration = 4}) {
     Get.snackbar("", message,
      
         isDismissible: true,
@@ -40,13 +43,13 @@ class TLoader {
           style: titilliumBold.copyWith(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         showProgressIndicator: true,
-        
+        progressIndicatorBackgroundColor:Colors.yellow ,
       
         maxWidth: 300,
-         margin: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-        backgroundColor:TColors.warning.withValues(alpha: .5),
+         margin: EdgeInsets.all(20),
+        backgroundColor:Colors.yellow.withValues(alpha: .5),
         snackPosition: SnackPosition.TOP,
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 2),
 
       //  icon: const Icon(Icons.warning, color:TColors.warning)
         );
@@ -68,7 +71,7 @@ class TLoader {
         maxWidth: 600,
         backgroundColor: Colors.white,
         snackPosition: SnackPosition.TOP,
-        duration: const Duration(seconds: 5),
+        duration: const Duration(seconds: 4),
        margin: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
       //  icon: const Icon(Icons.error, color: Colors.red)
       );

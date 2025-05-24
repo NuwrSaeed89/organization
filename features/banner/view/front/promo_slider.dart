@@ -71,6 +71,8 @@ class TPromoSlider extends StatelessWidget {
                        height:height+20,
                      viewportFraction: 0.85,
                      enlargeCenterPage: true,
+                        autoPlayCurve: Curves.fastOutSlowIn, // منحنى الحركة المناسب
+         autoPlayAnimationDuration: Duration(milliseconds: 1000),
                     //autoPlay: true,
                    // height: 200,
                  //   enlargeCenterPage: true,
@@ -241,6 +243,9 @@ class TPromoSlider extends StatelessWidget {
               height :height+20,
         viewportFraction: 0.85,
         enlargeCenterPage: true,
+           autoPlayCurve: Curves.fastOutSlowIn, // منحنى الحركة المناسب
+         autoPlayAnimationDuration: Duration(milliseconds: 800),
+
                        // enableInfiniteScroll: true,
                      
                         // تعطيل التكرار إذا كان عدد الصور = 1

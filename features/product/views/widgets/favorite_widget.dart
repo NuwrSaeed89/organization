@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:winto/features/organization/e_commerce/features/product/controllers/favorite_product_controller.dart';
+import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/sizes.dart';
@@ -8,14 +10,14 @@ import 'package:winto/features/organization/e_commerce/utils/constants/sizes.dar
 class FavouriteButton extends StatelessWidget {
   final Color backgroundColor;
   RxBool like = false.obs;
-  final String? productId;
+  final ProductModel  product;
   final bool editMode;
   final bool withBackground;
  final double size ;
   FavouriteButton(
       {super.key,
       this.backgroundColor = Colors.black,
-      this.productId,
+     required  this.product,
       this.withBackground=true,
       this.size=19,
       this.editMode = false});
@@ -23,10 +25,19 @@ class FavouriteButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //  bool isGuestMode = false;
-
+ var controller = FavoriteProductsController.instance;
+    //  bool isGuestMode = false;
+    //RxBool like = false.obs;
+    var like = controller.isSaved(product.id).obs;
     return GestureDetector(
       onTap: () {
-        like.value = !like.value;
+         if (like.value) {
+          controller.removeProduct(product.id);
+          like.value = !like.value;
+        } else {
+          controller.saveProduct(product);
+          like.value = !like.value;
+        }
       },
       child: TRoundedContainer(
         width: size+6,

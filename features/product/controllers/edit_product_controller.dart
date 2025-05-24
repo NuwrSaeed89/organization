@@ -6,15 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:winto/app/app_localization.dart';
 import 'package:winto/core/constants/app_urls.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/core/utils/uploads.dart';
+import 'package:winto/features/organization/e_commerce/controllers/category_controller.dart';
 import 'package:winto/features/organization/e_commerce/data/models/category_model.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_repository.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
+import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/loader/loaders.dart';
 
 class EditProductController extends GetxController {
@@ -26,7 +29,8 @@ class EditProductController extends GetxController {
   // final skuCode = TextEditingController();
   final title = TextEditingController();
   final arabicTitle = TextEditingController();
-
+String t="";
+String a="";
   final description = TextEditingController();
   final arabicDescription = TextEditingController();
   final price = TextEditingController();
@@ -55,25 +59,6 @@ var salePrice = 00.0.obs;
     }
   }
 
-
-
-  void changePrice(String value) {
-    if(oldPrice.text==''){
-   TLoader.warningSnackBar(title: '',message:  isArabicLocale()?"فضلا أدخل السعر ثم ادخل النسبة" :"Please type the price first");
-     return;
-}
-if (double.parse(value) >100){
-  TLoader.warningSnackBar(title: '',message:  isArabicLocale()?"نسبة الادخال الصحيحة اقل من 100" :"Sale precentage should be less than 100");
-   return;
-}
-
-
-
-var s=double.parse(oldPrice.text.toString());
-var p=    (s-(s*(double.parse(value)/100)));
-price.text=p.toString();
-
-}
   Future<void> cropImage(String imagePath) async {
     var croppedFile = await ImageCropper().cropImage(
         sourcePath: imagePath,
@@ -111,17 +96,20 @@ price.text=p.toString();
       print('=========id==========${product.id}');
     }
     localThumbnail.value = "";
-    title.text = product.title;
+    title.text = product.title??"";
+    t=product.title;
+    a=product.arabicTitle;
     initialImage.value=product.images!;
-    arabicTitle.text = product.arabicTitle;
-    description.text = product.description!;
-    arabicDescription.text = product.arabicDescription!;
-    oldPrice.text = product.oldPrice.toString();
+    arabicTitle.text = product.arabicTitle??"";
+    description.text = product.description??"";
+    arabicDescription.text = product.arabicDescription??"";
+    oldPrice.text =  product.oldPrice==null ?"": product.oldPrice.toString();
     price.text = product.price.toString();
 
     images.value = product.images!;
-    selectedCategory.value = product.category!;
-
+    if(product.category != CategoryModel.empty() ) {
+      selectedCategory.value =CategoryController.instance.allItems.where((c)=> c.id==product.category!.id).single;
+    }
     categoryTextField.text = product.category!.arabicName;
     oldExtraImages.assignAll(product.images!);
   }
@@ -141,71 +129,113 @@ selectedImage.clear();
     localThumbnail.value = "";
   }
 
-  Future<void> updateProduct(ProductModel product, String vendorId) async {
-    // message.value = "now update Thumbnail ";
-    // first upload thumbnail to server
-    // await uploadImage();
-    // if (oldthumb != localThumbnail.value) {
-    //   uploadThumbnail();
-    //   //product.thumbnail = thumbnailUrl.value;
-    // }
-
-    // update Extra images
-    // List<XFile> forNewUpload = [];
-product.images=initialImage;
-    if (selectedImage.isNotEmpty) {
-      message.value = isArabicLocale()
-          ? "يتم الان رفع الصور"
-          : "now uploading extra images";
+  Future<void> updateProduct(ProductModel product, String vendorId) async 
+  {
+  product.images=initialImage;
+  var oldimages=initialImage.length;
+     var  salePriceNumber = double.parse(price.text.replaceAll(',', ''));
+     var oldPriceNumber=double.tryParse(oldPrice.text.toString())??0.00;
+   if(t.isEmpty && a.isEmpty){//Check the titles
+   TLoader.warningSnackBar(
+          title:'',
+          message: isArabicLocale()
+              ?"الرجاء إدخال اسم العنصر بإحدى اللغتين "
+              : "Please add at least one title");    
+   return;
+}else if (!formKey.currentState!.validate()) {
+      isLoading.value = false;
+     // Navigator.pop(Get.context!);
+      return;
+    }
+else  if (selectedImage.isEmpty && oldimages<1 ) {
+     
+      TLoader.warningSnackBar(
+          title:'',
+          message: isArabicLocale()
+              ? "يرجى ادخال صورة على الأقل"
+              : "Please add at least one photo");
+    // Get.closeCurrentSnackbar();
+      return;
+      } 
+        else if (selectedCategory.value == CategoryModel.empty()) {
+      isLoading.value = false;
+      TLoader.warningSnackBar(
+          title:'',
+          message: isArabicLocale()
+              ? "يرجى اختيار تصنيف "
+              : "Please select a category");
+    // Get.closeCurrentSnackbar();
+      return;
+    } 
+     else if(oldPriceNumber < salePriceNumber && oldPriceNumber>0.00 ) {
+      TLoader.warningSnackBar(
+          title:'',
+          message: isArabicLocale()
+              ? "سعر البيع يجب ان يكون أقل من السعر"
+              : "Sale price should be less than Price");
+    // Get.closeCurrentSnackbar();
+      return;
+        }
+     else{
+  showProgressBar();
       List<String> s3 = await uploadImages(selectedImage);
       for (var image in s3) {
-        product.images?.add(image);
-      }
-    }
+        product.images?.add(image);}
 
-    message.value = isArabicLocale() ? 'يتم الأن التعديل' : "now inserting ";
-// second create category model
-    product.title = title.text.trim();
+    product.title = t;
     product.productType = type;
     // product.sku = skuCode.text.trim();
-    product.arabicTitle = arabicTitle.text.trim();
-    product.price = double.parse(price.text.toString());
-    product.oldPrice=  double.tryParse(oldPrice.text.toString());
+    product.arabicTitle = a;
+    product.price = salePriceNumber;
+    product.oldPrice= oldPriceNumber;
     product.description = description.text.trim();
     product.arabicDescription = arabicDescription.text.trim();
 
     product.isFeature = true;
     product.category = selectedCategory.value;
-
-// third send category values
-    //productRepository.updateProduct(product);
-
+      
     try {
-      if (vendorId.isEmpty) {
-        throw 'Unable to find user information. try again later';
-      }
-      productRepository.updateProduct(product, vendorId);
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(vendorId)
-          .collection('organization')
-          .doc('1')
-          .collection('Products')
-          .doc(product.id)
-          .update(product.toJson());
+     productRepository.updateProduct(product, vendorId);
+      Get.closeCurrentSnackbar();
+
+
+
+
+  
     } catch (e) {
+     Get.closeCurrentSnackbar();
       throw 'some thing go wrong while updating category';
-    }
- // Navigator.pop(Get.context!);
-    Navigator.pop(Get.context!);
-   Get.to(ProductDetails(product: product, vendorId: vendorId));
-    ProductController.instance.updateList(product);
-    resetFields();
-
-    //  LoadingFullscreen.stopLoading();
-    message.value = "";
+   }
+      TLoader.successSnackBar(
+        title: 'Successfull', message: "data updated successfully");
   }
-
+    resetFields();
+    Navigator.pop(Get.context!);
+    //  Navigator.push(
+    //                   Get.context!,
+    //                   MaterialPageRoute(
+    //                       builder: (context) => ProductDetails(
+    //                           vendorId: vendorId, product: product,)));
+     }
+  
+void showProgressBar() {
+  Get.snackbar(
+   
+    isArabicLocale()? "جاري التعديل..." :"Updating Now ..",
+    "",
+    snackPosition: SnackPosition.TOP,
+    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+    backgroundColor:TColors.primary,
+    colorText: Colors.white,
+    duration: Duration(days: 1),
+    isDismissible: false,
+    showProgressIndicator: true,
+     padding: EdgeInsets.symmetric(horizontal:  50),
+    
+    
+    progressIndicatorBackgroundColor: Colors.white,
+  );
+}
   Future<void> pickImage() async {
     var pickedFile =
         (await ImagePicker().pickImage(source: ImageSource.gallery));
@@ -293,4 +323,66 @@ product.images=initialImage;
       return [];
     }
   }
+
+  void formatInput(String value) {
+    if (value.isNotEmpty) {
+      double? number = double.tryParse(value.replaceAll(',', ''));
+      if (number != null) {
+      
+       price.value = TextEditingValue(
+          text: formatter.format(number),
+          selection: TextSelection.collapsed(offset: formatter.format(number).length),
+        );
+      }
+    }
+  }
+   
+ final NumberFormat formatter = NumberFormat("#,##0", "en_US"); 
+double? priceNumber;
+
+
+   void changePrice(String value) {
+
+if (double.parse(value) >100){
+    TLoader.warningSnackBar(title: '',message:  isArabicLocale()?"نسبة الادخال الصحيحة اقل من 100" :"Sale precentage should be less than 100");
+     return;
+}
+    if(oldPrice.text.isNotEmpty){
+ 
+var s= double.tryParse(oldPrice.text.toString().replaceAll(',', '')) ??0.00;
+var p=    (s-(s*(double.parse(value)/100)));
+//changePrice(p.toString());
+//
+  formatInput(p.toString());
+  }
+  }
+  
+  void changeSalePresentage(String value) {
+    if (kDebugMode) {
+      print("===========value is ====$value");
+    }
+    if(saleprecentage.text.isNotEmpty){
+      var s=double.parse(saleprecentage.text.toString());
+      var p= double.parse(value)- (s*(double.parse(value)/100));
+     // price.text="";
+     formatInput(p.toString());
+    }
+
+
+    if (value.isNotEmpty) {
+      double? number = double.tryParse(value.replaceAll(',', ''));
+      if (number != null) {
+      
+       oldPrice.value = TextEditingValue(
+          text: formatter.format(number),
+          selection: TextSelection.collapsed(offset: formatter.format(number).length),
+        );
+      }
+    }
+
+
+    }
+
+  
+
 }

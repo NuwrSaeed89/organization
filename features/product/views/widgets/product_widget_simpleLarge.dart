@@ -31,6 +31,7 @@ class ProductWidgetSmall2 extends StatelessWidget {
             PageRouteBuilder(
               transitionDuration: const Duration(milliseconds: 1000),
               pageBuilder: (context, anim1, anim2) => ProductDetails(
+                 key: UniqueKey(),
                 product: product,
                 vendorId: product.vendorId,
               ),

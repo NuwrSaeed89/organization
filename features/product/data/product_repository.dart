@@ -206,6 +206,8 @@ class ProductRepository extends GetxController {
   }
 
   Future<void> deleteProduct(ProductModel product, String vendorId) async {
+   try {
+   
     await FirebaseFirestore.instance
         .collection('users')
         .doc(vendorId)
@@ -218,6 +220,14 @@ class ProductRepository extends GetxController {
         .collection('products')
         .doc(product.id)
         .delete();
+        } catch (e) {
+      if (kDebugMode) {
+        print('=======================insert product faild=============');
+      }
+       Get.closeCurrentSnackbar();
+      throw 'Some thing wrong while saving product';
+
+    }
   }
 
  Future<bool> addProductToTemps(ProductModel product, String vendorId) async {
@@ -295,6 +305,7 @@ class ProductRepository extends GetxController {
       if (kDebugMode) {
         print('=======================insert product faild=============');
       }
+       Get.closeCurrentSnackbar();
       throw 'Some thing wrong while saving product';
     }
   }

@@ -21,11 +21,12 @@ import 'package:winto/features/organization/e_commerce/utils/constants/image_str
 import 'package:winto/features/organization/e_commerce/utils/dialog/confirmation_dialog.dart';
 import 'package:winto/main.dart';
 
-class ControlPanelProduct extends StatelessWidget {
-   ControlPanelProduct(
-      {super.key, required this.vendorId, required this.product,this.withCircle=false, required this.editMode});
+class ControlPanelBlackProduct extends StatelessWidget {
+   ControlPanelBlackProduct(
+      {super.key, required this.vendorId, required this.product,this.withCircle=false, required this.editMode, this.iconColor =Colors.white});
   final String vendorId;
   final bool editMode;
+  Color iconColor;
   final ProductModel product;
   bool withCircle;
   @override
@@ -33,13 +34,18 @@ class ControlPanelProduct extends StatelessWidget {
      var savController = SavedProductsController.instance;
     var save = savController.isSaved(product.id).obs;
     var localizations = AppLocalizations.of(context);
-    return PullDownButton(
+    return
+    
+    
+     PullDownButton(
+      
         routeTheme: const PullDownMenuRouteTheme(
           backgroundColor: Colors.white,
         ),
         itemBuilder: (context) => [
 
          if(!editMode) PullDownMenuItem(
+        
              icon: Icons.favorite,
                 title:
                     isLocaleEn(context) ? 'Like' : 'أعجبني',
@@ -87,7 +93,7 @@ class ControlPanelProduct extends StatelessWidget {
                               )));
                 },
               ),
-           if(editMode)     PullDownMenuItem(
+   if(editMode)     PullDownMenuItem(
                   icon: Icons.delete,
                   title: isLocaleEn(context)
                       ? 'Delete this item'
@@ -95,7 +101,7 @@ class ControlPanelProduct extends StatelessWidget {
                   itemTheme: PullDownMenuItemTheme(
                       textStyle: bodyText1.copyWith(color: Colors.black)),
                   iconColor: Colors.black,
-                  onTap: () async {
+                   onTap: () async {
                      ReusableAlertDialog.show(
               context: context,
               title: isArabicLocale() ? 'حذف العنصر' : 'Delete Item',
@@ -104,58 +110,41 @@ class ControlPanelProduct extends StatelessWidget {
                   : 'Are you sure you want to delete this product ?',
               onConfirm: () async {
              ProductController.instance
-                                 .deleteProduct(product, product.vendorId, true);
-        },
-            );
-           Navigator.of(context).pop();
-                      }),
-                       PullDownMenuItem(
-                icon: Icons.language,
-                      title: isArabicLocale() ? 'English' : 'العربية',
-                      itemTheme: PullDownMenuItemTheme(
-                          textStyle: bodyText1.copyWith(color: Colors.black)),
-                      iconColor: Colors.black,
-                      onTap: () async {
-                        HapticFeedback.lightImpact;
-                        globalRef!
-                            .read(localeProvider.notifier)
-                            .toggleLocale(context, globalRef!);
-                      },
-                    ),
-              // PullDownMenuItem(
-              //   icon: CupertinoIcons.add_circled,
-              //   title: localizations.translate('shop.addProduct'),
-              //   itemTheme: PullDownMenuItemTheme(
-              //       textStyle: bodyText1.copyWith(color: Colors.black)),
-              //   iconColor: Colors.black,
-              //   onTap: () async {
-              //     HapticFeedback.lightImpact;
-
-              //     Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //             builder: (context) => CreateProduct(
-              //                   vendorId: vendorId,
-              //                   type: '',
-              //                   sectionId: 'all',
-              //                 )));
-              //   },
-              // ),
+                                 .deleteProduct(product, product.vendorId,true);
+                
+              },
+            );}),
+           
             ],
+
+
+
+
+
+//////////////
+/// TRoundedContainer(
+                  
+
+
+
+
+            ////////////
         buttonBuilder: (context, showMenu) => CupertinoButton(
+          
+          padding: EdgeInsets.zero,
               onPressed: showMenu,
-              padding: EdgeInsets.zero,
+            
               child: TRoundedContainer(
-                backgroundColor:withCircle? Colors.white: Colors.transparent,
+                backgroundColor:withCircle? Colors.black.withValues(alpha: .5): Colors.transparent,
                 radius: BorderRadius.circular(400),
-                // width: 28,
-                // height: 28,
+                width: 28,
+                height: 28,
                 enableShadow: withCircle,
                 child: Center(
                   child: Icon(
                     Icons.more_vert,
-                    color: TColors.black,
-                    size: 25,
+                    color: iconColor,
+                    size: 22,
                   ),
                 ),
               ),

@@ -50,24 +50,24 @@ class ControlPanelMenu extends StatelessWidget {
                               vendorId: vendorId, editMode: false)));
                 },
               ),
-              PullDownMenuItem(
-                icon: CupertinoIcons.add_circled,
-                title:isArabicLocale()? 'الاستديو':'Studio',
-                itemTheme: PullDownMenuItemTheme(
-                    textStyle: bodyText1.copyWith(color: Colors.black)),
-                iconColor: Colors.black,
-                onTap: () async {
-                  HapticFeedback.lightImpact;
+              // PullDownMenuItem(
+              //   icon: CupertinoIcons.add_circled,
+              //   title:isArabicLocale()? 'الاستديو':'Studio',
+              //   itemTheme: PullDownMenuItemTheme(
+              //       textStyle: bodyText1.copyWith(color: Colors.black)),
+              //   iconColor: Colors.black,
+              //   onTap: () async {
+              //     HapticFeedback.lightImpact;
 
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AlbumPage(
-                                userId: vendorId,
+              //     Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => AlbumPage(
+              //                   userId: vendorId,
                               
-                              )));
-                },
-              ),//PolicyPage
+              //                 )));
+              //   },
+              // ),//PolicyPage
               PullDownMenuItem(
                 icon: Icons.terminal,
                   title: isLocaleEn(context) ? 'manage Terms' : 'ادارة البنود',
@@ -84,21 +84,21 @@ class ControlPanelMenu extends StatelessWidget {
                           builder: (context) => PolicyPage(vendorId: vendorId,)));
                 },
               ),
-               PullDownMenuItem(
-                icon: Icons.save,
-               title: isLocaleEn(context) ? 'Excel import' : 'استيرات اكسل',
-                itemTheme: PullDownMenuItemTheme(
-                    textStyle: bodyText1.copyWith(color: Colors.black)),
-                iconColor: Colors.black,
-                onTap: () async {
-                  HapticFeedback.lightImpact;
+              //  PullDownMenuItem(
+              //   icon: Icons.save,
+              //  title: isLocaleEn(context) ? 'Excel import' : 'استيرات اكسل',
+              //   itemTheme: PullDownMenuItemTheme(
+              //       textStyle: bodyText1.copyWith(color: Colors.black)),
+              //   iconColor: Colors.black,
+              //   onTap: () async {
+              //     HapticFeedback.lightImpact;
 
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ImportExcelPage(vendorId:vendorId)));
-                },
-              ),
+              //     Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => ImportExcelPage(vendorId:vendorId)));
+              //   },
+              // ),
               PullDownMenuItem(
                 icon: Icons.category,
                 title: localizations.translate('shop.categories'),
@@ -218,23 +218,23 @@ class ControlPanelMenu extends StatelessWidget {
                           builder: (context) => const StaticBottomNavigator()));
                 },
               ),
-              PullDownMenuItem(
-                icon: Icons.textsms_sharp,
-                title: localizations.translate('test'),
-                itemTheme: PullDownMenuItemTheme(
-                    onPressedBackgroundColor:
-                        TColors.primary.withValues(alpha: .5),
-                    textStyle: bodyText1.copyWith(color: Colors.black)),
-                iconColor: Colors.black,
-                onTap: () async {
+              // PullDownMenuItem(
+              //   icon: Icons.textsms_sharp,
+              //   title: localizations.translate('test'),
+              //   itemTheme: PullDownMenuItemTheme(
+              //       onPressedBackgroundColor:
+              //           TColors.primary.withValues(alpha: .5),
+              //       textStyle: bodyText1.copyWith(color: Colors.black)),
+              //   iconColor: Colors.black,
+              //   onTap: () async {
                 
 
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProductListScreen()));
-                },
-              ),
+              //     Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => ProductListScreen()));
+              //   },
+              // ),
             ],
         buttonBuilder: (context, showMenu) => CupertinoButton(
               onPressed: showMenu,

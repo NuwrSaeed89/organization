@@ -3,6 +3,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:winto/app/app_localization.dart';
 import 'package:winto/core/functions/lang_f.dart';
+import 'package:winto/core/utils/dialogs/reusable_alert_dialog.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/edit_product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
@@ -131,7 +132,7 @@ class TProductItem extends StatelessWidget {
               renderOverlay: renderOverlay,
               useRotationAnimation: useRAnimation,
               backgroundColor: Theme.of(context).cardColor,
-              foregroundColor: TColors.black,
+              foregroundColor: Colors.black,
               elevation: 0,
               animationCurve: Curves.elasticInOut,
               isOpenOnStart: false,
@@ -182,19 +183,19 @@ class TProductItem extends StatelessWidget {
                       color: Colors.black,
                     ),
                   ),
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return ConfirmationDialog(
-                              icon: TImages.deleteProduct,
-                              refund: false,
-                              description: AppLocalizations.of(context).translate(
-                                  'dialog.are_you_sure_want_to_delete_this_product'),
-                              onYesPressed: () => ProductController.instance
-                                  .deleteProduct(product, product.vendorId));
-                        });
-                  },
+                  onTap: () async {
+                     ReusableAlertDialog.show(
+              context: context,
+              title: isArabicLocale() ? 'حذف العنصر' : 'Delete Item',
+              content: isArabicLocale()
+                  ? 'هل أنت متأكد أنك تريد حذف هذا العنصر؟'
+                  : 'Are you sure you want to delete this product ?',
+              onConfirm: () async {
+             ProductController.instance
+                                 .deleteProduct(product, product.vendorId, false);
+                
+              },
+            );}
                 ),
               ],
             ),

@@ -12,6 +12,7 @@ import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:winto/app/app_localization.dart';
 import 'package:winto/app/data.dart';
+import 'package:winto/app/providers.dart';
 import 'package:winto/core/constants/colors.dart';
 import 'package:winto/core/functions/lang_f.dart';
 import 'package:winto/features/admin/data/utils/user_images.dart';
@@ -27,6 +28,7 @@ import 'package:winto/features/organization/e_commerce/features/shop/view/widget
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/shimmers/shimmer.dart';
+import 'package:winto/features/organization/e_commerce/utils/constants/constant.dart';
 import 'package:winto/features/organization/e_commerce/utils/organization_images.dart';
 import 'package:winto/features/social/data/firebase/user/fetch_user_map.dart';
 import 'package:winto/features/social/presentation/pages/feed/wall.dart';
@@ -177,11 +179,16 @@ onTap: ()  { if( editMode) {
                               child: GestureDetector(
                                 onTap: () {
                                   HapticFeedback.lightImpact;
-Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ViewSocialProfile(
-                                userId)));
+                                   Navigator.pop(context);
+                                    globalRef!
+                                        .read(
+                                            currentScreenIndexProvider.notifier)
+                                        .state = 3;
+// Navigator.push(
+//                                 context,
+//                                 MaterialPageRoute(
+                                    // builder: (context) => ViewSocialProfile(
+                                // userId)));
                                 },
                                 child: TRoundedContainer(
                                     radius: BorderRadius.circular(50),
@@ -199,20 +206,65 @@ Navigator.push(
                             ),
                             Positioned(
                               left: 15,
-                              bottom: 21,
-                              child: FollowHeart(
-                                myId: userId_,
-                                userId: userMap['uid'],
-                                primary: primary,
+                              bottom: 20,
+                              child:  editMode?
+                              
+                              Column(
+                                     mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    verticalDirection:VerticalDirection.down,
+                                children: [
+                                  TRoundedContainer(
+                                                    width: 34,
+                                                    height: 34,
+                                                    radius: BorderRadius.circular(300),
+                                                   enableShadow: true,
+                                                   
+                                                    child:const  Center(
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(0),
+                                                        child:
+                                                            const Icon(CupertinoIcons.heart,
+                                  // : CupertinoIcons.heart,
+                                  // color: const Color(0xFFFF5050),
+                                  color: Colors.black,
+                                  size: 23)
+                                                           
+                                                      ),
+                                                    ),
+                                                  ),
+                                                   SizedBox(height: 4,),
+                                    Visibility(
+                                      visible: false,
+                                      child: Text(
+                                      userMap['likes'].toString(),
+                                      style: titilliumBold.copyWith(fontFamily: numberFonts),
+                                                                        ),
+                                    ),
+                                ],
+                              ): Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                verticalDirection:VerticalDirection.down,
+                                children: [
+                                  FollowHeart(
+                                                  myId: userId_,
+                                                  userId: userMap['uid'],
+                                                  primary: primary,
+                                                ),
+                                                SizedBox(height: 4,),
+                                                Visibility(
+                                                  visible: false,
+                                                  child: Text(
+                                                  userMap['likes'].toString(),
+                                                  style: titilliumBold.copyWith(fontFamily: numberFonts),
+                                                                                                ),
+                                                ),
+                                ],
                               ),
                             ),
                           ],
                         ),
-
-
-
-
-
                 if (userMap['bannerImage'] == 'loading')
                   TShimmerEffect(
                     width: 100.w,
@@ -220,10 +272,6 @@ Navigator.push(
                     raduis: BorderRadius.circular(50),
                     color: Colors.grey,
                   ),
-
-
-
-                
                 Positioned(
                   bottom: -10,
                   child: GestureDetector(

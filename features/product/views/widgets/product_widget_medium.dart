@@ -7,6 +7,8 @@ import 'package:winto/features/organization/e_commerce/features/product/data/pro
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_image_slider_mini.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/saved_widget.dart';
+import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/control_panel_menu_black_product.dart';
+import 'package:winto/features/organization/e_commerce/features/shop/view/widgets/control_panel_menu_black_type2.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_widgets.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
@@ -32,7 +34,7 @@ class ProductWidgetMedium extends StatelessWidget {
  
       var floatControllerVendor =
       Get.put(FloatingButtonsController());
-      floatControllerVendor.isEditabel=editMode;
+      
     final controller = ProductController.instance;
     final salePrecentage =
         controller.calculateSalePresentage(product.price, product.oldPrice);
@@ -48,6 +50,7 @@ class ProductWidgetMedium extends StatelessWidget {
             PageRouteBuilder(
               transitionDuration: const Duration(milliseconds: 1000),
               pageBuilder: (context, anim1, anim2) => ProductDetails(
+                 key: UniqueKey(),
                 product: product,
                 vendorId: vendorId,
               ),
@@ -67,7 +70,9 @@ class ProductWidgetMedium extends StatelessWidget {
             // ],
             ),
         child: Stack(children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Column(
+           // crossAxisAlignment: CrossAxisAlignment.stretch,
+             children: [
             Container(
                 height: prefferHeight ?? 200,
                 width: prefferWidth ?? 150,
@@ -95,76 +100,49 @@ class ProductWidgetMedium extends StatelessWidget {
                 )),
 
             // Product Details
-            Center(
-              child: SizedBox(
-                height: 98,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      const SizedBox(height: 10),
-                      ProductController.getTitle(product ,isLocaleEn(context), 15,2 ),
-                                             
-                      const SizedBox(
-                        height: 4,
-                      ),
-                       Text(isArabicLocale() ? product.arabicDescription! : product.description!,
-                         
-                          style: robotoRegular.copyWith(
-                              fontSize: 12, fontWeight: FontWeight.normal,color: TColors.darkerGray),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis),
+            SizedBox(
+              height: 98,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 7.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    const SizedBox(height: 10),
+                    ProductController.getTitle(product ,isLocaleEn(context), 15,2 ),
+                                           
                     const SizedBox(
-                        height: 4,
-                      ),
-                    Spacer(),
-
-                      Center(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                    //           if (product.oldPrice !=null)
-                    //  TCustomWidgets.viewSalePrice(product.oldPrice.toString(),12)
-                    //         ,  const SizedBox(width: 4),
-                        TCustomWidgets.formattedPrice( product.price,'AED',18)
-                               
-                        
-                           
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                      height: 4,
+                    ),
+                     Text(isArabicLocale() ? product.arabicDescription! : product.description!,
+                       
+                        style: robotoRegular.copyWith(
+                            fontSize: 12, fontWeight: FontWeight.normal,color: TColors.darkerGray),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis),
+                  const SizedBox(
+                      height: 4,
+                    ),
+                  Spacer(),
+            
+                    TCustomWidgets.formattedPrice( product.price,'AED',18)
+                  ],
                 ),
               ),
             ),
           ]),
 
           // Off
-                                    Visibility(  visible: editMode,
-                                                                    child: Positioned(
-                                                                      right:10,
-                                                                      top:195,
-                                                                      child:  GestureDetector(
-                                                                        onTapDown: (details) {
-                                                                              if(editMode){
-                                                                     floatControllerVendor.product=product;
-                                                                                  floatControllerVendor.showFloatingButtons(context, details.globalPosition);
-                                                                                }
-                                                                                
-                                                                        },
-                                                                        child:  Icon(Icons.more_horiz, color: Colors.white),
-                                                                                          
-                                                                                        
-                                                                      ),
-                                                                      
-                                                                    ),
-                                                                  ),
-          if (salePrecentage != null)
+        Visibility(
+                visible: true,
+                child: Positioned(
+                top: 0,
+              right: 0,
+                  child: ControlPanelBlackProducttype2(editMode: editMode,
+                  product: product,vendorId: vendorId,withCircle: true,)
+                ),
+              ),
+          if (salePrecentage != null && salePrecentage !='0')
             Positioned(
               top: 20,
               left: 0,
@@ -192,14 +170,14 @@ class ProductWidgetMedium extends StatelessWidget {
               ),
             ),
 
-          Positioned(
-            top: 5,
-            right: 5,
-            child: FavouriteButton(
-              editMode: editMode,
-              productId: product.id,
-            ),
-          ),
+          // Positioned(
+          //   top: 5,
+          //   right: 5,
+          //   child: FavouriteButton(
+          //     editMode: editMode,
+          //     productId: product.id,
+          //   ),
+          // ),
           Visibility(
             visible: false,
             child: Positioned(

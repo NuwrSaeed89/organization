@@ -12,6 +12,7 @@ import 'package:winto/features/organization/e_commerce/features/product/data/pro
 import 'package:winto/features/organization/e_commerce/features/product/views/add/add_product.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
 import 'package:winto/features/organization/e_commerce/features/sector/model/sector_model.dart';
+import 'package:winto/features/organization/e_commerce/utils/actions.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/buttons/customFloatingButton.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
@@ -32,7 +33,8 @@ class GridBuilder extends StatelessWidget {
   var showMore = true.obs;
   @override
   Widget build(BuildContext context) {
-
+double cardWidth=33.33333.w;
+double cardHeight=cardWidth*(4/3);
       var floatControllerVendor =
       Get.put(FloatingButtonsController());
       floatControllerVendor.isEditabel=editMode;
@@ -60,15 +62,15 @@ class GridBuilder extends StatelessWidget {
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) {
                   return TRoundedContainer(
-                    width: 33.3.w,
-                    height: 33.3.w*(4/3),
+                    width: cardWidth,
+                    height: cardHeight,
                     showBorder: true,
                     borderWidth: 1,
                     borderColor: TColors.white,
                     child: TShimmerEffect(
-                      width: 33.3.w,
+                      width: cardWidth,
                      
-                    height: 33.3.w*(4/3),
+                    height: cardHeight,
                       raduis: BorderRadius.circular(0),
                     ),
                   );
@@ -122,8 +124,8 @@ class GridBuilder extends StatelessWidget {
                                                 sectorTitle: SectorModel(name: 'newArrival', englishName: 'New Arrival', arabicName: 'وصلنا حديثا'),
                                               )));},
                                   child: TRoundedContainer(
-                                    width: 33.3.w,
-                height: 33.3.w*(4/3),
+                                    width: cardWidth,
+                height: cardHeight,
                                     borderColor: TColors.grey,
                                     showBorder: true,
                                     borderWidth: 1,
@@ -204,7 +206,7 @@ class GridBuilder extends StatelessWidget {
                                               initialList: [],
                                             sectionId: 'all',
                                           )));},
-                  child: emptyMedium(33.3.w*(4/3), 33.3.w));}
+                  child: emptyMedium(cardHeight, cardWidth));}
               
               if(editMode && index == spotList.sublist(0, 12).length){
                 return GestureDetector(
@@ -221,45 +223,20 @@ class GridBuilder extends StatelessWidget {
                                             type: 'mixlin1',
                                             sectionId: 'all',
                                           )));},
-                  child: emptyMedium(33.3.w*(4/3), 33.3.w));}
+                  child: emptyMedium(cardHeight, cardWidth));}
               
-                                      return GestureDetector(
-                                             onLongPressStart: (details) {
-                          if(editMode){
-               floatControllerVendor.product=spotList.sublist( 0, 12)[index];
-              floatControllerVendor.showFloatingButtons(context, details.globalPosition);
-                          }else{
-              
-               
-                          }
-                         
-                          },
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              PageRouteBuilder(
-                                                transitionDuration: const Duration(
-                                                    milliseconds: 1000),
-                                                pageBuilder:
-                                                    (context, anim1, anim2) =>
-                                                        ProductDetails(
-                                                  product: spotList.sublist(
-                                                      0, 12)[index],
-                                                  vendorId: vendorId,
-                                                ),
-                                              ));
-                                        },
-                                        child: TRoundedContainer(
-                                          width: 141,
-                                          height: 191,
+                                      return  ActionsMethods.customLongMethode
+(  spotList.sublist(0,12)[index],context,editMode,TRoundedContainer(
+                                          width: cardWidth,
+                                          height: cardHeight,
                                           showBorder: true,
                                           borderWidth: 1,
                                           borderColor: TColors.white,
                                           child: CustomCaChedNetworkImage(
-                                              width: 141,
+                                              width: cardWidth,
               
                                               enableShadow: false,
-                                              height: 191,
+                                              height: cardHeight,
                                               raduis: BorderRadius.circular(0),
                                               url: spotList
                                                   .sublist(0, 12)[index]
@@ -336,7 +313,7 @@ class GridBuilder extends StatelessWidget {
                                             type: 'newArrival',
                                             sectionId: 'all',
                                           )));},
-                  child: emptyMedium( 33.3.w*(4/3), 33.3.w));}
+                  child: emptyMedium( cardHeight, cardWidth));}
               
               // if(editMode && index == spotList.length){
               //   return GestureDetector(
@@ -353,41 +330,18 @@ class GridBuilder extends StatelessWidget {
               //                                           )));},
               //     child: emptyMedium(   44.7.w, 33.3.w
               //                                            ));}
-              
-                                      return GestureDetector(
-                                             onLongPressStart: (details) {
-                          if(editMode){
-               floatControllerVendor.product=spotList[index];
-              floatControllerVendor.showFloatingButtons(context, details.globalPosition);
-                          
-                          }
-                         
-                          },
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              PageRouteBuilder(
-                                                transitionDuration: const Duration(
-                                                    milliseconds: 1000),
-                                                pageBuilder:
-                                                    (context, anim1, anim2) =>
-                                                        ProductDetails(
-                                                  product: spotList[index],
-                                                  vendorId: vendorId,
-                                                ),
-                                              ));
-                                        },
-                                        child: TRoundedContainer(
-                                        width: 33.333.w,
-                                        height: 33.3.w*(4/3),
+               return ActionsMethods.customLongMethode
+(  spotList[index],context,editMode,TRoundedContainer(
+                                        width: cardWidth,
+                                        height: cardHeight,
                                           showBorder: true,
                                           borderWidth: 1,
                                           borderColor: TColors.white,
                                           // showBorder: true,
                                           child: CustomCaChedNetworkImage(
                                             
-                                             width: 33.3.w,
-                  height: 33.3.w*(4/3),
+                                             width:cardWidth,
+                  height: cardHeight,
                                               enableShadow: false,
                                               raduis: BorderRadius.circular(0),
                                               url: spotList[index].images!.first),

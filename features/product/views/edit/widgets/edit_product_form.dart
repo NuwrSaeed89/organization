@@ -16,6 +16,7 @@ import 'package:winto/features/organization/e_commerce/features/product/cashed_n
 import 'package:winto/features/organization/e_commerce/features/product/controllers/edit_product_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/controllers/scrolle_controller.dart';
 import 'package:winto/features/organization/e_commerce/features/product/data/product_model.dart';
+import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/buttons/custom_button.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
@@ -96,11 +97,12 @@ const double padding=8;
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(height: 12),
-                                 TCustomWidgets.buildLabel('عنوان *'),
+                                 TCustomWidgets.buildLabel('عنوان'),
                                 TextFormField(
                                    focusNode: tabController.arabicFocusNode,
                                   style: titilliumNormal.copyWith(fontSize: 18),
                                   controller: controller.arabicTitle,
+                                  onChanged: (value) => controller.a=value,
                                   // validator: (value) =>
                                   //     TValidator.validateEmptyText(
                                   //   'عنوان',
@@ -131,17 +133,18 @@ const double padding=8;
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const SizedBox(height: 12),
-                                TCustomWidgets.buildLabel('Title *'),
+                                TCustomWidgets.buildLabel('Title '),
                               TextFormField(
                                    focusNode: tabController.englishFocusNode,
                                 style: titilliumNormal.copyWith(
                                   fontSize: 18,
                                 ),
-                                validator: (value) =>
-                                    TValidator.validateEmptyText(
-                                  'title *',
-                                  value,
-                                ),
+                                onChanged: (value) => controller.t=value,
+                                // validator: (value) =>
+                                //     TValidator.validateEmptyText(
+                                //   'title *',
+                                //   value,
+                                // ),
                                 controller: controller.title,
                                 decoration: inputTextField
                                  
@@ -249,63 +252,73 @@ const double padding=8;
                     ),
               ),
   ),
-
-
-            Padding(
-              padding: const EdgeInsets.only(left:TSizes.defaultSpace,right: TSizes.defaultSpace),
-              child: Obx(() => CategoryController.instance.isLoading.value
-                  ? const TShimmerEffect(width: double.infinity, height: 55)
-                  : TypeAheadField(
-
-
-  // textFieldConfiguration: TextFieldConfiguration(
-  //   decoration: InputDecoration(
-  //     labelText: "Select an option",
-  //   ),
-  //   readOnly: true, // Disables typing
-  // ),
-                      builder: (context, ctr, foucsNode) {
-                        return TextFormField(
-                          style: titilliumNormal.copyWith(fontSize: 18),
-                          focusNode: foucsNode,
-                          controller: controller.categoryTextField,
-                          decoration:  InputDecoration(
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-                            //labelText: "Select Category",
-                          ),
-                        );
-                      },
-                      itemBuilder: (context, suggestion) {
-                        return
-                        Padding(
-                          padding: const EdgeInsets.only(top:4.0,bottom: 4),
-                          child: Row(
-                                          children: [
-                                            ClipOval
-                                           (
-                                            
-                                            child: Image.network(suggestion.image!, width: 40, height:40, fit: BoxFit.cover))    , SizedBox(width: 10),
-                                            Text(isArabicLocale()? suggestion.arabicName: suggestion.name,style: titilliumRegular, ),]),
-                        );
-                        //  ListTile(
-                        //   title: Text(
-                        //     suggestion.arabicName,
-                        //     style: titilliumNormal,
-                        //   ),
-                        // );
-                      },
-                      onSelected: (suggestion) {
-                        controller.category = suggestion;
-                        controller.categoryTextField.text =
-                            suggestion.arabicName;
-                      },
-                      suggestionsCallback: (pattern) {
-                        return CategoryController.instance.allItems
-                            .where((cat) => cat.arabicName.contains(pattern))
-                            .toList();
-                      },
-                    )),
-            ),
+ Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: CategoryController.instance.isLoading.value
+                      ? const TShimmerEffect(width: double.infinity, height: 55)
+                      : Center(
+                       
+                        child: Obx(() {
+                         
+                              
+                      
+                          return SizedBox(
+                            height: 80,
+                            child: DropdownButtonFormField(
+                        value:  controller.selectedCategory.value.id!.isNotEmpty? controller.selectedCategory.value:null,
+                              borderRadius: BorderRadius.circular(15),
+                              iconSize: 40,
+                               decoration: inputTextField,
+                              itemHeight: 60, // 
+                            
+                              items: CategoryController.instance.allItems.map((cat) {
+                                return DropdownMenuItem(
+                                
+                                    value: cat,
+                                    child:
+                                    Row(
+                                              children: [
+                                              ClipRRect
+                                               (
+                                              borderRadius: BorderRadius.circular(300),
+                                              child: SizedBox(
+                                              height: 40,child: Image.network(cat.image!, width: 40, height: 40, fit: BoxFit.cover))),
+                                              const SizedBox(width: 10),
+                                              Text(CategoryController.instance.getAvilableCategoryTitle(cat),style: titilliumRegular.copyWith(fontSize: 16), ),
+                                              ],
+                                            ),
+                                  
+                                    );
+                              }).toList()..add(
+                                          DropdownMenuItem(
+                                            value:addCat,
+                                            child: Row(
+                                              children: [
+                                              const Icon(Icons.add, color: Colors.blue),
+                                              const SizedBox(width: 10),
+                                              Text( isArabicLocale()? "إضافة تصنيف جديد":"Add New Category", style: titilliumRegular.copyWith(color: Colors.blue)),
+                                              ],
+                                            ),
+                              )),
+                              onChanged: (newValue) {
+                               if (newValue == addCat) {
+                                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CreateCategory(
+                                        vendorId: vendorId,
+                                      )));
+                                          }else{
+                                  controller.category =
+                                      newValue!;}
+                                                }),
+                          );
+                          
+                        }),
+                      ),
+                ),
+        
+                
 
 SizedBox(height: TSizes.spaceBtWsections,),
    Padding(
@@ -321,7 +334,7 @@ SizedBox(height: TSizes.spaceBtWsections,),
                             TextFormField(
                               style: titilliumNormal.copyWith(fontSize: 20, color: TColors.primary,fontFamily: 'Poppins'),
                                              
-                                            
+                                 onChanged: controller.formatInput,            
                               controller: controller.price,
                               validator: (value) =>
                                   TValidator.validateEmptyText('price', value),
@@ -381,9 +394,10 @@ SizedBox(height: TSizes.spaceBtWsections,),
                                             //  decorationStyle: ,
                                               decorationThickness: 1.5,
                                               fontSize: 18),
-                              
+                                onChanged: (value) =>  controller.changeSalePresentage(value),
+                                
                               controller: controller.oldPrice,
-                             autovalidateMode: AutovalidateMode.onUnfocus,
+                            // autovalidateMode: AutovalidateMode.onUnfocus,
                               // validator: (value) => TValidator.validateSaleprice(
                               //     value, controller.price.text),
                               keyboardType: TextInputType.number,
@@ -404,89 +418,6 @@ SizedBox(height: TSizes.spaceBtWsections,),
                 ),
         
               
-
-            Visibility(
-              visible: false,
-              child: Padding(
-                padding: const EdgeInsets.all(TSizes.defaultSpace/2),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child:  TextFormField(
-                        style: titilliumNormal.copyWith(fontSize: 20, color: TColors.primary),
-                      //  onChanged: (value) => controller.price.value = double.tryParse(value) ?? 0.0,
-                  
-                        controller: controller.price,
-                        validator: (value) =>
-                            TValidator.validateEmptyText('price', value),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        decoration: inputTextField.copyWith(
-                          labelStyle: titilliumSemiBold,
-                          // prefixIcon: const Icon(Icons.edit_document),
-                          labelText: isLocaleEn(context) ? 'Sale Price *' : ' سعر البيع *',
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: TSizes.spaceBtwInputFields / 2),
-                  
-                   Expanded(
-                      child: TextFormField(
-                   //    onChanged: (value) => controller.validateDiscountPrice(value),
-                        style: titilliumBold.copyWith(
-                    color: TColors.darkGrey,fontFamily: 'Poppins',
-                   decoration: TextDecoration.lineThrough,
-                  //  decorationStyle: ,
-                    decorationThickness: 1.5,
-                    fontSize: 18),
-                        
-                        controller: controller.oldPrice,
-                       autovalidateMode: AutovalidateMode.onUnfocus,
-                        validator: (value) => TValidator.validateSaleprice(
-                            value, controller.price.text),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        decoration: inputTextField.copyWith(
-                          // prefixIcon: const Icon(Icons.edit_document),
-                          labelStyle: titilliumSemiBold,
-                          labelText:
-                              isLocaleEn(context) ? 'old Price' : 'السعر السابق',
-                        ),
-                      ),
-                    ),
-                  
-                  //   Expanded(
-                  //     child: TextFormField(
-                  //      style: titilliumBold.copyWith(
-                  //   color: TColors.darkGrey,fontFamily: 'Poppins',
-                  //  decoration: TextDecoration.lineThrough,
-                  // //  decorationStyle: ,
-                  //   decorationThickness: 1.5,
-                  //   fontSize: 14),
-                  //       // autovalidateMode: AutovalidateMode.onUserInteraction,
-                  //       controller: controller.oldPrice,
-                  //       // validator: (value) => TValidator.validateSaleprice(
-                  //       //     value, controller.price.text),
-                  //       keyboardType: TextInputType.number,
-                  //       inputFormatters: <TextInputFormatter>[
-                  //         FilteringTextInputFormatter.digitsOnly,
-                  //       ],
-                  //       decoration:  InputDecoration(
-                  //         // prefixIcon: const Icon(Icons.edit_document),
-                  //         labelText: isArabicLocale()?"سعر التخفيض":'Sale Price',
-                  //       ),
-                  //     ),
-                  //   ),
-                  ],
-                ),
-              ),
-            ),
-
-            const SizedBox(height: TSizes.spaceBtwInputFields / 2),
 
             const SizedBox(height: TSizes.spaceBtwInputFields),
              TCustomWidgets.buildLabel( isArabicLocale() ? 'الصور' : 'Images',),
@@ -726,46 +657,14 @@ Padding(
               width: double.infinity,
               child: CustomButtonBlack(
                 text:isArabicLocale()?'نشر': 'Post',
-                onTap: () async {
-
-
-                  if (controller.formKey.currentState!.validate()) 
-                  
-                  
-                   {
-                    await showSimpleLoadingDialog<String>(
-                      context: context,
-                      future: () async {
-                        await controller.updateProduct(product, vendorId);
-                        return "done3";
-                      },
-                      // Custom dialog
-                      dialogBuilder: (context, _) {
-                        return AlertDialog(
-                          content: Obx(
-                            () => Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const SizedBox(height: 20),
-                                TLoaderWidget(),
-                                const SizedBox(height: 16),
-                                Text(controller.message.value),
-                                const SizedBox(height: 16),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  
-                    
-                  }
-
-                  else{
-                    scrolleController.scrollToTop();
-                  }
-                },
-              ),
+              
+                onTap: ()async  {
+      
+      
+                      
+                            await  controller.updateProduct(product, vendorId);
+                          
+                            },  ),
             ),
             const SizedBox(height: 32),
    ])));

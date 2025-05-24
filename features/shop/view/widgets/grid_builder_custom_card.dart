@@ -11,6 +11,7 @@ import 'package:winto/features/organization/e_commerce/features/product/views/ad
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_details.dart';
 import 'package:winto/features/organization/e_commerce/features/product/views/widgets/product_widget_medium.dart';
 import 'package:winto/features/organization/e_commerce/features/sector/model/sector_model.dart';
+import 'package:winto/features/organization/e_commerce/utils/actions.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/buttons/customFloatingButton.dart';
 import 'package:winto/features/organization/e_commerce/utils/common/widgets/custom_shapes/containers/rounded_container.dart';
@@ -33,6 +34,8 @@ class GridBuilderCustomCard extends StatelessWidget {
   var showMore = true.obs;
   @override
   Widget build(BuildContext context) {
+    double cardWidth=48.w;
+double cardHeight=cardWidth*(4/3);
     RxList<ProductModel> spotList = <ProductModel>[].obs;
     var controller = ProductController.instance;
     controller.fetchOffersData(vendorId, 'mixlin1');
@@ -68,15 +71,15 @@ class GridBuilderCustomCard extends StatelessWidget {
               shrinkWrap: true,
               itemBuilder: (BuildContext context, int index) {
                 return TRoundedContainer(
-                  width: 174,
-                  height: 226,
+                  width: cardWidth,
+                  height: cardHeight,
                   showBorder: true,
                   borderWidth: 1,
                   radius: BorderRadius.circular(15),
                   borderColor: TColors.white,
                   child: TShimmerEffect(
-                    width: 174,
-                    height: 226,
+                    width: cardWidth,
+                    height: cardHeight,
                     raduis: BorderRadius.circular(15),
                   ),
                 );
@@ -115,8 +118,8 @@ class GridBuilderCustomCard extends StatelessWidget {
                                         borderColor: TColors.grey,
                                         showBorder: true,
                                         enableShadow: true,
-                                        height: 226 + 100,
-                                        width: 174,
+                                         width: cardWidth,
+                                       height: cardHeight+100,
                                         radius: BorderRadius.circular(15),
                                       ),
                                       InkWell(
@@ -141,8 +144,8 @@ class GridBuilderCustomCard extends StatelessWidget {
                                               // enableShadow: true,
                                             
                                               // backgroundColor: TColors.grey,
-                                              width: 174,
-                                              height: 226,
+                                              width: cardWidth,
+                                              height: cardHeight,
                                               borderColor: TColors.grey
                                                   .withValues(alpha: .5),
                                               radius: const BorderRadius.only(
@@ -178,47 +181,7 @@ class GridBuilderCustomCard extends StatelessWidget {
                                     ],
                                   );
                               
-                              //  Stack(
-                              //   alignment: Alignment.center,
-                              //   children: [
-                              //     InkWell(
-                              //       onTap: () => Navigator.push(
-                              //           context,
-                              //           MaterialPageRoute(
-                              //               builder: (context) => CreateProduct(
-                              //                     vendorId: vendorId,
-                              //                     type: 'mixlin1',
-                              //                     sectionId: 'all',
-                              //                   ))),
-                              //       child: TRoundedContainer(
-                              //         width: 174,
-                              //         height: 236,
-                              //         borderColor: TColors.grey,
-                              //         showBorder: true,
-                              //         borderWidth: 1,
-                              //         child: Visibility(
-                              //           visible: index == 0,
-                              //           child: Center(
-                              //             child: Padding(
-                              //               padding: const EdgeInsets.symmetric(
-                              //                   horizontal: 20.0),
-                              //               child: TRoundedContainer(
-                              //                 enableShadow: true,
-                              //                 width: 50,
-                              //                 height: 50,
-                              //                 radius: BorderRadius.circular(300),
-                              //                 child: const Icon(
-                              //                   CupertinoIcons.add,
-                              //                   color: TColors.primary,
-                              //                 ),
-                              //               ),
-                              //             ),
-                              //           ),
-                              //         ),
-                              //       ),
-                              //     ),
-                              //   ],
-                              // );
+                              
                             },
                           ),
                         )
@@ -271,7 +234,7 @@ if(editMode && index == spotList.sublist(0, 12).length+1){
                                             type: 'mixlin1',
                                             sectionId: 'all',
                                           )));},
-    child: emptyMedium( 335, 174));}
+    child: emptyMedium( cardHeight+110, cardWidth));}
 
 if(editMode && index == spotList.sublist(0, 12).length){
   return GestureDetector(
@@ -288,36 +251,14 @@ if(editMode && index == spotList.sublist(0, 12).length){
                                             type: 'mixlin1',
                                             sectionId: 'all',
                                           )));},
-    child: emptyMedium( 335, 174));}
+    child: emptyMedium( cardHeight+110, cardWidth));}
 
 
 
-                                      return GestureDetector(
-                                             onLongPressStart: (details) {
-            if(editMode){
- floatControllerVendor.product=spotList.sublist(0, 12)[index];
-              floatControllerVendor.showFloatingButtons(context, details.globalPosition);
-            }
-           
-            },
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              PageRouteBuilder(
-                                                transitionDuration:
-                                                    const Duration(
-                                                        milliseconds: 1000),
-                                                pageBuilder:
-                                                    (context, anim1, anim2) =>
-                                                        ProductDetails(
-                                                  product: spotList.sublist(0, 12)[index],
-                                                  vendorId: vendorId,
-                                                ),
-                                              ));
-                                        },
-                                        child: ProductWidgetMedium(
-                                          prefferWidth: 174,
-                                          prefferHeight: 226,
+                                      return  ActionsMethods.customLongMethode
+(  spotList.sublist(0,12)[index],context,editMode, ProductWidgetMedium(
+                                          prefferWidth: cardWidth,
+                                          prefferHeight: cardHeight,
                                           product: spotList.sublist(0, 12)[index],
                                           vendorId: vendorId,
                                           editMode: editMode,
@@ -402,7 +343,7 @@ if(editMode && index == spotList.sublist(0, 12).length){
                                             type: 'mixlin1',
                                             sectionId: 'all',
                                           )));},
-    child: emptyMedium( 335, 174));}
+    child: emptyMedium(cardHeight+110, cardWidth));}
 
 if(editMode && index == spotList.length){
   return GestureDetector(
@@ -419,34 +360,13 @@ if(editMode && index == spotList.length){
                                             type: 'mixlin1',
                                             sectionId: 'all',
                                           )));},
-    child: emptyMedium( 335, 174));}
+    child: emptyMedium( cardHeight+110, cardWidth));}
 
 
-                                      return GestureDetector(
-                                             onLongPressStart: (details) {
-            if(editMode){
- floatControllerVendor.product=spotList[index];
-              floatControllerVendor.showFloatingButtons(context, details.globalPosition);
-            }
-            },
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              PageRouteBuilder(
-                                                transitionDuration:
-                                                    const Duration(
-                                                        milliseconds: 1000),
-                                                pageBuilder:
-                                                    (context, anim1, anim2) =>
-                                                        ProductDetails(
-                                                  product: spotList[index],
-                                                  vendorId: vendorId,
-                                                ),
-                                              ));
-                                        },
-                                        child: ProductWidgetMedium(
-                                          prefferWidth: 174,
-                                          prefferHeight: 226,
+                                      return  ActionsMethods.customLongMethode
+                   (spotList[index],context,editMode, ProductWidgetMedium(
+                                          prefferWidth: cardWidth,
+                                          prefferHeight: cardHeight,
                                           product: spotList[index],
                                           vendorId: vendorId,
                                           editMode: editMode,
@@ -512,6 +432,9 @@ if(editMode && index == spotList.length){
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => CreateProduct(
+
+
+                                        
                                          sectorTitle: SectorModel( arabicName: 'جرب هذا',id: '',englishName: 'try this', name: 'mixlin1'),
                                                 initialList: spotList,
                                             vendorId: vendorId,

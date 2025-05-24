@@ -39,8 +39,8 @@ class TProductImageSliderMini extends StatelessWidget {
           TRoundedContainer(
               radius: BorderRadius.circular(15),
               //showBorder: true,
-              backgroundColor: Colors.transparent,
-               //     enableShadow: true,
+              //backgroundColor: Colors.transparent,
+                    enableShadow: true,
             child: CarouselSlider(
               options: CarouselOptions(
                 onPageChanged: (index, _) => selectdindex.value = index,
@@ -58,9 +58,11 @@ class TProductImageSliderMini extends StatelessWidget {
                       imageUrl: item,
                       imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
+                             // boxShadow: TColors.tboxShadow,
                               borderRadius: radius ?? BorderRadius.circular(15),
                               color: TColors.light,
                               image: DecorationImage(
+                            
                                   image: imageProvider, fit: BoxFit.fill),
                             ),
                           ),

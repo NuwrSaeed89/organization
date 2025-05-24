@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:winto/app/app_localization.dart';
+import 'package:winto/features/organization/e_commerce/utils/common/styles/styles.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/color.dart';
 import 'package:winto/features/organization/e_commerce/utils/constants/sizes.dart';
 import 'package:winto/features/organization/e_commerce/utils/themes/custom_button.dart';
@@ -61,8 +62,8 @@ class ConfirmationDialog extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(description ?? '',
-                          style: TextStyle(fontSize: TSizes.md),
-                          textAlign: TextAlign.center),
+                          style: titilliumBold.copyWith(fontSize: 20),
+                          textAlign: TextAlign.center,),
                       refund
                           ? TextFormField(
                               controller: note,
@@ -81,22 +82,29 @@ class ConfirmationDialog extends StatelessWidget {
                   Expanded(
                       child: InkWell(
                     onTap: () => Navigator.pop(context),
-                    child: CustomButton(
-                      btnTxt:
-                          AppLocalizations.of(context).translate('dialog.no'),
-                      backgroundColor: TColors.grey,
-                      isColor: true,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left:8.0, right:8),
+                      child: CustomButton(
+                        fontColor: Colors.black,
+                        btnTxt:
+                            AppLocalizations.of(context).translate('dialog.no'),
+                        backgroundColor: TColors.grey,
+                        isColor: true,
+                      ),
                     ),
                   )),
                   const SizedBox(width: TSizes.paddingSizeDefault),
                   Expanded(
-                      child: CustomButton(
-                          btnTxt: AppLocalizations.of(context)
-                              .translate('dialog.yes'),
-                          onTap: () {
-                            onYesPressed();
-                            Navigator.pop(context);
-                          })),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left:8.0, right:8),
+                        child: CustomButton(
+                            btnTxt: AppLocalizations.of(context)
+                                .translate('dialog.yes'),
+                            onTap: () {
+                              onYesPressed();
+                              Navigator.pop(context);
+                            }),
+                      )),
                 ])
               ])),
         ));
